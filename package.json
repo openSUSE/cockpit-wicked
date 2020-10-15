@@ -1,9 +1,9 @@
 {
-  "name": "starter-kit",
+  "name": "cockpit-wicked",
   "version": "0.1.0",
-  "description": "Scaffolding for a cockpit module",
+  "description": "Cockpit user interface for wicked",
   "main": "index.js",
-  "repository": "git@github.com:cockpit/starter-kit.git",
+  "repository": "https://github.com/dgdavid/cockpit-wicked",
   "author": "",
   "license": "LGPL-2.1",
   "scripts": {

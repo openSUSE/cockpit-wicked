@@ -28,21 +28,22 @@ const _ = cockpit.gettext;
 
 const columns = [
     { title: _("Name") },
+    { title: _("Type") },
     { title: _("IP address") },
-    { title: _("Sending") },
-    { title: _("Receiving") }
+    { title: _("Sending/Receiving") },
 ];
 
-const rows = [
-    {
-        cells: ["enp59s0u1u2", "192.168.8.107", "100", "50"]
-    },
-    {
-        cells: ["enp59s0u1u3", "192.168.8.100", "10", "5"]
-    }
-];
+const InterfacesList = ({ interfaces, connections }) => {
+    const rows = interfaces.map(i => {
+        const conn = connections.find(c => i.name == c.name);
+        return [
+            i.name,
+            i.type,
+            conn ? _("Configured") : _("Not configured"),
+            "0/0",
+        ];
+    });
 
-const InterfacesList = () => {
     return (
         <Card>
             <CardTitle>{_("Interfaces")}</CardTitle>

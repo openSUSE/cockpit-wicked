@@ -19,11 +19,8 @@
  * find current contact information at www.suse.com.
  */
 
-import React from 'react';
-import InterfacesList from './components/InterfacesList';
+const cockpit = {
+  gettext: (text) => text
+}
 
-export const Application = () => {
-    return (
-        <InterfacesList />
-    );
-};
+export default cockpit;

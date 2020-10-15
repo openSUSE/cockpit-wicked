@@ -19,11 +19,21 @@
  * find current contact information at www.suse.com.
  */
 
-import React from 'react';
-import InterfacesList from './components/InterfacesList';
+import React from "react";
+import { render, screen } from "@testing-library/react";
 
-export const Application = () => {
-    return (
-        <InterfacesList />
-    );
-};
+import InterfacesList from "./InterfacesList";
+
+describe("InterfacesList", () => {
+    test("shows the interfaces name", () => {
+        render(<InterfacesList />);
+
+        screen.getByText("enp59s0u1u3");
+    });
+
+    test("shows the interfaces IP", () => {
+        render(<InterfacesList />);
+
+        screen.getByText("192.168.8.100");
+    });
+});

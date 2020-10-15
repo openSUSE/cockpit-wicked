@@ -1,0 +1,32 @@
+Name: cockpit-wicked
+Version: %{VERSION}
+Release: 1%{?dist}
+Summary: Cockpit user interface for Wicked
+License: LGPLv2+
+
+Source: cockpit-wicked-%{version}.tar.gz
+BuildArch: noarch
+BuildRequires:  libappstream-glib
+
+Requires: cockpit-system
+
+%define debug_package %{nil}
+
+%description
+Cockpit Starter Kit Example Module
+
+%prep
+%setup -n cockpit-wicked
+
+%install
+%make_install
+appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/metainfo/*
+
+# drop source maps, they are large and just for debugging
+find %{buildroot}%{_datadir}/cockpit/ -name '*.map' | xargs rm --verbose
+
+%files
+%{_datadir}/cockpit/*
+%{_datadir}/metainfo/*
+
+%changelog

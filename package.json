@@ -1,5 +1,5 @@
 {
-  "name": "cockpit-wicked",
+  "name": "wicked",
   "version": "0.1.0",
   "description": "Cockpit user interface for wicked",
   "main": "index.js",

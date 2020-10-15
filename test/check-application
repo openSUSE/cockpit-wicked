@@ -20,7 +20,7 @@ class TestApplication(testlib.MachineCase):
 
         self.login_and_go("/starter-kit")
         # verify expected heading
-        b.wait_text(".pf-c-card__title", "Starter Kit")
+        b.wait_text(".pf-c-card__title", "Wicked")
 
         # verify expected host name
         hostname = m.execute("hostname").strip()

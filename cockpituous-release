@@ -11,7 +11,7 @@
 # .github/workflows/release.yml.disabled once you are ready.
 
 RELEASE_SOURCE="_release/source"
-RELEASE_SPEC="cockpit-starter-kit.spec"
+RELEASE_SPEC="cockpit-wicked.spec"
 RELEASE_SRPM="_release/srpm"
 
 job release-source

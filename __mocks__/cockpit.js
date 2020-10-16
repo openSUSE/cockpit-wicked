@@ -19,8 +19,43 @@
  * find current contact information at www.suse.com.
  */
 
+const connectionsFromDBus = [
+    [
+        {
+            Description: { t: "s", v: "Ethernet Card #1" },
+            Id:          { t: "i", v: 1 },
+            Name:        { t: "s", v: "eth0" }
+        }
+    ]
+];
+
+const interfacesFromDBus = [
+    [
+        {
+            Name: { t: "s", v: "eth0" },
+            Type: { t: "s", v: "eth" }
+        }
+    ]
+];
+
+const dbusData = {
+    GetConnections: connectionsFromDBus,
+    GetInterfaces:  interfacesFromDBus
+};
+
+const dbusClient = {
+    call: (object_path, iface, method) => {
+        return new Promise((resolve, reject) => {
+            process.nextTick(() => {
+                resolve(dbusData[method]);
+            });
+        });
+    }
+}
+
 const cockpit = {
-  gettext: (text) => text
+    gettext: (text) => text,
+    dbus: () => dbusClient
 }
 
 export default cockpit;

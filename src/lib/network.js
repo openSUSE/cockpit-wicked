@@ -36,35 +36,32 @@ const buildInterface = (data) => {
     };
 };
 
-/**
- * Returns the list of available connection configurations
- *
- * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
- */
-const listConnections = () => {
-    return new Promise((resolve, reject) => {
-        const client = cockpit.dbus("org.opensuse.YaST2.Network");
-        client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetConnections")
-                .then(result => resolve(result[0].map(buildConnection)))
-                .catch(reject);
-    });
-};
+export class NetworkClient {
+    /**
+     * Returns the list of available connection configurations
+     *
+     * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
+     */
+    getConnections() {
+        return new Promise((resolve, reject) => {
+            const client = cockpit.dbus("org.opensuse.YaST2.Network");
+            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetConnections")
+                    .then(result => resolve(result[0].map(buildConnection)))
+                    .catch(reject);
+        });
+    }
 
-/**
- * Returns the list of available interfaces
- *
- * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
- */
-const listInterfaces = () => {
-    return new Promise((resolve, reject) => {
-        const client = cockpit.dbus("org.opensuse.YaST2.Network");
-        client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetInterfaces")
-                .then(result => resolve(result[0].map(buildInterface)))
-                .catch(reject);
-    });
-};
-
-export default {
-    listConnections,
-    listInterfaces
-};
+    /**
+     * Returns the list of available interfaces
+     *
+     * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
+     */
+    getInterfaces() {
+        return new Promise((resolve, reject) => {
+            const client = cockpit.dbus("org.opensuse.YaST2.Network");
+            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetInterfaces")
+                    .then(result => resolve(result[0].map(buildInterface)))
+                    .catch(reject);
+        });
+    }
+}

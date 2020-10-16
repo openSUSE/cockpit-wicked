@@ -21,20 +21,22 @@
 
 import React, { useEffect, useState } from 'react';
 import InterfacesList from './components/InterfacesList';
-import network from './lib/network';
+import { NetworkClient } from './lib/network';
+
+const client = new NetworkClient();
 
 export const Application = () => {
     const [interfaces, setInterfaces] = useState(null);
     const [connections, setConnections] = useState(null);
 
     useEffect(() => {
-        network.listInterfaces()
+        client.getInterfaces()
                 .then(result => setInterfaces(result))
                 .catch(console.error);
     }, []);
 
     useEffect(() => {
-        network.listConnections()
+        client.getConnections()
                 .then(result => setConnections(result))
                 .catch(console.error);
     }, []);

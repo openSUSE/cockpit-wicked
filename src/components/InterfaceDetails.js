@@ -21,8 +21,18 @@
 
 import cockpit from "cockpit";
 import React from 'react';
+import StartMode from './StartMode';
 
 const _ = cockpit.gettext;
+
+const startMode = (connection) => {
+    return (
+        <>
+            <dt>{_("Start")}</dt>
+            <dd><StartMode connection={connection} /></dd>
+        </>
+    );
+};
 
 const InterfaceDetails = ({ iface, connection }) => {
     return (
@@ -31,6 +41,7 @@ const InterfaceDetails = ({ iface, connection }) => {
             <dd>{iface.type}</dd>
             <dt>{_("MAC")}</dt>
             <dd>{iface.mac}</dd>
+            { connection && startMode(connection) }
         </dl>
     );
 };

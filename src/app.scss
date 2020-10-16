@@ -1,3 +1,28 @@
 p {
     font-weight: bold;
 }
+
+/**
+ *  Place details definition list into a grid, with PF4-like style
+ *
+ *  Borrowed from cockpit-podman,
+ *  https://github.com/cockpit-project/cockpit-podman/blob/75fc8b57fa7a46b0cc74d2007e911fa64e23d6d4/src/podman.scss#L220-L238
+ */
+.details-list {
+  display: grid;
+  grid-template-columns: [label] auto [value] 1fr;
+  grid-gap: var(--pf-global--spacer--sm) var(--pf-global--spacer--lg);
+  align-items: baseline;
+  justify-content: left;
+
+  > dt {
+    grid-column: label;
+    font-size: var(--pf-global--FontSize--sm);
+    font-weight: var(--pf-global--FontWeight--semi-bold);
+  }
+
+  > dd {
+    grid-column: value;
+    font-size: var(--pf-global--FontSize--md);
+  }
+}

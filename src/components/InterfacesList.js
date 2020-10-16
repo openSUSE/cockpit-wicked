@@ -21,8 +21,9 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect } from 'react';
-import { Card, CardTitle, CardBody, Text, TextVariants } from '@patternfly/react-core';
+import { Card, CardTitle, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
+import InterfaceDetails from "./InterfaceDetails";
 
 const _ = cockpit.gettext;
 
@@ -61,10 +62,9 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 list.push(
                     {
                         parent: idx * 2,
-                        fullWidth: true,
                         cells: [
                             {
-                                title: <Text component={TextVariants.blockquote}>Details of {i.name}</Text>
+                                title: <InterfaceDetails iface={i} connection={conn} />
                             }
                         ]
                     }

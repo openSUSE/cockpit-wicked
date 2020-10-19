@@ -42,8 +42,11 @@ const InterfacesTab = () => {
                 .catch(console.error);
     }, [dispatch]);
 
+    const interfacesList = interfaces ? Object.values(interfaces) : [];
+    const connectionsList = connections ? Object.values(connections) : [];
+
     return (
-        <InterfacesList interfaces={interfaces} connections={connections} />
+        <InterfacesList interfaces={interfacesList} connections={connectionsList} />
     );
 };
 

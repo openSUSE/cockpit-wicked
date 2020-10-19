@@ -29,11 +29,17 @@ const NetworkDispatchContext = React.createContext();
 function networkReducer(state, action) {
     switch (action.type) {
     case 'set_interfaces': {
-        return { ...state, interfaces: action.payload };
+        const interfaces = action.payload.reduce((all, iface) => {
+            return { ...all, [iface.name]: iface };
+        }, {});
+        return { ...state, interfaces };
     }
 
     case 'set_connections': {
-        return { ...state, connections: action.payload };
+        const connections = action.payload.reduce((all, conn) => {
+            return { ...all, [conn.id]: conn };
+        }, {});
+        return { ...state, connections };
     }
 
     default: {

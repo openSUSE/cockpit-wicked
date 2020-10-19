@@ -21,6 +21,7 @@
 
 import React, { useState } from 'react';
 import { Modal, ModalVariant, Button, FormSelect, FormSelectOption } from '@patternfly/react-core';
+import { useNetworkDispatch } from '../NetworkContext';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
@@ -42,6 +43,12 @@ const startModeOptions = Object.keys(START_MODES).map(key => {
 const StartMode = ({ connection }) => {
     const [modal, setModal] = useState(false);
     const [startMode, setStartMode] = useState(connection.startMode);
+    const dispatch = useNetworkDispatch();
+
+    const updateConnection = () => {
+        dispatch({ type: 'update_connection', payload: { id: connection.id, changes: { startMode: startMode } } });
+        setModal(false);
+    }
 
     return (
         <>
@@ -51,7 +58,7 @@ const StartMode = ({ connection }) => {
                 title={_("Start Mode")}
                 isOpen={modal}
                 actions={[
-                    <Button key="confirm" variant="primary" onClick={() => setModal(false)}>
+                    <Button key="confirm" variant="primary" onClick={updateConnection}>
                         {_("Change")}
                     </Button>,
                     <Button key="cancel" variant="link" onClick={() => setModal(false)}>

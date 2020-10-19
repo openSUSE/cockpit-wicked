@@ -35,17 +35,23 @@ const columns = [
     { title: _("Sending/Receiving") },
 ];
 
-const onCollapseFn = (rows, setRows) => (event, rowKey, isOpen) => {
+// TODO: move this fn back to the component
+const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, isOpen) => {
     const clonedRows = [...rows];
 
     clonedRows[rowKey].isOpen = isOpen;
+    if (isOpen) {
+        if (!openRows.includes(rowKey)) setOpenRows([...openRows, rowKey]);
+    } else {
+        setOpenRows(openRows.filter(k => k == rowKey))
+    }
     setRows(clonedRows);
 };
 
-const buildRows = (interfaces, connections, displayOnly = []) => {
+const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
     let parentId = 0;
 
-    return interfaces.reduce((list, i) => {
+    return interfaces.reduce((list, i, idx) => {
         if (displayOnly.length && !displayOnly.includes(i.type)) {
             return list;
         }
@@ -54,7 +60,7 @@ const buildRows = (interfaces, connections, displayOnly = []) => {
 
         list.push(
             {
-                isOpen: false,
+                isOpen: idx in openRows,
                 cells: [
                     i.name,
                     i.type,
@@ -84,6 +90,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const [rows, setRows] = useState([]);
     const [types, setTypes] = useState([]);
     const [filterByType, setFilterByType] = useState([]);
+    const [openRows, setOpenRows] = useState([]);
 
     useEffect(() => {
         const uniqueTypes = [...new Set(interfaces.map((i) => i.type))];
@@ -91,7 +98,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     }, [interfaces]);
 
     useEffect(() => {
-        const rows = buildRows(interfaces, connections, filterByType);
+        const rows = buildRows(interfaces, connections, filterByType, openRows);
         setRows(rows);
     }, [interfaces, connections, filterByType]);
 
@@ -110,7 +117,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 <Table
                     aria-label="Networking interfaces"
                     variant={TableVariant.compact}
-                    onCollapse={onCollapseFn(rows, setRows)}
+                    onCollapse={onCollapseFn(rows, setRows, openRows, setOpenRows)}
                     cells={columns}
                     rows={rows}
                 >

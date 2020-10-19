@@ -22,6 +22,9 @@
 import React, { useState } from 'react';
 import InterfacesTab from './components/InterfacesTab';
 import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
+import cockpit from 'cockpit';
+
+const _ = cockpit.gettext;
 
 export const Application = () => {
     const [activeTabKey, setActiveTabKey] = useState(0);
@@ -33,7 +36,7 @@ export const Application = () => {
     return (
         <div>
             <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-                <Tab eventKey={0} title={<TabTitleText>Interfaces</TabTitleText>}>
+                <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
                     <InterfacesTab />
                 </Tab>
             </Tabs>

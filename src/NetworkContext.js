@@ -58,7 +58,7 @@ function networkReducer(state, action) {
 function useNetworkState() {
     const context = React.useContext(NetworkStateContext);
     if (!context) {
-        throw new Error('useNetwork must be used within a NetworkProvider');
+        throw new Error('useNetworkState must be used within a NetworkProvider');
     }
 
     return context;
@@ -67,7 +67,7 @@ function useNetworkState() {
 function useNetworkDispatch() {
     const context = React.useContext(NetworkDispatchContext);
     if (!context) {
-        throw new Error('useNetwork must be used within a NetworkProvider');
+        throw new Error('useNetworkDispatch must be used within a NetworkProvider');
     }
 
     return context;

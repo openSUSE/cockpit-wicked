@@ -19,31 +19,28 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import InterfacesList from './InterfacesList';
+import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
 import { NetworkClient } from '../lib/network';
 
 const client = new NetworkClient();
 
 const InterfacesTab = () => {
-    const [interfaces, setInterfaces] = useState(null);
-    const [connections, setConnections] = useState(null);
+    const dispatch = useNetworkDispatch();
+    const { interfaces, connections } = useNetworkState();
 
     useEffect(() => {
         client.getInterfaces()
-                .then(setInterfaces)
+                .then(result => dispatch({ type: 'set_interfaces', payload: result }))
                 .catch(console.error);
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         client.getConnections()
-                .then(setConnections)
+                .then(result => dispatch({ type: 'set_connections', payload: result }))
                 .catch(console.error);
-    }, []);
-
-    if (!interfaces || !connections) {
-        return <div>Loading...</div>;
-    }
+    }, [dispatch]);
 
     return (
         <InterfacesList interfaces={interfaces} connections={connections} />

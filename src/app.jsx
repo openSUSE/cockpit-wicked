@@ -22,6 +22,7 @@
 import React, { useState } from 'react';
 import InterfacesTab from './components/InterfacesTab';
 import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
+import { NetworkProvider } from './NetworkContext';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
@@ -34,12 +35,12 @@ export const Application = () => {
     };
 
     return (
-        <div>
+        <NetworkProvider>
             <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
                 <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
                     <InterfacesTab />
                 </Tab>
             </Tabs>
-        </div>
+        </NetworkProvider>
     );
 };

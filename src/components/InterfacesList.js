@@ -40,8 +40,8 @@ const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, i
     const clonedRows = [...rows];
 
     clonedRows[rowKey].isOpen = isOpen;
-    if (isOpen) {
-        if (!openRows.includes(rowKey)) setOpenRows([...openRows, rowKey]);
+    if (isOpen && !openRows.includes(rowKey)) {
+        setOpenRows([...openRows, rowKey]);
     } else {
         setOpenRows(openRows.filter(k => k == rowKey))
     }
@@ -51,7 +51,7 @@ const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, i
 const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
     let parentId = 0;
 
-    return interfaces.reduce((list, i, idx) => {
+    return interfaces.reduce((list, i) => {
         if (displayOnly.length && !displayOnly.includes(i.type)) {
             return list;
         }
@@ -60,7 +60,7 @@ const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => 
 
         list.push(
             {
-                isOpen: idx in openRows,
+                isOpen: openRows.includes(parentId),
                 cells: [
                     i.name,
                     i.type,
@@ -102,13 +102,17 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         setRows(rows);
     }, [interfaces, connections, filterByType]);
 
+
     return (
         <Card>
             <CardHeader>
                 <CardActions>
                     <TypesFilter
                         types={types}
-                        onSelect={(selectedTypes) => setFilterByType(selectedTypes)}
+                        onSelect={(selectedTypes) => {
+                          setOpenRows([]);
+                          setFilterByType(selectedTypes)
+                        }}
                     />
                 </CardActions>
                 <CardTitle><h2>{_("Interfaces")}</h2></CardTitle>

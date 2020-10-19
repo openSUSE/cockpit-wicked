@@ -19,33 +19,24 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useEffect, useState } from 'react';
-import InterfacesList from './components/InterfacesList';
-import { NetworkClient } from './lib/network';
-
-const client = new NetworkClient();
+import React, { useState } from 'react';
+import InterfacesTab from './components/InterfacesTab';
+import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
 
 export const Application = () => {
-    const [interfaces, setInterfaces] = useState(null);
-    const [connections, setConnections] = useState(null);
+    const [activeTabKey, setActiveTabKey] = useState(0);
 
-    useEffect(() => {
-        client.getInterfaces()
-                .then(result => setInterfaces(result))
-                .catch(console.error);
-    }, []);
-
-    useEffect(() => {
-        client.getConnections()
-                .then(result => setConnections(result))
-                .catch(console.error);
-    }, []);
-
-    if (!interfaces || !connections) {
-        return <div>Loading...</div>;
-    }
+    const handleTabClick = (event, tabIndex) => {
+        setActiveTabKey(tabIndex);
+    };
 
     return (
-        <InterfacesList interfaces={interfaces} connections={connections} />
+        <div>
+            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                <Tab eventKey={0} title={<TabTitleText>Interfaces</TabTitleText>}>
+                    <InterfacesTab />
+                </Tab>
+            </Tabs>
+        </div>
     );
 };

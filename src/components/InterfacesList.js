@@ -24,6 +24,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardActions, CardTitle, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
 import InterfaceDetails from "./InterfaceDetails";
+import BootProto from './BootProto';
 import TypesFilter from "./TypesFilter";
 
 const _ = cockpit.gettext;
@@ -48,13 +49,6 @@ const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, i
     setRows(clonedRows);
 };
 
-const ipAddress = (conn) => {
-    return !conn
-        ? _("Not configured")
-        : (conn.bootProto !== "static")
-            ? conn.bootProto : conn.iP;
-};
-
 const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
     let parentId = 0;
 
@@ -71,7 +65,7 @@ const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => 
                 cells: [
                     i.name,
                     i.type,
-                    ipAddress(conn),
+                    <><BootProto connection={conn} /></>,
                     "0/0",
                 ]
             }

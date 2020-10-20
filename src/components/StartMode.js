@@ -46,7 +46,7 @@ const StartMode = ({ connection }) => {
     const dispatch = useNetworkDispatch();
 
     const updateConnection = () => {
-        dispatch({ type: 'update_connection', payload: { id: connection.id, changes: { startMode: startMode } } });
+        dispatch({ type: 'update_connection', payload: { name: connection.name, changes: { startMode: startMode } } });
         setModal(false);
     };
 

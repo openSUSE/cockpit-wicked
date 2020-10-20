@@ -48,6 +48,13 @@ const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, i
     setRows(clonedRows);
 };
 
+const ipAddress = (conn) => {
+    return !conn
+        ? _("Not configured")
+        : (conn.bootProto !== "static")
+            ? conn.bootProto : conn.iP;
+};
+
 const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
     let parentId = 0;
 
@@ -64,7 +71,7 @@ const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => 
                 cells: [
                     i.name,
                     i.type,
-                    conn ? _("Configured") : _("Not configured"),
+                    ipAddress(conn),
                     "0/0",
                 ]
             }

@@ -34,13 +34,21 @@ const startMode = (connection) => {
     );
 };
 
+const macAddress = (iface) => {
+    return (
+        <>
+            <dt>{_("MAC")}</dt>
+            <dd>{iface.mac}</dd>
+        </>
+    );
+};
+
 const InterfaceDetails = ({ iface, connection }) => {
     return (
         <dl className="details-list">
             <dt>{_("Type")}</dt>
             <dd>{iface.type}</dd>
-            <dt>{_("MAC")}</dt>
-            <dd>{iface.mac}</dd>
+            { iface.mac && macAddress(iface) }
             { connection && startMode(connection) }
         </dl>
     );

@@ -46,7 +46,7 @@ function networkReducer(state, action) {
         const { name, changes } = action.payload;
         const { connections } = state;
         const conn = connections[name];
-        return { ...state, connections: { ...connections, [name]: { ...conn, ...changes } } };
+        return { ...state, connections: { ...connections, [name]: { ...conn, ...changes, modified: true } } };
     }
 
     default: {

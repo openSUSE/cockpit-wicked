@@ -25,6 +25,7 @@ import { Card, CardHeader, CardActions, CardTitle, CardBody } from '@patternfly/
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
 import InterfaceDetails from "./InterfaceDetails";
 import TypesFilter from "./TypesFilter";
+import SaveChanges from './SaveChanges';
 
 const _ = cockpit.gettext;
 
@@ -121,6 +122,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                           setFilterByType(selectedTypes)
                         }}
                     />
+                    <SaveChanges />
                 </CardActions>
                 <CardTitle><h2>{_("Interfaces")}</h2></CardTitle>
             </CardHeader>

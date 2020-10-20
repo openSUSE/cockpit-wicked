@@ -21,11 +21,32 @@
 
 import cockpit from 'cockpit';
 
-const transformDBusData = (data) => {
+const dataFromDBus = (data) => {
     return Object.keys(data).reduce((obj, key) => {
         const newKey = key.charAt(0).toLowerCase() + key.slice(1);
         return { ...obj, [newKey]: data[key].v };
     }, {});
+};
+
+const dataToDBus = (data) => {
+    return Object.keys(data).reduce((obj, key) => {
+        const value = data[key];
+        const newValue = valueVariant(value);
+        const newKey = key.charAt(0).toUpperCase() + key.slice(1);
+        return { ...obj, [newKey]: newValue };
+    }, {});
+};
+
+const valueVariant = (value) => {
+    if (typeof value === 'object' && value !== null) {
+        return cockpit.variant('a{sv}', dataToDBus(value));
+    } else if (typeof value === 'number') {
+        return cockpit.variant('i', value);
+    } else if (typeof value === 'boolean') {
+        return cockpit.variant('b', value);
+    } else {
+        return cockpit.variant('s', value);
+    }
 };
 
 export class NetworkClient {
@@ -38,7 +59,7 @@ export class NetworkClient {
         return new Promise((resolve, reject) => {
             const client = cockpit.dbus("org.opensuse.YaST2.Network");
             client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetConnections")
-                    .then(result => resolve(result[0].map(transformDBusData)))
+                    .then(result => resolve(result[0].map(dataFromDBus)))
                     .catch(reject);
         });
     }
@@ -52,7 +73,24 @@ export class NetworkClient {
         return new Promise((resolve, reject) => {
             const client = cockpit.dbus("org.opensuse.YaST2.Network");
             client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetInterfaces")
-                    .then(result => resolve(result[0].map(transformDBusData)))
+                    .then(result => resolve(result[0].map(dataFromDBus)))
+                    .catch(reject);
+        });
+    }
+
+    /**
+     * Update connections
+     *
+     * @param {Array<Object>} connections - List of connections to update
+     * @returns {Promise<Array|Error>} Resolves to an array of connection objects in case of success
+     */
+    updateConnections(connections) {
+        const dbusConnections = Object.values(connections).map(dataToDBus);
+
+        return new Promise((resolve, reject) => {
+            const client = cockpit.dbus("org.opensuse.YaST2.Network");
+            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "UpdateConnections", [dbusConnections])
+                    .then(result => resolve(result[0].map(dataFromDBus)))
                     .catch(reject);
         });
     }

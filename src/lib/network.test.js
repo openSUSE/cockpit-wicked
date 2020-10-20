@@ -31,7 +31,7 @@ describe("NetworkClient", () => {
                 const conn = data[0];
                 expect(conn).toEqual(
                     { id: 1, description: "Ethernet Card #1", name: "eth0" }
-                )
+                );
             });
         });
     });
@@ -43,7 +43,7 @@ describe("NetworkClient", () => {
                 const conn = data[0];
                 expect(conn).toEqual(
                     { name: "eth0", type: "eth" }
-                )
+                );
             });
         });
     });

@@ -21,8 +21,10 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect } from 'react';
-import { Card, CardTitle, CardBody, Text, TextVariants } from '@patternfly/react-core';
+import { Card, CardHeader, CardActions, CardTitle, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
+import InterfaceDetails from "./InterfaceDetails";
+import TypesFilter from "./TypesFilter";
 
 const _ = cockpit.gettext;
 
@@ -33,55 +35,100 @@ const columns = [
     { title: _("Sending/Receiving") },
 ];
 
-const onCollapseFn = (rows, setRows) => (event, rowKey, isOpen) => {
+// TODO: move this fn back to the component
+const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, isOpen) => {
     const clonedRows = [...rows];
 
     clonedRows[rowKey].isOpen = isOpen;
+    if (isOpen && !openRows.includes(rowKey)) {
+        setOpenRows([...openRows, rowKey]);
+    } else {
+        setOpenRows(openRows.filter(k => k == rowKey))
+    }
     setRows(clonedRows);
+};
+
+const ipAddress = (conn) => {
+    return !conn
+        ? _("Not configured")
+        : (conn.bootProto !== "static")
+            ? conn.bootProto : conn.iP;
+};
+
+const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
+    let parentId = 0;
+
+    return interfaces.reduce((list, i) => {
+        if (displayOnly.length && !displayOnly.includes(i.type)) {
+            return list;
+        }
+
+        const conn = connections.find(c => i.name == c.name);
+
+        list.push(
+            {
+                isOpen: openRows.includes(parentId),
+                cells: [
+                    i.name,
+                    i.type,
+                    ipAddress(conn),
+                    "0/0",
+                ]
+            }
+        );
+        list.push(
+            {
+                parent: parentId,
+                cells: [
+                    {
+                        title: <InterfaceDetails iface={i} connection={conn} />
+                    }
+                ]
+            }
+        );
+
+        parentId += 2;
+
+        return list;
+    }, []);
 };
 
 const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const [rows, setRows] = useState([]);
+    const [types, setTypes] = useState([]);
+    const [filterByType, setFilterByType] = useState([]);
+    const [openRows, setOpenRows] = useState([]);
 
     useEffect(() => {
-        setRows(
-            interfaces.reduce((list, i, idx) => {
-                const conn = connections.find(c => i.name == c.name);
-                list.push(
-                    {
-                        isOpen: false,
-                        cells: [
-                            i.name,
-                            i.type,
-                            conn ? _("Configured") : _("Not configured"),
-                            "0/0",
-                        ]
-                    }
-                );
-                list.push(
-                    {
-                        parent: idx * 2,
-                        fullWidth: true,
-                        cells: [
-                            {
-                                title: <Text component={TextVariants.blockquote}>Details of {i.name}</Text>
-                            }
-                        ]
-                    }
-                );
-                return list;
-            }, [])
-        );
-    }, [interfaces, connections]);
+        const uniqueTypes = [...new Set(interfaces.map((i) => i.type))];
+        setTypes(uniqueTypes);
+    }, [interfaces]);
+
+    useEffect(() => {
+        const rows = buildRows(interfaces, connections, filterByType, openRows);
+        setRows(rows);
+    }, [interfaces, connections, filterByType]);
+
 
     return (
         <Card>
-            <CardTitle>{_("Interfaces")}</CardTitle>
+            <CardHeader>
+                <CardActions>
+                    <TypesFilter
+                        types={types}
+                        onSelect={(selectedTypes) => {
+                          setOpenRows([]);
+                          setFilterByType(selectedTypes)
+                        }}
+                    />
+                </CardActions>
+                <CardTitle><h2>{_("Interfaces")}</h2></CardTitle>
+            </CardHeader>
             <CardBody>
                 <Table
                     aria-label="Networking interfaces"
                     variant={TableVariant.compact}
-                    onCollapse={onCollapseFn(rows, setRows)}
+                    onCollapse={onCollapseFn(rows, setRows, openRows, setOpenRows)}
                     cells={columns}
                     rows={rows}
                 >

@@ -19,28 +19,39 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState } from 'react';
-import InterfacesTab from './components/InterfacesTab';
-import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
-import { NetworkProvider } from './NetworkContext';
-import cockpit from 'cockpit';
+import cockpit from "cockpit";
+import React from 'react';
+import StartMode from './StartMode';
 
 const _ = cockpit.gettext;
 
-export const Application = () => {
-    const [activeTabKey, setActiveTabKey] = useState(0);
-
-    const handleTabClick = (event, tabIndex) => {
-        setActiveTabKey(tabIndex);
-    };
-
+const startMode = (connection) => {
     return (
-        <NetworkProvider>
-            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-                <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
-                    <InterfacesTab />
-                </Tab>
-            </Tabs>
-        </NetworkProvider>
+        <>
+            <dt>{_("Start")}</dt>
+            <dd><StartMode connection={connection} /></dd>
+        </>
     );
 };
+
+const macAddress = (iface) => {
+    return (
+        <>
+            <dt>{_("MAC")}</dt>
+            <dd>{iface.mac}</dd>
+        </>
+    );
+};
+
+const InterfaceDetails = ({ iface, connection }) => {
+    return (
+        <dl className="details-list">
+            <dt>{_("Type")}</dt>
+            <dd>{iface.type}</dd>
+            { iface.mac && macAddress(iface) }
+            { connection && startMode(connection) }
+        </dl>
+    );
+};
+
+export default InterfaceDetails;

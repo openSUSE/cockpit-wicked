@@ -32,6 +32,7 @@ const InterfacesTab = () => {
     const dispatch = useNetworkDispatch();
     const { interfaces, connections } = useNetworkState();
 
+    // TODO: Only 1 call should be needed to get all this information
     useEffect(() => {
         client.getInterfaces()
                 .then(result => dispatch({ type: 'set_interfaces', payload: result }))
@@ -43,6 +44,12 @@ const InterfacesTab = () => {
                 .then(result => dispatch({ type: 'set_connections', payload: result }))
                 .catch(console.error);
     }, [dispatch]);
+
+    useEffect(() => {
+        client.getRoutes()
+                .then(result => dispatch({ type: 'set_routes', payload: result }))
+                .catch(console.error);
+    }, [dispatch])
 
     const interfacesList = interfaces ? Object.values(interfaces) : [];
     const connectionsList = connections ? Object.values(connections) : [];

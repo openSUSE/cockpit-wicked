@@ -49,6 +49,7 @@ const valueVariant = (value) => {
     }
 };
 
+// TODO: reduce duplication in get* methods
 export class NetworkClient {
     /**
      * Returns the list of available connection configurations
@@ -78,6 +79,15 @@ export class NetworkClient {
         });
     }
 
+    getRoutes() {
+        return new Promise((resolve, reject) => {
+            const client = cockpit.dbus("org.opensuse.YaST2.Network");
+            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetRoutes")
+                    .then(result => resolve(result[0].map(dataFromDBus)))
+                    .catch(reject);
+        });
+    }
+
     /**
      * Update connections
      *
@@ -90,6 +100,17 @@ export class NetworkClient {
         return new Promise((resolve, reject) => {
             const client = cockpit.dbus("org.opensuse.YaST2.Network");
             client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "UpdateConnections", [dbusConnections])
+                    .then(result => resolve(result[0].map(dataFromDBus)))
+                    .catch(reject);
+        });
+    }
+
+    updateRoutes(routes) {
+        const dbusRoutes = routes.map(dataToDBus);
+
+        return new Promise((resolve, reject) => {
+            const client = cockpit.dbus("org.opensuse.YaST2.Network");
+            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "UpdateRoutes", [dbusRoutes])
                     .then(result => resolve(result[0].map(dataFromDBus)))
                     .catch(reject);
         });

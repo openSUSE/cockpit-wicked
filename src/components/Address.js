@@ -23,39 +23,30 @@ import React, { useState, useEffect } from 'react';
 import { Modal, ModalVariant, Button, FormSelect, FormSelectOption, TextInputBase } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant } from '@patternfly/react-table'
 import { useNetworkDispatch } from '../NetworkContext';
+import BootProtoSelector from './BootProtoSelector'
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const BOOT_PROTOCOL_MODES = {
-    none:    _("None"),
-    static:  _("Static"),
-    dhcp:    _("DHCP")
-};
-
-const bootProtocolOptions = Object.keys(BOOT_PROTOCOL_MODES).map(key => {
-    return { value: key, label: BOOT_PROTOCOL_MODES[key] };
-});
-
-const linkText = (connection) => {
-  if (!connection) {
-      return _("Not configured");
-  }
-
-  if (connection.bootProto === "static") {
-    return connection.iP;
-  }
-
-  return BOOT_PROTOCOL_MODES[connection.bootProto];
-};
-
-const BootProto = ({ connection }) => {
+const Address = ({ connection }) => {
     const [modal, setModal] = useState(false);
     const [bootProto, setBootProto] = useState(undefined);
     const [ip, setIp] = useState(connection?.ip || "");
     const [netmask, setNetmask] = useState(connection?.netmask || "");
 
     const dispatch = useNetworkDispatch();
+
+    const linkText = (connection) => {
+      if (!connection) {
+          return _("Not configured");
+      }
+
+      if (connection.bootProto === "static") {
+        return connection.iP;
+      }
+
+      return connection.bootProto;
+    };
 
     const updateConnection = () => {
         dispatch({
@@ -94,8 +85,9 @@ const BootProto = ({ connection }) => {
     };
 
     useEffect(() => {
-        setBootProto(connection?.bootProto)
-    }, [connection]);
+      setBootProto(connection?.bootProto);
+      setIp(connection?.ip);
+    }, [connection])
 
     return (
         <>
@@ -113,11 +105,7 @@ const BootProto = ({ connection }) => {
                     </Button>
                 ]}
             >
-                <FormSelect value={bootProto} onChange={setBootProto} id="bootProto">
-                    {bootProtocolOptions.map((option, index) => (
-                        <FormSelectOption key={index} value={option.value} label={option.label} />
-                    ))}
-                </FormSelect>
+                <BootProtoSelector bootProto={bootProto} onChange={setBootProto} />
 
                 {bootProto === "static" && renderAddressFields()}
             </Modal>
@@ -125,4 +113,4 @@ const BootProto = ({ connection }) => {
     );
 };
 
-export default BootProto;
+export default Address;

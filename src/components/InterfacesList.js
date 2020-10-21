@@ -24,7 +24,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardActions, CardTitle, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
 import InterfaceDetails from "./InterfaceDetails";
-import BootProto from './BootProto';
+import Address from './Address';
 import TypesFilter from "./TypesFilter";
 
 const _ = cockpit.gettext;
@@ -32,7 +32,7 @@ const _ = cockpit.gettext;
 const columns = [
     { title: _("Name"), cellFormatters: [expandable] },
     { title: _("Type") },
-    { title: _("IP address") },
+    { title: _("Address") },
     { title: _("Sending/Receiving") },
 ];
 
@@ -65,7 +65,7 @@ const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => 
                 cells: [
                     i.name,
                     i.type,
-                    <><BootProto connection={conn} /></>,
+                    <><Address connection={conn} /></>,
                     "0/0",
                 ]
             }

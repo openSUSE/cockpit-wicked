@@ -39,10 +39,10 @@ const bootProtocolOptions = Object.keys(BOOT_PROTOCOL_MODES).map(key => {
 
 const linkText = (connection) => {
   if (!connection) {
-      return _("Not configured") ;
+      return _("Not configured");
   }
 
-  if (connection.iP) {
+  if (connection.bootProto === "static") {
     return connection.iP;
   }
 

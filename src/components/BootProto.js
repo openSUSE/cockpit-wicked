@@ -102,7 +102,7 @@ const BootProto = ({ connection }) => {
             <a href="#" onClick={() => setModal(true)}>{linkText(connection)}</a>
             <Modal
                 variant={ModalVariant.small}
-                title={_("Boot Protocol")}
+                title={_("Address")}
                 isOpen={modal}
                 actions={[
                     <Button key="confirm" variant="primary" onClick={updateConnection}>

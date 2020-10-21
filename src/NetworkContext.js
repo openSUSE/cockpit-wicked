@@ -37,16 +37,16 @@ function networkReducer(state, action) {
 
     case 'set_connections': {
         const connections = action.payload.reduce((all, conn) => {
-            return { ...all, [conn.id]: conn };
+            return { ...all, [conn.name]: conn };
         }, {});
         return { ...state, connections };
     }
 
     case 'update_connection': {
-        const { id, changes } = action.payload;
+        const { name, changes } = action.payload;
         const { connections } = state;
-        const conn = connections[id];
-        return { ...state, connections: { ...connections, [id]: { ...conn, ...changes } } };
+        const conn = connections[name];
+        return { ...state, connections: { ...connections, [name]: { ...conn, ...changes, modified: true } } };
     }
 
     default: {

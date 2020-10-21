@@ -21,7 +21,9 @@
 
 import React, { useEffect } from 'react';
 import InterfacesList from './InterfacesList';
+import SaveChanges from './SaveChanges';
 import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
+import { Button, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { NetworkClient } from '../lib/network';
 
 const client = new NetworkClient();
@@ -46,7 +48,19 @@ const InterfacesTab = () => {
     const connectionsList = connections ? Object.values(connections) : [];
 
     return (
-        <InterfacesList interfaces={interfacesList} connections={connectionsList} />
+        <>
+            <Toolbar id="interfaces-toolbar">
+                <ToolbarContent>
+                    <ToolbarItem>
+                        <Button variant="secondary">Add Bridge</Button>
+                    </ToolbarItem>
+                    <ToolbarItem>
+                        <SaveChanges />
+                    </ToolbarItem>
+                </ToolbarContent>
+            </Toolbar>
+            <InterfacesList interfaces={interfacesList} connections={connectionsList} />
+        </>
     );
 };
 

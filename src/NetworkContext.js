@@ -46,6 +46,12 @@ function networkReducer(state, action) {
         return { ...state, routes: action.payload };
     }
 
+    case 'add_interface': {
+        const { interfaces } = state;
+        const { name } = action.payload;
+        return { ...state, interfaces: { ...interfaces, [name]: action.payload } };
+    }
+
     case 'update_connection': {
         const { name, changes } = action.payload;
         const { connections } = state;

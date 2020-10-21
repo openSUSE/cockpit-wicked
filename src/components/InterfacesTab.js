@@ -21,6 +21,7 @@
 
 import React, { useEffect } from 'react';
 import InterfacesList from './InterfacesList';
+import AddBridge from './AddBridge';
 import SaveChanges from './SaveChanges';
 import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
 import { Button, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
@@ -53,7 +54,7 @@ const InterfacesTab = () => {
             <Toolbar id="interfaces-toolbar">
                 <ToolbarContent>
                     <ToolbarItem>
-                        <Button variant="secondary">Add Bridge</Button>
+                        <AddBridge />
                     </ToolbarItem>
                     <ToolbarItem>
                         <SaveChanges />

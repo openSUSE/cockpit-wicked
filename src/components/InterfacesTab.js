@@ -24,7 +24,7 @@ import InterfacesList from './InterfacesList';
 import AddBridge from './AddBridge';
 import SaveChanges from './SaveChanges';
 import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
-import { Button, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { NetworkClient } from '../lib/network';
 
 const client = new NetworkClient();
@@ -43,6 +43,12 @@ const InterfacesTab = () => {
     useEffect(() => {
         client.getConnections()
                 .then(result => dispatch({ type: 'set_connections', payload: result }))
+                .catch(console.error);
+    }, [dispatch]);
+
+    useEffect(() => {
+        client.getRoutes()
+                .then(result => dispatch({ type: 'set_routes', payload: result }))
                 .catch(console.error);
     }, [dispatch]);
 

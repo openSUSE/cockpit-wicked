@@ -36,7 +36,7 @@ describe("InterfacesList", () => {
     test.skip("shows the interfaces name", () => {
         render(<InterfacesList interfaces={interfaces} connections={connections} />);
 
-        expect(screen.getByText("eth0").toBeInTheDocument());
+        expect(screen.getByText("eth0")).toBeInTheDocument();
     });
 
     test.skip("shows the interfaces IP", () => {

@@ -20,6 +20,7 @@
  */
 
 import startModeEnum from './startMode';
+import interfaceType from './interfaceType';
 
 /**
  * Returns an object representing a connection

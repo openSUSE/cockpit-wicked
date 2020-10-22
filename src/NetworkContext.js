@@ -20,6 +20,7 @@
  */
 
 import React from 'react';
+import { createConnection, createInterface } from './lib/model';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
@@ -48,14 +49,14 @@ function networkReducer(state, action) {
     switch (action.type) {
     case SET_INTERFACES: {
         const interfaces = action.payload.reduce((all, iface) => {
-            return { ...all, [iface.name]: iface };
+            return { ...all, [iface.name]: createInterface(iface) };
         }, {});
         return { ...state, interfaces };
     }
 
     case SET_CONNECTIONS: {
         const connections = action.payload.reduce((all, conn) => {
-            return { ...all, [conn.name]: conn };
+            return { ...all, [conn.name]: createConnection(conn) };
         }, {});
         return { ...state, connections };
     }
@@ -66,8 +67,8 @@ function networkReducer(state, action) {
 
     case ADD_CONNECTION: {
         const { interfaces } = state;
-        const { name } = action.payload;
-        return { ...state, interfaces: { ...interfaces, [name]: action.payload } };
+        const conn = createConnection(action.payload);
+        return { ...state, interfaces: { ...interfaces, [conn.name]: conn } };
     }
 
     case UPDATE_CONNECTION: {

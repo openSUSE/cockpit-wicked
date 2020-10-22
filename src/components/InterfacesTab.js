@@ -31,7 +31,10 @@ const client = new NetworkClient();
 
 const InterfacesTab = () => {
     const dispatch = useNetworkDispatch();
-    const { interfaces, connections } = useNetworkState();
+    const { interfaces, connections, routes } = useNetworkState();
+    console.log(interfaces);
+    console.log(connections);
+    console.log(routes);
 
     // TODO: Only 1 call should be needed to get all this information
     useEffect(() => {

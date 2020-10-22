@@ -20,22 +20,20 @@
  */
 
 import React, { useState } from 'react';
-import { Button } from '@patternfly/react-core';
 import BridgeForm from './BridgeForm';
 import cockpit from 'cockpit';
-import { useNetworkState } from '../NetworkContext';
 
 const _ = cockpit.gettext;
 
-const AddBridge = () => {
+const BridgeDetails = ({bridge}) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (
         <>
-            <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Bridge")}</Button>
-            <BridgeForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} />
+            <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
+            <BridgeForm isOpen={isFormOpen} bridge={bridge} onClose={() => setFormOpen(false)}/>
         </>
     );
 };
 
-export default AddBridge;
+export default BridgeDetails;

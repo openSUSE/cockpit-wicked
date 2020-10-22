@@ -43,7 +43,7 @@ const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, i
     if (isOpen && !openRows.includes(rowKey)) {
         setOpenRows([...openRows, rowKey]);
     } else {
-        setOpenRows(openRows.filter(k => k == rowKey))
+        setOpenRows(openRows.filter(k => k == rowKey));
     }
     setRows(clonedRows);
 };
@@ -107,8 +107,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     useEffect(() => {
         const rows = buildRows(interfaces, connections, filterByType, openRows);
         setRows(rows);
-    }, [interfaces, connections, filterByType]);
-
+    }, [interfaces, connections, openRows, filterByType]);
 
     return (
         <Card>
@@ -117,8 +116,8 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     <TypesFilter
                         types={types}
                         onSelect={(selectedTypes) => {
-                          setOpenRows([]);
-                          setFilterByType(selectedTypes)
+                            setOpenRows([]);
+                            setFilterByType(selectedTypes);
                         }}
                     />
                 </CardActions>

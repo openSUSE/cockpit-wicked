@@ -79,6 +79,11 @@ export class NetworkClient {
         });
     }
 
+    /**
+    * Returns the list of configured routes
+    *
+    * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
+    */
     getRoutes() {
         return new Promise((resolve, reject) => {
             const client = cockpit.dbus("org.opensuse.YaST2.Network");
@@ -105,6 +110,12 @@ export class NetworkClient {
         });
     }
 
+    /**
+     * Update routes
+     *
+     * @param {Array<Object>} connections - List of routes to update
+     * @returns {Promise<Array|Error>} Resolves to an array of connection objects in case of success
+     */
     updateRoutes(routes) {
         const dbusRoutes = routes.map(dataToDBus);
 

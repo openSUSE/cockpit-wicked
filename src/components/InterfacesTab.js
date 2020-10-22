@@ -46,12 +46,6 @@ const InterfacesTab = () => {
                 .catch(console.error);
     }, [dispatch]);
 
-    useEffect(() => {
-        client.getRoutes()
-                .then(result => dispatch({ type: actionTypes.SET_ROUTES, payload: result }))
-                .catch(console.error);
-    }, [dispatch]);
-
     const interfacesList = interfaces ? Object.values(interfaces) : [];
     const connectionsList = connections ? Object.values(connections) : [];
 

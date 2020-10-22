@@ -22,7 +22,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@patternfly/react-core';
 import cockpit from "cockpit";
-import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import { NetworkClient } from '../lib/network';
 
 const _ = cockpit.gettext;
@@ -41,7 +41,8 @@ const SaveChanges = () => {
     const applyChanges = () => {
         setStatus('loading');
         client.updateConnections(Object.values(connections))
-                .then(result => dispatch({ type: 'set_connections', payload: result }));
+                .then(result => dispatch(
+                    { type: actionTypes.SET_CONNECTIONS, payload: result }));
     };
 
     return (

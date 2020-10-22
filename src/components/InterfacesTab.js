@@ -23,7 +23,7 @@ import React, { useEffect } from 'react';
 import InterfacesList from './InterfacesList';
 import AddBridge from './AddBridge';
 import SaveChanges from './SaveChanges';
-import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { NetworkClient } from '../lib/network';
 
@@ -36,19 +36,19 @@ const InterfacesTab = () => {
     // TODO: Only 1 call should be needed to get all this information
     useEffect(() => {
         client.getInterfaces()
-                .then(result => dispatch({ type: 'set_interfaces', payload: result }))
+                .then(result => dispatch({ type: actionTypes.SET_INTERFACES, payload: result }))
                 .catch(console.error);
     }, [dispatch]);
 
     useEffect(() => {
         client.getConnections()
-                .then(result => dispatch({ type: 'set_connections', payload: result }))
+                .then(result => dispatch({ type: actionTypes.SET_CONNECTIONS, payload: result }))
                 .catch(console.error);
     }, [dispatch]);
 
     useEffect(() => {
         client.getRoutes()
-                .then(result => dispatch({ type: 'set_routes', payload: result }))
+                .then(result => dispatch({ type: actionTypes.SET_ROUTES, payload: result }))
                 .catch(console.error);
     }, [dispatch]);
 

@@ -21,7 +21,7 @@
 
 import React, { useState } from 'react';
 import { Modal, ModalVariant, Button, FormSelect, FormSelectOption } from '@patternfly/react-core';
-import { useNetworkDispatch } from '../NetworkContext';
+import { useNetworkDispatch, actionTypes } from '../NetworkContext';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
@@ -46,7 +46,10 @@ const StartMode = ({ connection }) => {
     const dispatch = useNetworkDispatch();
 
     const updateConnection = () => {
-        dispatch({ type: 'update_connection', payload: { name: connection.name, changes: { startMode: startMode } } });
+        dispatch({
+            type: actionTypes.UPDATE_CONNECTION,
+            payload: { name: connection.name, changes: { startMode: startMode } }
+        });
         setModal(false);
     };
 

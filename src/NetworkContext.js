@@ -26,33 +26,51 @@ const NetworkDispatchContext = React.createContext();
 
 // TODO: document and test this context.
 
+const SET_INTERFACES = 'set_interfaces';
+const SET_CONNECTIONS = 'set_connections';
+const SET_ROUTES = 'set_routes';
+const ADD_CONNECTION = 'add_connection';
+const UPDATE_CONNECTION = 'update_connection';
+const ADD_ROUTE = 'add_route';
+const UPDATE_ROUTE = 'update_route';
+
+const actionTypes = {
+    SET_INTERFACES,
+    SET_CONNECTIONS,
+    SET_ROUTES,
+    ADD_CONNECTION,
+    UPDATE_CONNECTION,
+    ADD_ROUTE,
+    UPDATE_ROUTE
+};
+
 function networkReducer(state, action) {
     switch (action.type) {
-    case 'set_interfaces': {
+    case SET_INTERFACES: {
         const interfaces = action.payload.reduce((all, iface) => {
             return { ...all, [iface.name]: iface };
         }, {});
         return { ...state, interfaces };
     }
 
-    case 'set_connections': {
+    case SET_CONNECTIONS: {
         const connections = action.payload.reduce((all, conn) => {
             return { ...all, [conn.name]: conn };
         }, {});
         return { ...state, connections };
     }
 
-    case 'set_routes': {
+    case SET_ROUTES: {
         return { ...state, routes: action.payload };
     }
 
-    case 'add_interface': {
+    case ADD_CONNECTION: {
         const { interfaces } = state;
         const { name } = action.payload;
         return { ...state, interfaces: { ...interfaces, [name]: action.payload } };
     }
 
-    case 'update_connection': {
+    case UPDATE_CONNECTION: {
         const { name, changes } = action.payload;
         const { connections } = state;
         const conn = connections[name];
@@ -60,6 +78,7 @@ function networkReducer(state, action) {
     }
 
     default: {
+        console.error("Unknown action", action.type, action.payload);
         return state;
     }
     }
@@ -98,5 +117,7 @@ function NetworkProvider({ children }) {
 export {
     NetworkProvider,
     useNetworkState,
-    useNetworkDispatch
+    useNetworkDispatch,
+    actionTypes
+
 };

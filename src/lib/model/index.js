@@ -22,6 +22,9 @@
 import startModeEnum from './startMode';
 import interfaceType from './interfaceType';
 
+let connectionIndex = 0;
+let interfaceIndex = 0;
+
 /**
  * Returns an object representing a connection
  *
@@ -40,17 +43,20 @@ export const createConnection = ({
     description,
     type = "eth",
     bootProto,
+    interfaces = [],
     interfaceName,
-    startMode = startModeEnum.NFSROOT,
+    startMode = startModeEnum.AUTO,
     ip,
     label,
     virtual = false
 }) => {
     return {
+        id: connectionIndex++,
         name,
         description,
         type,
         bootProto,
+        interfaces,
         interfaceName,
         startMode,
         ip,
@@ -79,6 +85,7 @@ export const createInterface = ({
     virtual = false
 }) => {
     return {
+        id: interfaceIndex++,
         name,
         description,
         driver,

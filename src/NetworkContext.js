@@ -66,9 +66,14 @@ function networkReducer(state, action) {
     }
 
     case ADD_CONNECTION: {
-        const { interfaces } = state;
+        const { interfaces, connections } = state;
         const conn = createConnection(action.payload);
-        return { ...state, interfaces: { ...interfaces, [conn.name]: conn } };
+        const iface = createInterface({ name: conn.name, type: conn.type });
+        return {
+            ...state,
+            interfaces: { ...interfaces, [iface.name]: iface },
+            connections: { ...connections, [conn.name]: conn }
+        };
     }
 
     case UPDATE_CONNECTION: {

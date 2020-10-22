@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
@@ -27,28 +27,39 @@ import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
 const _ = cockpit.gettext;
 
 const BridgeForm = ({ isOpen, onClose, bridge }) => {
+    const isEditing = !!bridge;
     const [name, setName] = useState(bridge?.name || "");
-    const [selectedInterfaces, setSelectedInterfaces] = useState(bridge?.interfaces || [])
+    const [selectedInterfaces, setSelectedInterfaces] = useState(bridge?.interfaces || []);
+    const [candidateInterfaces, setCandidateInterfaces] = useState([]);
     const { interfaces } = useNetworkState();
     const dispatch = useNetworkDispatch();
+
+    useEffect(() => {
+        if (isEditing) {
+            setCandidateInterfaces(Object.values(interfaces).filter(i => i.id !== bridge.id));
+        } else {
+            setCandidateInterfaces(Object.values(interfaces));
+        }
+    }, [interfaces]);
 
     const addInterface = () => {
         const action = bridge ? 'update_connection' : 'add_connection';
         dispatch({
             type: action, payload: { name, interfaces: selectedInterfaces, type: "br" }
         });
-        if (!bridge) resetForm();
+        if (!isEditing) resetForm();
         onClose();
     };
 
     const closeForm = () => {
         resetForm();
         onClose();
-    }
+    };
+
     const resetForm = () => {
         setName(bridge?.name || "");
         setSelectedInterfaces(bridge?.interfaces || []);
-    }
+    };
 
     const handleSelectedInterfaces = (name) => (value) => {
         if (value) {
@@ -58,18 +69,18 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
         }
     };
 
-    const isComplete = () => {
+    const isIncomplete = () => {
         return (name === "" || selectedInterfaces.length === 0);
     };
 
     return (
         <Modal
             variant={ModalVariant.small}
-            title={_("Add Bridge")}
+            title={isEditing ? _("Edit Bridge") : _("Add Bridge")}
             isOpen={isOpen}
             actions={[
-                <Button key="confirm" variant="primary" onClick={addInterface} isDisabled={isComplete()}>
-                    {_("Add")}
+                <Button key="confirm" variant="primary" onClick={addInterface} isDisabled={isIncomplete()}>
+                    {isEditing ? _("Change") : _("Add")}
                 </Button>,
                 <Button key="cancel" variant="link" onClick={closeForm}>
                     {_("Cancel")}
@@ -95,7 +106,7 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
                     label={_("Interfaces")}
                     isRequired
                 >
-                    {Object.values(interfaces).map(({ name }) => (
+                    {candidateInterfaces.map(({ name }) => (
                         <Checkbox
                             label={name}
                             key={name}

@@ -78,7 +78,7 @@ function useNetworkDispatch() {
 }
 
 function NetworkProvider({ children }) {
-    const [state, dispatch] = React.useReducer(networkReducer, { interfaces: [], connections: [] });
+    const [state, dispatch] = React.useReducer(networkReducer, { interfaces: [], connections: [], routes: [] });
 
     return (
         <NetworkStateContext.Provider value={state}>

@@ -41,7 +41,7 @@ const SaveChanges = () => {
     const applyChanges = () => {
         setStatus('loading');
         client.updateConnections(Object.values(connections))
-              .then(result => dispatch({ type: 'set_connections', payload: result }));
+                .then(result => dispatch({ type: 'set_connections', payload: result }));
     };
 
     return (
@@ -52,7 +52,7 @@ const SaveChanges = () => {
         >
             {_("Save Changes")}
         </Button>
-    )
+    );
 };
 
 export default SaveChanges;

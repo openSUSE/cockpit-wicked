@@ -22,22 +22,13 @@
 import React, { useState } from 'react';
 import { Modal, ModalVariant, Button, FormSelect, FormSelectOption } from '@patternfly/react-core';
 import { useNetworkDispatch, actionTypes } from '../NetworkContext';
+import startModeEnum from '../lib/model/startMode';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const START_MODES = {
-    auto:    _("At Boot Time"),
-    hotplug: _("On Hotplug"),
-    ifplugd: _("On Cable Connection"),
-    manual:  _("Manually"),
-    nfsroot: _("On NFSroot"),
-    off:     _("Never")
-
-};
-
-const startModeOptions = Object.keys(START_MODES).map(key => {
-    return { value: key, label: START_MODES[key] };
+const startModeOptions = startModeEnum.values.map(mode => {
+    return { value: mode, label: startModeEnum.label(mode) };
 });
 
 const StartMode = ({ connection }) => {
@@ -55,7 +46,7 @@ const StartMode = ({ connection }) => {
 
     return (
         <>
-            <a href="#" onClick={() => setModal(true)}>{START_MODES[connection.startMode]}</a>
+            <a href="#" onClick={() => setModal(true)}>{startModeEnum.label(connection.startMode)}</a>
             <Modal
                 variant={ModalVariant.small}
                 title={_("Start Mode")}

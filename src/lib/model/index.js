@@ -19,6 +19,8 @@
  * find current contact information at www.suse.com.
  */
 
+import startModeEnum from './startMode';
+
 /**
  * Returns an object representing a connection
  *
@@ -38,7 +40,7 @@ export const createConnection = ({
     type = "eth",
     bootProto,
     interfaceName,
-    startMode,
+    startMode = startModeEnum.NFSROOT,
     ip,
     label,
     virtual = false
@@ -84,4 +86,3 @@ export const createInterface = ({
         virtual
     };
 };
-

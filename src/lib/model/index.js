@@ -20,6 +20,7 @@
  */
 
 import startModeEnum from './startMode';
+import bondingModeEnum from './bondingMode';
 import interfaceType from './interfaceType';
 
 let connectionIndex = 0;
@@ -41,14 +42,15 @@ let interfaceIndex = 0;
 export const createConnection = ({
     name,
     description,
-    type = "eth",
+    type = interfaceType.ETHERNET,
     bootProto,
     interfaces = [],
     interfaceName,
     startMode = startModeEnum.AUTO,
     ip,
     label,
-    virtual = false
+    virtual = false,
+    ...rest
 }) => {
     return {
         id: connectionIndex++,
@@ -61,9 +63,34 @@ export const createConnection = ({
         startMode,
         ip,
         label,
-        virtual
+        virtual,
+        ...propsByType(type, rest)
     };
 };
+
+/**
+ * Returns an object representing additional properties based on the connection type
+ *
+ * @param {string} type - Connection type ('eth', 'br', etc.)
+ * @param {object} props - Additional connection properties
+ */
+const propsByType = (type, props) => {
+  const fn = propsByConnectionType[type];
+
+  return (fn && fn(props)) || {};
+}
+
+/**
+ * An object holding additional properties per connection.
+ */
+const propsByConnectionType = {
+    [interfaceType.BONDING]: ({ bondingMode = bondingModeEnum.ACTIVE_BACKUP, options = "" }) => {
+        return {
+          bondingMode,
+          options
+        }
+    }
+}
 
 /**
  * Returns an object representing an interface

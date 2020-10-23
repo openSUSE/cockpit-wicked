@@ -23,7 +23,7 @@ import cockpit from 'cockpit';
 import React, { useState, useEffect } from 'react';
 import SaveChanges from './SaveChanges';
 import { NetworkClient } from '../lib/network';
-import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import { Button, Card, CardBody, CardTitle, Toolbar, ToolbarContent, ToolbarItem, Switch } from '@patternfly/react-core';
 import RoutesList from './RoutesList';
 
@@ -57,7 +57,7 @@ const RoutingTab = () => {
 
     useEffect(() => {
         client.getRoutes()
-                .then(result => dispatch({ type: 'set_routes', payload: result }))
+                .then(result => dispatch({ type: actionTypes.SET_ROUTES, payload: result }))
                 .catch(console.error);
     }, [dispatch]);
 

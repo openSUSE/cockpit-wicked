@@ -19,29 +19,45 @@
  * find current contact information at www.suse.com.
  */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import cockpit from 'cockpit';
 
-import InterfacesList from "./InterfacesList";
+const _ = cockpit.gettext;
+const NC_ = cockpit.noop;
 
-const interfaces = [
-    { name: "eth0", type: "eth" }
+const AUTO = "auto";
+const HOTPLUG = "hotplug";
+const IFPLUGD = "ifplugd";
+const MANUAL = "manual";
+const NFSROOT = "nfsroot";
+const OFF = "off";
+
+const values = [
+    AUTO,
+    HOTPLUG,
+    IFPLUGD,
+    MANUAL,
+    NFSROOT,
+    OFF
 ];
 
-const connections = [
-    { id: 1, name: "eth0", description: "Ethernet Card #1" }
-];
+const labels = {
+    [AUTO]: NC_("On Boot"),
+    [HOTPLUG]: NC_("On Hotplug"),
+    [IFPLUGD]: NC_("On Cable Connection"),
+    [MANUAL]: NC_("Manual"),
+    [NFSROOT]: NC_("On NFSroot"),
+    [OFF]: NC_("Never")
+};
 
-describe("InterfacesList", () => {
-    test.skip("shows the interfaces name", () => {
-        render(<InterfacesList interfaces={interfaces} connections={connections} />);
+const label = (mode) => _(labels[mode]);
 
-        expect(screen.getByText("eth0")).toBeInTheDocument();
-    });
-
-    test.skip("shows the interfaces IP", () => {
-        render(<InterfacesList />);
-
-        screen.getByText("192.168.8.100");
-    });
-});
+export default {
+    AUTO,
+    HOTPLUG,
+    IFPLUGD,
+    MANUAL,
+    NFSROOT,
+    OFF,
+    label,
+    values
+};

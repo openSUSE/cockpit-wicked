@@ -19,29 +19,21 @@
  * find current contact information at www.suse.com.
  */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import React, { useState } from 'react';
+import BridgeForm from './BridgeForm';
+import cockpit from 'cockpit';
 
-import InterfacesList from "./InterfacesList";
+const _ = cockpit.gettext;
 
-const interfaces = [
-    { name: "eth0", type: "eth" }
-];
+const BridgeDetails = ({bridge}) => {
+    const [isFormOpen, setFormOpen] = useState(false);
 
-const connections = [
-    { id: 1, name: "eth0", description: "Ethernet Card #1" }
-];
+    return (
+        <>
+            <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
+            <BridgeForm isOpen={isFormOpen} bridge={bridge} onClose={() => setFormOpen(false)}/>
+        </>
+    );
+};
 
-describe("InterfacesList", () => {
-    test.skip("shows the interfaces name", () => {
-        render(<InterfacesList interfaces={interfaces} connections={connections} />);
-
-        expect(screen.getByText("eth0")).toBeInTheDocument();
-    });
-
-    test.skip("shows the interfaces IP", () => {
-        render(<InterfacesList />);
-
-        screen.getByText("192.168.8.100");
-    });
-});
+export default BridgeDetails;

@@ -22,6 +22,8 @@
 import cockpit from "cockpit";
 import React from 'react';
 import StartMode from './StartMode';
+import BridgeDetails from './BridgeDetails';
+import interfaceTypeEnum from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
 
@@ -43,15 +45,23 @@ const macAddress = (iface) => {
     );
 };
 
-const InterfaceDetails = ({ iface, connection }) => {
+const bridgeDetails = (bridge) => {
     return (
-        <dl className="details-list">
-            <dt>{_("Type")}</dt>
-            <dd>{iface.type}</dd>
-            { iface.mac && macAddress(iface) }
-            { connection && startMode(connection) }
-        </dl>
+        <>
+            <dt>{_("Bridge")}</dt>
+            <dd><BridgeDetails bridge={bridge} /></dd>
+        </>
     );
 };
+
+const InterfaceDetails = ({ iface, connection }) => (
+    <dl className="details-list">
+        <dt>{_("Type")}</dt>
+        <dd>{interfaceTypeEnum.label(iface.type)}</dd>
+        { iface.mac && macAddress(iface) }
+        { connection && startMode(connection) }
+        { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
+    </dl>
+);
 
 export default InterfaceDetails;

@@ -19,29 +19,41 @@
  * find current contact information at www.suse.com.
  */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import cockpit from 'cockpit';
 
-import InterfacesList from "./InterfacesList";
+const _ = cockpit.gettext;
+const NC_ = cockpit.noop;
 
-const interfaces = [
-    { name: "eth0", type: "eth" }
+const ETHERNET = "eth";
+const WIRELESS = "wlan";
+const BONDING = "bond";
+const BRIDGE = "br";
+const VLAN = "vlan";
+
+const values = [
+    ETHERNET,
+    WIRELESS,
+    BONDING,
+    BRIDGE,
+    VLAN
 ];
 
-const connections = [
-    { id: 1, name: "eth0", description: "Ethernet Card #1" }
-];
+const labels = {
+    [ETHERNET]: NC_("Ethernet"),
+    [WIRELESS]: NC_("Wireless"),
+    [BONDING]: NC_("Bonding"),
+    [BRIDGE]: NC_("Bridge"),
+    [VLAN]: NC_("VLAN")
+};
 
-describe("InterfacesList", () => {
-    test.skip("shows the interfaces name", () => {
-        render(<InterfacesList interfaces={interfaces} connections={connections} />);
+const label = (mode) => _(labels[mode]);
 
-        expect(screen.getByText("eth0")).toBeInTheDocument();
-    });
-
-    test.skip("shows the interfaces IP", () => {
-        render(<InterfacesList />);
-
-        screen.getByText("192.168.8.100");
-    });
-});
+export default {
+    ETHERNET,
+    WIRELESS,
+    BONDING,
+    BRIDGE,
+    VLAN,
+    values,
+    label
+};

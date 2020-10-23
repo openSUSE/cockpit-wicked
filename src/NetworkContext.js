@@ -20,40 +20,74 @@
  */
 
 import React from 'react';
+import { createConnection, createInterface } from './lib/model';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
 
 // TODO: document and test this context.
 
+const SET_INTERFACES = 'set_interfaces';
+const SET_CONNECTIONS = 'set_connections';
+const SET_ROUTES = 'set_routes';
+const ADD_CONNECTION = 'add_connection';
+const UPDATE_CONNECTION = 'update_connection';
+const ADD_ROUTE = 'add_route';
+const UPDATE_ROUTE = 'update_route';
+
+const actionTypes = {
+    SET_INTERFACES,
+    SET_CONNECTIONS,
+    SET_ROUTES,
+    ADD_CONNECTION,
+    UPDATE_CONNECTION,
+    ADD_ROUTE,
+    UPDATE_ROUTE
+};
+
 function networkReducer(state, action) {
     switch (action.type) {
-    case 'set_interfaces': {
-        const interfaces = action.payload.reduce((all, iface) => {
-            return { ...all, [iface.name]: iface };
+    case SET_INTERFACES: {
+        const interfaces = action.payload.reduce((all, ifaceData) => {
+            const iface = createInterface(ifaceData);
+            return { ...all, [iface.id]: iface };
         }, {});
         return { ...state, interfaces };
     }
 
-    case 'set_connections': {
-        const connections = action.payload.reduce((all, conn) => {
-            return { ...all, [conn.name]: conn };
+    case SET_CONNECTIONS: {
+        const connections = action.payload.reduce((all, connData) => {
+            const conn = createConnection(connData);
+            return { ...all, [conn.id]: conn };
         }, {});
         return { ...state, connections };
     }
 
-    case 'set_routes': {
+    case SET_ROUTES: {
         return { ...state, routes: action.payload };
     }
 
-    case 'update_connection': {
-        const { name, changes } = action.payload;
+    case ADD_CONNECTION: {
+        const { interfaces, connections } = state;
+        const conn = createConnection(action.payload);
+        const iface = createInterface({ name: conn.name, type: conn.type });
+        return {
+            ...state,
+            interfaces: { ...interfaces, [iface.id]: iface },
+            connections: { ...connections, [conn.id]: conn }
+        };
+    }
+
+    case UPDATE_CONNECTION: {
+        const { id, changes } = action.payload;
         const { connections } = state;
-        const conn = connections[name];
-        return { ...state, connections: { ...connections, [name]: { ...conn, ...changes, modified: true } } };
+        const conn = connections[id];
+        // FIXME: what about updating the interface name?
+        return { ...state, connections: { ...connections, [id]: { ...conn, ...changes, modified: true } } };
     }
 
     default: {
+        console.error("Unknown action", action.type, action.payload);
         return state;
     }
     }
@@ -92,5 +126,7 @@ function NetworkProvider({ children }) {
 export {
     NetworkProvider,
     useNetworkState,
-    useNetworkDispatch
+    useNetworkDispatch,
+    actionTypes
+
 };

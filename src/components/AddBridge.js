@@ -19,29 +19,23 @@
  * find current contact information at www.suse.com.
  */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import React, { useState } from 'react';
+import { Button } from '@patternfly/react-core';
+import BridgeForm from './BridgeForm';
+import cockpit from 'cockpit';
+import { useNetworkState } from '../NetworkContext';
 
-import InterfacesList from "./InterfacesList";
+const _ = cockpit.gettext;
 
-const interfaces = [
-    { name: "eth0", type: "eth" }
-];
+const AddBridge = () => {
+    const [isFormOpen, setFormOpen] = useState(false);
 
-const connections = [
-    { id: 1, name: "eth0", description: "Ethernet Card #1" }
-];
+    return (
+        <>
+            <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Bridge")}</Button>
+            <BridgeForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} />
+        </>
+    );
+};
 
-describe("InterfacesList", () => {
-    test.skip("shows the interfaces name", () => {
-        render(<InterfacesList interfaces={interfaces} connections={connections} />);
-
-        expect(screen.getByText("eth0")).toBeInTheDocument();
-    });
-
-    test.skip("shows the interfaces IP", () => {
-        render(<InterfacesList />);
-
-        screen.getByText("192.168.8.100");
-    });
-});
+export default AddBridge;

@@ -130,4 +130,15 @@ export class NetworkClient {
                     .catch(reject);
         });
     }
+
+    getEssidList(iface) {
+        return new Promise((resolve, reject) => {
+            const link_up = `ip link set ${iface} ip`;
+            const scan = `iwlist ${iface} scan`;
+            const grep_and_cut_essid = "/usr/bin/grep ESSID | /usr/bin/cut -d':' -f2 | /usr/bin/cut -d'\"' -f2";
+            const sort = "/usr/bin/sort -u";
+
+            cockpit.spawn(["bash", "-c", `${link_up} && ${scan} | ${grep_and_cut_essid} | ${sort}`], { superuser: true });
+        });
+    }
 }

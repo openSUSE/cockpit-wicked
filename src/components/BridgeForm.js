@@ -49,7 +49,7 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
         } else {
             setCandidatePorts(Object.values(interfaces));
         }
-    }, [interfaces]);
+    }, [bridge, isEditing, interfaces]);
 
     const addConnection = () => {
         dispatch({

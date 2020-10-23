@@ -20,7 +20,7 @@
  */
 
 import React from 'react';
-import { createConnection, createInterface } from './lib/model';
+import { createConnection, createInterface, createRoute } from './lib/model';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
@@ -64,7 +64,12 @@ function networkReducer(state, action) {
     }
 
     case SET_ROUTES: {
-        return { ...state, routes: action.payload };
+        const routes = action.payload.reduce((all, routeData) => {
+            const route = createRoute(routeData);
+            return { ...all, [route.id]: route };
+        }, {});
+
+        return { ...state, routes };
     }
 
     case ADD_CONNECTION: {
@@ -76,6 +81,12 @@ function networkReducer(state, action) {
             interfaces: { ...interfaces, [iface.id]: iface },
             connections: { ...connections, [conn.id]: { ...conn, modified: true } }
         };
+    }
+
+    case ADD_ROUTE: {
+        const { routes } = state;
+        const route = createRoute(action.payload);
+        return { ...state, routes: { ...routes, [route.id]: route } };
     }
 
     case UPDATE_CONNECTION: {

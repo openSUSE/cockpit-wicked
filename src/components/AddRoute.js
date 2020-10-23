@@ -21,20 +21,20 @@
 
 import React, { useState } from 'react';
 import { Button } from '@patternfly/react-core';
-import BridgeForm from './BridgeForm';
+import RouteForm from './RouteForm';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const AddBridge = () => {
+const AddRoute = () => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (
         <>
-            <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Bridge")}</Button>
-            { isFormOpen && <BridgeForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
+            <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Route")}</Button>
+            <RouteForm key="new_route" isOpen={isFormOpen} onClose={() => setFormOpen(false)} />
         </>
     );
 };
 
-export default AddBridge;
+export default AddRoute;

@@ -19,28 +19,27 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState } from 'react';
-import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, Select, SelectOption, SelectVariant, TextInput } from '@patternfly/react-core';
+import React, { useState, useEffect } from 'react';
+import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, actionTypes } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 
 const _ = cockpit.gettext;
 
 const RouteForm = ({ isOpen, onClose, route }) => {
-    const [selectIsOpen, setSelectIsOpen] = useState(false);
     const isEditing = !!route;
     const [is_default, setDefault] = useState(route?.is_default);
     const [gateway, setGateway] = useState(route?.gateway || "");
     const [destination, setDestination] = useState(route?.destination || "");
     const [device, setDevice] = useState(route?.device || "");
     const [options, setOptions] = useState(route?.options || "");
+    const { interfaces } = useNetworkState();
+    const [candidateInterfaces, setCandidateInterfaces] = useState([]);
     const dispatch = useNetworkDispatch();
 
-    const select_options = [
-        <SelectOption key="any" value="" />,
-        <SelectOption key="eth0" value="eth0" />,
-        <SelectOption key="eth1" value="eth1" />
-    ];
+    useEffect(() => {
+        setCandidateInterfaces([{ name: "" }, ...Object.values(interfaces)]);
+    }, [interfaces]);
 
     const updateRoute = () => {
         dispatch({
@@ -131,18 +130,11 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                     isRequired
                     fieldId="device"
                 >
-                    <Select
-                      variant={SelectVariant.single}
-                      onToggle={(selectIsOpen) => setSelectIsOpen(isOpen)}
-                      selections={[device]}
-                      onSelect={(event, selection) => {
-                          setDevice(selection);
-                          setSelectIsOpen(false);
-                      }}
-                      isOpen={selectIsOpen}
-                    >
-                        {select_options}
-                    </Select>
+                    <FormSelect value={device} onChange={setDevice} id="device">
+                        {candidateInterfaces.map(({ name }, index) => (
+                            <FormSelectOption key={index} value={name} label={name} />
+                        ))}
+                    </FormSelect>
                 </FormGroup>
                 <FormGroup
                     label={_("Options")}

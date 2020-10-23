@@ -39,7 +39,9 @@ const dataToDBus = (data) => {
 };
 
 const valueVariant = (value) => {
-    if (typeof value === 'object' && value !== null) {
+    if (value instanceof Array) {
+        return cockpit.variant('av', value.map(dataToDBus));
+    } else if (typeof value === 'object' && value !== null) {
         return cockpit.variant('a{sv}', dataToDBus(value));
     } else if (typeof value === 'number') {
         return cockpit.variant('i', value);

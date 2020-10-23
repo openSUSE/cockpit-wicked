@@ -23,7 +23,6 @@ import React, { useState } from 'react';
 import { Button } from '@patternfly/react-core';
 import BondForm from './BondForm';
 import cockpit from 'cockpit';
-import { useNetworkState } from '../NetworkContext';
 
 const _ = cockpit.gettext;
 

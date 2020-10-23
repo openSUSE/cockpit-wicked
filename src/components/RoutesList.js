@@ -37,7 +37,7 @@ const columns = [
 ];
 
 const destination_text = (route) => {
-    return route.default ? "default" : route.destination;
+    return route.is_default ? "default" : route.destination;
 };
 
 const RoutesList = ({ routes }) => {
@@ -47,11 +47,11 @@ const RoutesList = ({ routes }) => {
     const [route, setRoute] = useState();
 
     const editRoute = (event, rowId) => {
-        dispatch({ type: 'set_routes', payload: routes.filter((value, index) => index !== rowId) });
+        setRoute(routes[rowId]);
+        setFormOpen(true);
     };
 
     const deleteRoute = (event, rowId) => {
-
         dispatch({ type: 'set_routes', payload: routes.filter((value, index) => index !== rowId) });
     };
 
@@ -67,26 +67,27 @@ const RoutesList = ({ routes }) => {
     ];
 
     useEffect(() => {
-        setRows(routes.map((route) => [destination_text(route), route.gateway, route.interface, route.options]));
+        setRows(routes.map((route) => [destination_text(route), route.gateway, route.device, route.options]));
     }, [routes]);
 
     return (
-        { isFormOpen && <RouteForm isOpen={isFormOpen} route={route} onClose={() => setFormOpen(false)} /> }
-        <Card>
-            <CardBody>
-                <Table
-                aria-label="Default Routing Table"
-                variant={TableVariant.compact}
-                cells={columns}
-                rows={rows}
-                actions={actions}
-                >
-                    <TableHeader />
-                    <TableBody />
-                </Table>
-            </CardBody>
-        </Card>
-
+        <>
+            { isFormOpen && <RouteForm isOpen={isFormOpen} route={route} onClose={() => setFormOpen(false)} /> }
+            <Card>
+                <CardBody>
+                    <Table
+                    aria-label="Default Routing Table"
+                    variant={TableVariant.compact}
+                    cells={columns}
+                    rows={rows}
+                    actions={actions}
+                    >
+                        <TableHeader />
+                        <TableBody />
+                    </Table>
+                </CardBody>
+            </Card>
+        </>
     );
 };
 

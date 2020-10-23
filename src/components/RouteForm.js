@@ -29,10 +29,10 @@ const _ = cockpit.gettext;
 const RouteForm = ({ isOpen, onClose, route }) => {
     const [selectIsOpen, setSelectIsOpen] = useState(false);
     const isEditing = !!route;
-    const [is_default, setDefault] = useState(false);
+    const [is_default, setDefault] = useState(route?.is_default);
     const [gateway, setGateway] = useState(route?.gateway || "");
     const [destination, setDestination] = useState(route?.destination || "");
-    const [device, setDevice] = useState(route?.interface || "");
+    const [device, setDevice] = useState(route?.device || "");
     const [options, setOptions] = useState(route?.options || "");
     const dispatch = useNetworkDispatch();
 
@@ -42,25 +42,27 @@ const RouteForm = ({ isOpen, onClose, route }) => {
         <SelectOption key="eth1" value="eth1" />
     ];
 
+    const updateRoute = () => {
+        dispatch({
+            type: actionTypes.UPDATE_ROUTE,
+            payload: { id: route.id, changes: { is_default, destination, gateway, device, options } }
+        });
+    };
+
     const addOrUpdateRoute = () => {
-        addRoute();
+        if (isEditing) {
+            updateRoute();
+        } else {
+            addRoute();
+        }
+        onClose();
     };
 
     const addRoute = () => {
         dispatch({
             type: actionTypes.ADD_ROUTE,
-            payload: { destination, gateway, device, options }
+            payload: { default: is_default, destination, gateway, interface: device, options }
         });
-        resetForm();
-    };
-
-    const closeForm = () => {
-        resetForm();
-        onClose();
-    };
-
-    const resetForm = () => {
-        console.log("Form reset");
     };
 
     const isInComplete = () => {
@@ -79,7 +81,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                 <Button key="confirm" variant="primary" onClick={addOrUpdateRoute} isDisabled={isInComplete()}>
                     {isEditing ? _("Change") : _("Add")}
                 </Button>,
-                <Button key="cancel" variant="link" onClick={closeForm}>
+                <Button key="cancel" variant="link" onClick={onClose}>
                     {_("Cancel")}
                 </Button>
             ]}
@@ -136,7 +138,6 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                       onSelect={(event, selection) => {
                           setDevice(selection);
                           setSelectIsOpen(false);
-                          console.log('selected:', selection);
                       }}
                       isOpen={selectIsOpen}
                     >

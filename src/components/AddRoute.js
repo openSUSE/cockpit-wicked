@@ -32,7 +32,7 @@ const AddRoute = () => {
     return (
         <>
             <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Route")}</Button>
-            <RouteForm key="new_route" isOpen={isFormOpen} onClose={() => setFormOpen(false)} />
+            { isFormOpen && <RouteForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };

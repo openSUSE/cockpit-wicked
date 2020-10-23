@@ -48,15 +48,17 @@ const actionTypes = {
 function networkReducer(state, action) {
     switch (action.type) {
     case SET_INTERFACES: {
-        const interfaces = action.payload.reduce((all, iface) => {
-            return { ...all, [iface.name]: createInterface(iface) };
+        const interfaces = action.payload.reduce((all, ifaceData) => {
+            const iface = createInterface(ifaceData);
+            return { ...all, [iface.id]: iface };
         }, {});
         return { ...state, interfaces };
     }
 
     case SET_CONNECTIONS: {
-        const connections = action.payload.reduce((all, conn) => {
-            return { ...all, [conn.name]: createConnection(conn) };
+        const connections = action.payload.reduce((all, connData) => {
+            const conn = createConnection(connData);
+            return { ...all, [conn.id]: conn };
         }, {});
         return { ...state, connections };
     }
@@ -71,16 +73,17 @@ function networkReducer(state, action) {
         const iface = createInterface({ name: conn.name, type: conn.type });
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.name]: iface },
-            connections: { ...connections, [conn.name]: conn }
+            interfaces: { ...interfaces, [iface.id]: iface },
+            connections: { ...connections, [conn.id]: conn }
         };
     }
 
     case UPDATE_CONNECTION: {
-        const { name, changes } = action.payload;
+        const { id, changes } = action.payload;
         const { connections } = state;
-        const conn = connections[name];
-        return { ...state, connections: { ...connections, [name]: { ...conn, ...changes, modified: true } } };
+        const conn = connections[id];
+        // FIXME: what about updating the interface name?
+        return { ...state, connections: { ...connections, [id]: { ...conn, ...changes, modified: true } } };
     }
 
     default: {

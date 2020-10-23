@@ -22,7 +22,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
+import interfaceType from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
 
@@ -42,14 +43,29 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
         }
     }, [interfaces]);
 
-    const addInterface = () => {
-        const action = bridge ? 'update_connection' : 'add_connection';
+    const addConnection = () => {
         dispatch({
-            type: action, payload: { name, interfaces: selectedInterfaces, type: "br" }
+            type: actionTypes.ADD_CONNECTION,
+            payload: { name, interfaces: selectedInterfaces, type: interfaceType.BRIDGE }
         });
-        if (!isEditing) resetForm();
-        onClose();
+        resetForm();
     };
+
+    const updateConnection = () => {
+        dispatch({
+            type: actionTypes.UPDATE_CONNECTION,
+            payload: { id: bridge.id, changes: { name, interfaces: selectedInterfaces } }
+        });
+    }
+
+    const addOrUpdateConnection = () => {
+        if (isEditing) {
+            updateConnection();
+        } else {
+            addConnection();
+        }
+        onClose();
+    }
 
     const closeForm = () => {
         resetForm();
@@ -79,7 +95,7 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
             title={isEditing ? _("Edit Bridge") : _("Add Bridge")}
             isOpen={isOpen}
             actions={[
-                <Button key="confirm" variant="primary" onClick={addInterface} isDisabled={isIncomplete()}>
+                <Button key="confirm" variant="primary" onClick={addOrUpdateConnection} isDisabled={isIncomplete()}>
                     {isEditing ? _("Change") : _("Add")}
                 </Button>,
                 <Button key="cancel" variant="link" onClick={closeForm}>

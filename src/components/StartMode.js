@@ -39,7 +39,7 @@ const StartMode = ({ connection }) => {
     const updateConnection = () => {
         dispatch({
             type: actionTypes.UPDATE_CONNECTION,
-            payload: { name: connection.name, changes: { startMode: startMode } }
+            payload: { id: connection.id, changes: { startMode: startMode } }
         });
         setModal(false);
     };

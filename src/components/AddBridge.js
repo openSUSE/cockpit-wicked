@@ -33,7 +33,7 @@ const AddBridge = () => {
     return (
         <>
             <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Bridge")}</Button>
-            <BridgeForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} />
+            { isFormOpen && <BridgeForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };

@@ -31,7 +31,7 @@ const BridgeDetails = ({ bridge }) => {
     return (
         <>
             <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
-            <BridgeForm isOpen={isFormOpen} bridge={bridge} onClose={() => setFormOpen(false)} />
+            { isFormOpen && <BridgeForm isOpen={isFormOpen} bridge={bridge} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };

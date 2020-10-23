@@ -20,7 +20,15 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
+import {
+    Button,
+    Checkbox,
+    Form,
+    FormGroup,
+    Modal,
+    ModalVariant,
+    TextInput
+} from '@patternfly/react-core';
 import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import interfaceType from '../lib/model/interfaceType';
@@ -30,7 +38,7 @@ const _ = cockpit.gettext;
 const BridgeForm = ({ isOpen, onClose, bridge }) => {
     const isEditing = !!bridge;
     const [name, setName] = useState(bridge?.name || "");
-    const [selectedPorts, setSelectedPorts] = useState(bridge?.interfaces || []);
+    const [selectedPorts, setSelectedPorts] = useState(bridge?.ports || []);
     const [candidatePorts, setCandidatePorts] = useState([]);
     const { interfaces } = useNetworkState();
     const dispatch = useNetworkDispatch();
@@ -46,15 +54,14 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
     const addConnection = () => {
         dispatch({
             type: actionTypes.ADD_CONNECTION,
-            payload: { name, interfaces: selectedPorts, type: interfaceType.BRIDGE }
+            payload: { name, ports: selectedPorts, type: interfaceType.BRIDGE }
         });
-        resetForm();
     };
 
     const updateConnection = () => {
         dispatch({
             type: actionTypes.UPDATE_CONNECTION,
-            payload: { id: bridge.id, changes: { name, interfaces: selectedPorts } }
+            payload: { id: bridge.id, changes: { name, ports: selectedPorts } }
         });
     };
 
@@ -65,16 +72,6 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
             addConnection();
         }
         onClose();
-    };
-
-    const closeForm = () => {
-        resetForm();
-        onClose();
-    };
-
-    const resetForm = () => {
-        setName(bridge?.name || "");
-        setSelectedPorts(bridge?.interfaces || []);
     };
 
     const handleSelectedPorts = (name) => (value) => {
@@ -94,11 +91,12 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
             variant={ModalVariant.small}
             title={isEditing ? _("Edit Bridge") : _("Add Bridge")}
             isOpen={isOpen}
+            onClose={onClose}
             actions={[
                 <Button key="confirm" variant="primary" onClick={addOrUpdateConnection} isDisabled={isIncomplete()}>
                     {isEditing ? _("Change") : _("Add")}
                 </Button>,
-                <Button key="cancel" variant="link" onClick={closeForm}>
+                <Button key="cancel" variant="link" onClick={onClose}>
                     {_("Cancel")}
                 </Button>
             ]}

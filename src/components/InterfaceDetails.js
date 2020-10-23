@@ -23,6 +23,7 @@ import cockpit from "cockpit";
 import React from 'react';
 import StartMode from './StartMode';
 import BridgeDetails from './BridgeDetails';
+import BondDetails from './BondDetails';
 import interfaceTypeEnum from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
@@ -45,6 +46,15 @@ const macAddress = (iface) => {
     );
 };
 
+const bondDetails = (bond) => {
+    return (
+        <>
+            <dt>{_("Bond")}</dt>
+            <dd><BondDetails bond={bond} /></dd>
+        </>
+    );
+};
+
 const bridgeDetails = (bridge) => {
     return (
         <>
@@ -60,6 +70,7 @@ const InterfaceDetails = ({ iface, connection }) => (
         <dd>{interfaceTypeEnum.label(iface.type)}</dd>
         { iface.mac && macAddress(iface) }
         { connection && startMode(connection) }
+        { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
         { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
     </dl>
 );

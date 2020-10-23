@@ -56,7 +56,7 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
             type: actionTypes.UPDATE_CONNECTION,
             payload: { id: bridge.id, changes: { name, interfaces: selectedInterfaces } }
         });
-    }
+    };
 
     const addOrUpdateConnection = () => {
         if (isEditing) {
@@ -65,7 +65,7 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
             addConnection();
         }
         onClose();
-    }
+    };
 
     const closeForm = () => {
         resetForm();

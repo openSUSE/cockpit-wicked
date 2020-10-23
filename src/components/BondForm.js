@@ -29,7 +29,8 @@ import {
     FormSelectOption,
     Modal,
     ModalVariant,
-    TextInput } from '@patternfly/react-core';
+    TextInput
+} from '@patternfly/react-core';
 import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import interfaceType from '../lib/model/interfaceType';
@@ -49,14 +50,14 @@ const bondingModeOptions = bondingModes.values.map(mode => {
  */
 const parseOptions = (options) => {
     return options.split(" ").reduce((obj, option) => {
-        if (Boolean(option)) {
-            const [ key, value ] = option.split("=");
+        if (option) {
+            const [key, value] = option.split("=");
             obj[key] = value;
         }
 
         return obj;
-    }, {})
-}
+    }, {});
+};
 
 /**
  * Returns given options object serialized as a key=value string
@@ -65,7 +66,8 @@ const parseOptions = (options) => {
  * @return {string} a key=value string
  */
 const serializeOptions = (options) => (
-    Object.keys(options).map((key) => `${key}=${options[key]}`).join(" ")
+    Object.keys(options).map((key) => `${key}=${options[key]}`)
+            .join(" ")
 );
 
 const BondForm = ({ isOpen, onClose, bond }) => {
@@ -117,7 +119,7 @@ const BondForm = ({ isOpen, onClose, bond }) => {
                 }
             }
         });
-    }
+    };
 
     const addOrUpdateConnection = () => {
         if (isEditing) {
@@ -126,7 +128,7 @@ const BondForm = ({ isOpen, onClose, bond }) => {
             addConnection();
         }
         closeForm();
-    }
+    };
 
     const closeForm = () => {
         onClose();

@@ -25,13 +25,13 @@ import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const BridgeDetails = ({bridge}) => {
+const BridgeDetails = ({ bridge }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (
         <>
             <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
-            <BridgeForm isOpen={isFormOpen} bridge={bridge} onClose={() => setFormOpen(false)}/>
+            <BridgeForm isOpen={isFormOpen} bridge={bridge} onClose={() => setFormOpen(false)} />
         </>
     );
 };

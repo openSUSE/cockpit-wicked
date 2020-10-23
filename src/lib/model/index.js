@@ -75,10 +75,10 @@ export const createConnection = ({
  * @param {object} props - Additional connection properties
  */
 const propsByType = (type, props) => {
-  const fn = propsByConnectionType[type];
+    const fn = propsByConnectionType[type];
 
-  return (fn && fn(props)) || {};
-}
+    return (fn && fn(props)) || {};
+};
 
 /**
  * An object holding additional properties per connection.
@@ -86,11 +86,11 @@ const propsByType = (type, props) => {
 const propsByConnectionType = {
     [interfaceType.BONDING]: ({ bondingMode = bondingModeEnum.ACTIVE_BACKUP, options = "" }) => {
         return {
-          bondingMode,
-          options
-        }
+            bondingMode,
+            options
+        };
     }
-}
+};
 
 /**
  * Returns an object representing an interface

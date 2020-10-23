@@ -74,7 +74,7 @@ function networkReducer(state, action) {
         return {
             ...state,
             interfaces: { ...interfaces, [iface.id]: iface },
-            connections: { ...connections, [conn.id]: conn }
+            connections: { ...connections, [conn.id]: { ...conn, modified: true } }
         };
     }
 

@@ -20,7 +20,15 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, TextInput } from '@patternfly/react-core';
+import {
+    Button,
+    Checkbox,
+    Form,
+    FormGroup,
+    Modal,
+    ModalVariant,
+    TextInput
+} from '@patternfly/react-core';
 import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import interfaceType from '../lib/model/interfaceType';
@@ -30,31 +38,30 @@ const _ = cockpit.gettext;
 const BridgeForm = ({ isOpen, onClose, bridge }) => {
     const isEditing = !!bridge;
     const [name, setName] = useState(bridge?.name || "");
-    const [selectedInterfaces, setSelectedInterfaces] = useState(bridge?.interfaces || []);
-    const [candidateInterfaces, setCandidateInterfaces] = useState([]);
+    const [selectedPorts, setSelectedPorts] = useState(bridge?.ports || []);
+    const [candidatePorts, setCandidatePorts] = useState([]);
     const { interfaces } = useNetworkState();
     const dispatch = useNetworkDispatch();
 
     useEffect(() => {
         if (isEditing) {
-            setCandidateInterfaces(Object.values(interfaces).filter(i => i.id !== bridge.id));
+            setCandidatePorts(Object.values(interfaces).filter(i => i.id !== bridge.id));
         } else {
-            setCandidateInterfaces(Object.values(interfaces));
+            setCandidatePorts(Object.values(interfaces));
         }
     }, [interfaces]);
 
     const addConnection = () => {
         dispatch({
             type: actionTypes.ADD_CONNECTION,
-            payload: { name, interfaces: selectedInterfaces, type: interfaceType.BRIDGE }
+            payload: { name, ports: selectedPorts, type: interfaceType.BRIDGE }
         });
-        resetForm();
     };
 
     const updateConnection = () => {
         dispatch({
             type: actionTypes.UPDATE_CONNECTION,
-            payload: { id: bridge.id, changes: { name, interfaces: selectedInterfaces } }
+            payload: { id: bridge.id, changes: { name, ports: selectedPorts } }
         });
     };
 
@@ -67,26 +74,16 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
         onClose();
     };
 
-    const closeForm = () => {
-        resetForm();
-        onClose();
-    };
-
-    const resetForm = () => {
-        setName(bridge?.name || "");
-        setSelectedInterfaces(bridge?.interfaces || []);
-    };
-
-    const handleSelectedInterfaces = (name) => (value) => {
+    const handleSelectedPorts = (name) => (value) => {
         if (value) {
-            setSelectedInterfaces([...selectedInterfaces, name]);
+            setSelectedPorts([...selectedPorts, name]);
         } else {
-            setSelectedInterfaces(selectedInterfaces.filter(i => i !== name));
+            setSelectedPorts(selectedPorts.filter(i => i !== name));
         }
     };
 
     const isIncomplete = () => {
-        return (name === "" || selectedInterfaces.length === 0);
+        return (name === "" || selectedPorts.length === 0);
     };
 
     return (
@@ -94,11 +91,12 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
             variant={ModalVariant.small}
             title={isEditing ? _("Edit Bridge") : _("Add Bridge")}
             isOpen={isOpen}
+            onClose={onClose}
             actions={[
                 <Button key="confirm" variant="primary" onClick={addOrUpdateConnection} isDisabled={isIncomplete()}>
                     {isEditing ? _("Change") : _("Add")}
                 </Button>,
-                <Button key="cancel" variant="link" onClick={closeForm}>
+                <Button key="cancel" variant="link" onClick={onClose}>
                     {_("Cancel")}
                 </Button>
             ]}
@@ -119,15 +117,15 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
                 </FormGroup>
 
                 <FormGroup
-                    label={_("Interfaces")}
+                    label={_("Ports")}
                     isRequired
                 >
-                    {candidateInterfaces.map(({ name }) => (
+                    {candidatePorts.map(({ name }) => (
                         <Checkbox
                             label={name}
                             key={name}
-                            isChecked={selectedInterfaces.includes(name)}
-                            onChange={handleSelectedInterfaces(name)}
+                            isChecked={selectedPorts.includes(name)}
+                            onChange={handleSelectedPorts(name)}
                         />
                     ))}
                 </FormGroup>

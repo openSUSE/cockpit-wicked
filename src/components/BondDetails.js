@@ -20,20 +20,20 @@
  */
 
 import React, { useState } from 'react';
-import BridgeForm from './BridgeForm';
+import BondForm from './BondForm';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const BridgeDetails = ({ bridge }) => {
+const BondDetails = ({ bond }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (
         <>
             <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
-            <BridgeForm isOpen={isFormOpen} bridge={bridge} onClose={() => setFormOpen(false)} />
+            { isFormOpen && <BondForm isOpen={isFormOpen} bond={bond} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };
 
-export default BridgeDetails;
+export default BondDetails;

@@ -30,8 +30,9 @@ const dataFromDBus = (data) => {
 
 const dataToDBus = (data) => {
     return Object.keys(data).reduce((obj, key) => {
-        const value = data[key];
-        const newValue = valueVariant(value);
+        if (data[key] === undefined) return obj;
+
+        const newValue = valueVariant(data[key]);
         const newKey = key.charAt(0).toUpperCase() + key.slice(1);
         return { ...obj, [newKey]: newValue };
     }, {});
@@ -59,7 +60,8 @@ export class NetworkClient {
     getConnections() {
         return new Promise((resolve, reject) => {
             const client = cockpit.dbus("org.opensuse.YaST2.Network");
-            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetConnections")
+            client.call("/org/opensuse/YaST2/Network",
+                        "org.opensuse.YaST2.Network", "GetConnections")
                     .then(result => resolve(result[0].map(dataFromDBus)))
                     .catch(reject);
         });

@@ -31,7 +31,7 @@ const BondDetails = ({bond}) => {
     return (
         <>
             <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
-            <BondForm isOpen={isFormOpen} bond={bond} onClose={() => setFormOpen(false)}/>
+            { isFormOpen && <BondForm isOpen={isFormOpen} bond={bond} onClose={() => setFormOpen(false)}/> }
         </>
     );
 };

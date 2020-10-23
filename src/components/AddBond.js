@@ -33,7 +33,7 @@ const AddBond = () => {
     return (
         <>
             <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Bond")}</Button>
-            <BondForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} />
+            { isFormOpen && <BondForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };

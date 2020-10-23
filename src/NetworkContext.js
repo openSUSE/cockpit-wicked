@@ -97,7 +97,6 @@ function useNetworkState() {
     const context = React.useContext(NetworkStateContext);
     if (!context) {
         throw new Error('useNetworkState must be used within a NetworkProvider');
-
     }
 
     return context;

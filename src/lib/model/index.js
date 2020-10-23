@@ -44,7 +44,6 @@ export const createConnection = ({
     description,
     type = interfaceType.ETHERNET,
     bootProto,
-    interfaces = [],
     interfaceName,
     startMode = startModeEnum.AUTO,
     ip,
@@ -58,7 +57,6 @@ export const createConnection = ({
         description,
         type,
         bootProto,
-        interfaces,
         interfaceName,
         startMode,
         ip,
@@ -88,6 +86,11 @@ const propsByConnectionType = {
         return {
             bondingMode,
             options
+        };
+    },
+    [interfaceType.BRIDGE]: ({ ports = [] }) => {
+        return {
+            ports
         };
     }
 };

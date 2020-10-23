@@ -30,23 +30,23 @@ const _ = cockpit.gettext;
 const BridgeForm = ({ isOpen, onClose, bridge }) => {
     const isEditing = !!bridge;
     const [name, setName] = useState(bridge?.name || "");
-    const [selectedInterfaces, setSelectedInterfaces] = useState(bridge?.interfaces || []);
-    const [candidateInterfaces, setCandidateInterfaces] = useState([]);
+    const [selectedPorts, setSelectedPorts] = useState(bridge?.interfaces || []);
+    const [candidatePorts, setCandidatePorts] = useState([]);
     const { interfaces } = useNetworkState();
     const dispatch = useNetworkDispatch();
 
     useEffect(() => {
         if (isEditing) {
-            setCandidateInterfaces(Object.values(interfaces).filter(i => i.id !== bridge.id));
+            setCandidatePorts(Object.values(interfaces).filter(i => i.id !== bridge.id));
         } else {
-            setCandidateInterfaces(Object.values(interfaces));
+            setCandidatePorts(Object.values(interfaces));
         }
     }, [interfaces]);
 
     const addConnection = () => {
         dispatch({
             type: actionTypes.ADD_CONNECTION,
-            payload: { name, interfaces: selectedInterfaces, type: interfaceType.BRIDGE }
+            payload: { name, interfaces: selectedPorts, type: interfaceType.BRIDGE }
         });
         resetForm();
     };
@@ -54,7 +54,7 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
     const updateConnection = () => {
         dispatch({
             type: actionTypes.UPDATE_CONNECTION,
-            payload: { id: bridge.id, changes: { name, interfaces: selectedInterfaces } }
+            payload: { id: bridge.id, changes: { name, interfaces: selectedPorts } }
         });
     };
 
@@ -74,19 +74,19 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
 
     const resetForm = () => {
         setName(bridge?.name || "");
-        setSelectedInterfaces(bridge?.interfaces || []);
+        setSelectedPorts(bridge?.interfaces || []);
     };
 
-    const handleSelectedInterfaces = (name) => (value) => {
+    const handleSelectedPorts = (name) => (value) => {
         if (value) {
-            setSelectedInterfaces([...selectedInterfaces, name]);
+            setSelectedPorts([...selectedPorts, name]);
         } else {
-            setSelectedInterfaces(selectedInterfaces.filter(i => i !== name));
+            setSelectedPorts(selectedPorts.filter(i => i !== name));
         }
     };
 
     const isIncomplete = () => {
-        return (name === "" || selectedInterfaces.length === 0);
+        return (name === "" || selectedPorts.length === 0);
     };
 
     return (
@@ -119,15 +119,15 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
                 </FormGroup>
 
                 <FormGroup
-                    label={_("Interfaces")}
+                    label={_("Ports")}
                     isRequired
                 >
-                    {candidateInterfaces.map(({ name }) => (
+                    {candidatePorts.map(({ name }) => (
                         <Checkbox
                             label={name}
                             key={name}
-                            isChecked={selectedInterfaces.includes(name)}
-                            onChange={handleSelectedInterfaces(name)}
+                            isChecked={selectedPorts.includes(name)}
+                            onChange={handleSelectedPorts(name)}
                         />
                     ))}
                 </FormGroup>

@@ -26,17 +26,9 @@ const KEYS_MAP = {
     Interface: "device"
 };
 
-const dataKeyFromDBus = (key) => {
-    return KEYS_MAP[key] || key.charAt(0).toLowerCase() + key.slice(1);
-};
-
-const dataKeyToDBus = (key) => {
-    return Object.keys(KEYS_MAP).find((k) => KEYS_MAP[k] === key) || key.charAt(0).toUpperCase() + key.slice(1);
-};
-
 const dataFromDBus = (data) => {
     return Object.keys(data).reduce((obj, key) => {
-        const newKey = dataKeyFromDBus(key);
+        const newKey = KEYS_MAP[key] || key.charAt(0).toLowerCase() + key.slice(1);
 
         return { ...obj, [newKey]: data[key].v };
     }, {});
@@ -47,7 +39,7 @@ const dataToDBus = (data) => {
         if (data[key] === undefined) return obj;
 
         const newValue = valueVariant(data[key]);
-        const newKey = dataKeyToDBus(key);
+        const newKey = Object.keys(KEYS_MAP).find((k) => KEYS_MAP[k] === key) || key.charAt(0).toUpperCase() + key.slice(1);
 
         return { ...obj, [newKey]: newValue };
     }, {});

@@ -20,7 +20,7 @@
  */
 
 import React from 'react';
-import { createConnection, createInterface } from './lib/model';
+import { createConnection, createInterface, createRoute } from './lib/model';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
@@ -64,7 +64,12 @@ function networkReducer(state, action) {
     }
 
     case SET_ROUTES: {
-        return { ...state, routes: action.payload };
+        const routes = action.payload.reduce((all, routeData) => {
+            const route = createRoute(routeData);
+            return { ...all, [route.id]: route };
+        }, {});
+
+        return { ...state, routes };
     }
 
     case ADD_CONNECTION: {
@@ -78,12 +83,25 @@ function networkReducer(state, action) {
         };
     }
 
+    case ADD_ROUTE: {
+        const { routes } = state;
+        const route = createRoute(action.payload);
+        return { ...state, routes: { ...routes, [route.id]: { ...route, modified: true } } };
+    }
+
     case UPDATE_CONNECTION: {
         const { id, changes } = action.payload;
         const { connections } = state;
         const conn = connections[id];
         // FIXME: what about updating the interface name?
         return { ...state, connections: { ...connections, [id]: { ...conn, ...changes, modified: true } } };
+    }
+
+    case UPDATE_ROUTE: {
+        const { id, changes } = action.payload;
+        const { routes } = state;
+        const route = routes[id];
+        return { ...state, routes: { ...routes, [id]: { ...route, ...changes, modified: true } } };
     }
 
     default: {

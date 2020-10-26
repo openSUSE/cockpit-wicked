@@ -24,8 +24,9 @@ import React, { useState, useEffect } from 'react';
 import SaveChanges from './SaveChanges';
 import { NetworkClient } from '../lib/network';
 import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
-import { Button, Card, CardBody, CardTitle, Toolbar, ToolbarContent, ToolbarItem, Switch } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Toolbar, ToolbarContent, ToolbarItem, Switch } from '@patternfly/react-core';
 import RoutesList from './RoutesList';
+import AddRoute from './AddRoute';
 
 const client = new NetworkClient();
 
@@ -36,7 +37,6 @@ const ForwardingSettings = () => {
     const [ipv6, setIPv6] = useState(false);
 
     return (
-        // TODO: It is not implemented yet and probably will be removed
         <Card>
             <CardTitle>{_("Forwarding")}</CardTitle>
             <CardBody>
@@ -68,7 +68,7 @@ const RoutingTab = () => {
             <Toolbar id="routing-toolbar">
                 <ToolbarContent>
                     <ToolbarItem>
-                        <Button variant="secondary">Add Route</Button>
+                        <AddRoute />
                     </ToolbarItem>
                     <ToolbarItem>
                         <SaveChanges />
@@ -79,13 +79,6 @@ const RoutingTab = () => {
             <Card>
                 <CardTitle>{_("Default routing table")}</CardTitle>
                 <CardBody>
-                    <Toolbar id="routing-toolbar">
-                        <ToolbarContent>
-                            <ToolbarItem className="pull-right">
-                                <Button variant="secondary">Add Route</Button>
-                            </ToolbarItem>
-                        </ToolbarContent>
-                    </Toolbar>
                     <RoutesList routes={routesList} />
                 </CardBody>
             </Card>

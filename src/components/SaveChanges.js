@@ -30,19 +30,28 @@ const client = new NetworkClient();
 
 const SaveChanges = () => {
     const [status, setStatus] = useState('disabled');
-    const { connections } = useNetworkState();
+    const { connections, routes } = useNetworkState();
     const dispatch = useNetworkDispatch();
 
     useEffect(() => {
-        const modified = Object.values(connections).find(c => c.modified);
-        setStatus(modified ? 'enabled' : 'disabled');
-    }, [connections]);
+        const modified_connections = Object.values(connections).find(c => c.modified);
+        const modified_routes = Object.values(routes).find(c => c.modified);
+
+        setStatus((modified_connections || modified_routes) ? 'enabled' : 'disabled');
+    }, [connections, routes]);
 
     const applyChanges = () => {
         setStatus('loading');
-        client.updateConnections(Object.values(connections))
-                .then(result => dispatch(
-                    { type: actionTypes.SET_CONNECTIONS, payload: result }));
+
+        if (Object.values(routes).find(c => c.modified))
+            client.updateRoutes(Object.values(routes))
+                    .then(result => dispatch(
+                        { type: actionTypes.SET_ROUTES, payload: result }));
+
+        if (Object.values(connections).find(c => c.modified))
+            client.updateConnections(Object.values(connections))
+                    .then(result => dispatch(
+                        { type: actionTypes.SET_CONNECTIONS, payload: result }));
     };
 
     return (

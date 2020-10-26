@@ -25,6 +25,29 @@ import interfaceType from './interfaceType';
 
 let connectionIndex = 0;
 let interfaceIndex = 0;
+let routeIndex = 0;
+
+/**
+ * Returns an object representing a route
+ *
+ * @param {object} args - Route properties
+ * @param {boolean} args.default - Whether the route is a default one
+ * @param {string} args.destination - Destination network
+ * @param {string} args.gateway - Gateway
+ * @param {string} args.interface - Name of the interface associated to this connection
+ * @param {string} args.options - Additional options like metric
+ */
+
+export const createRoute = ({ default: is_default, destination, gateway, interface: device, options }) => {
+    return {
+        id: routeIndex++,
+        is_default,
+        destination,
+        gateway,
+        device,
+        options
+    };
+};
 
 /**
  * Returns an object representing a connection

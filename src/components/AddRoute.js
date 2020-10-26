@@ -21,20 +21,20 @@
 
 import React, { useState } from 'react';
 import { Button } from '@patternfly/react-core';
-import BondForm from './BondForm';
+import RouteForm from './RouteForm';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const AddBond = () => {
+const AddRoute = () => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (
         <>
-            <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Bond")}</Button>
-            { isFormOpen && <BondForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
+            <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Route")}</Button>
+            { isFormOpen && <RouteForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };
 
-export default AddBond;
+export default AddRoute;

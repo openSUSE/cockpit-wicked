@@ -21,9 +21,23 @@
 
 import cockpit from 'cockpit';
 
+const KEYS_MAP = {
+    Default: "isDefault",
+    Interface: "device"
+};
+
+const dataKeyFromDBus = (key) => {
+    return KEYS_MAP[key] || key.charAt(0).toLowerCase() + key.slice(1);
+};
+
+const dataKeyToDBus = (key) => {
+    return Object.keys(KEYS_MAP).find((k) => KEYS_MAP[k] === key) || key.charAt(0).toUpperCase() + key.slice(1);
+};
+
 const dataFromDBus = (data) => {
     return Object.keys(data).reduce((obj, key) => {
-        const newKey = key.charAt(0).toLowerCase() + key.slice(1);
+        const newKey = dataKeyFromDBus(key);
+
         return { ...obj, [newKey]: data[key].v };
     }, {});
 };
@@ -33,7 +47,8 @@ const dataToDBus = (data) => {
         if (data[key] === undefined) return obj;
 
         const newValue = valueVariant(data[key]);
-        const newKey = key.charAt(0).toUpperCase() + key.slice(1);
+        const newKey = dataKeyToDBus(key);
+
         return { ...obj, [newKey]: newValue };
     }, {});
 };

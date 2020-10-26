@@ -38,10 +38,10 @@ let routeIndex = 0;
  * @param {string} args.options - Additional options like metric
  */
 
-export const createRoute = ({ default: is_default, destination, gateway, interface: device, options }) => {
+export const createRoute = ({ isDefault, destination, gateway, device, options }) => {
     return {
         id: routeIndex++,
-        is_default,
+        isDefault,
         destination,
         gateway,
         device,

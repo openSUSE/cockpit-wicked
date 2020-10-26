@@ -44,7 +44,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const updateRoute = () => {
         dispatch({
             type: actionTypes.UPDATE_ROUTE,
-            payload: { id: route.id, changes: { isDefault, destination, gateway, device, options } }
+            payload: { id: route.id, changes: buildRouteData() }
         });
     };
 
@@ -60,8 +60,18 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const addRoute = () => {
         dispatch({
             type: actionTypes.ADD_ROUTE,
-            payload: { isDefault, destination, gateway, device, options }
+            payload: buildRouteData()
         });
+    };
+
+    const buildRouteData = () => {
+        return {
+            isDefault,
+            destination: isDefault ? "" : destination,
+            gateway,
+            device,
+            options
+        };
     };
 
     const isInComplete = () => {

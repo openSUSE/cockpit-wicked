@@ -28,7 +28,7 @@ const _ = cockpit.gettext;
 
 const RouteForm = ({ isOpen, onClose, route }) => {
     const isEditing = !!route;
-    const [is_default, setDefault] = useState(route?.is_default);
+    const [isDefault, setIsDefault] = useState(route?.isDefault);
     const [gateway, setGateway] = useState(route?.gateway || "");
     const [destination, setDestination] = useState(route?.destination || "");
     const [device, setDevice] = useState(route?.device || "");
@@ -44,7 +44,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const updateRoute = () => {
         dispatch({
             type: actionTypes.UPDATE_ROUTE,
-            payload: { id: route.id, changes: { is_default, destination, gateway, device, options } }
+            payload: { id: route.id, changes: buildRouteData() }
         });
     };
 
@@ -60,12 +60,22 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const addRoute = () => {
         dispatch({
             type: actionTypes.ADD_ROUTE,
-            payload: { default: is_default, destination, gateway, interface: device, options }
+            payload: buildRouteData()
         });
     };
 
+    const buildRouteData = () => {
+        return {
+            isDefault,
+            destination: isDefault ? "" : destination,
+            gateway,
+            device,
+            options
+        };
+    };
+
     const isInComplete = () => {
-        if (!is_default && destination.length == 0) return true;
+        if (!isDefault && destination.length == 0) return true;
         if (gateway.length == 0) return true;
 
         return false;
@@ -88,19 +98,19 @@ const RouteForm = ({ isOpen, onClose, route }) => {
             <Form>
                 <FormGroup
                     label={_("Default route")}
-                    fieldId="is_default"
+                    fieldId="isDefault"
                 >
                     <Checkbox
-                        id="is_default"
-                        isChecked={is_default}
-                        onChange={setDefault}
+                        id="isDefault"
+                        isChecked={isDefault}
+                        onChange={setIsDefault}
                     />
                 </FormGroup>
 
-                { !is_default &&
+                { !isDefault &&
                     <FormGroup
                         label={_("Destination")}
-                        isRequired={!is_default}
+                        isRequired={!isDefault}
                         fieldId="destination"
                         helperText={_("Destination")}
                     >

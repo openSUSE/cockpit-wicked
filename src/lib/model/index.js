@@ -51,10 +51,10 @@ let routeIndex = 0;
  * Returns an object representing a route
  *
  * @param {object} args - Route properties
- * @param {boolean} args.default - Whether the route is a default one
+ * @param {boolean} args.isDefault - Whether the route is a default one
  * @param {string} args.destination - Destination network
  * @param {string} args.gateway - Gateway
- * @param {string} args.interface - Name of the interface associated to this connection
+ * @param {string} args.device - Name of the interface associated to this connection
  * @param {string} args.options - Additional options like metric
  * @return {Route} Route object
  */

@@ -22,6 +22,7 @@
 import startModeEnum from './startMode';
 import bondingModeEnum from './bondingMode';
 import interfaceType from './interfaceType';
+import addressType from './addressType';
 
 let connectionIndex = 0;
 let interfaceIndex = 0;
@@ -58,9 +59,9 @@ export const createRoute = ({ isDefault, destination, gateway, device, options }
  * @param {string} args.type - Connection type ('eth', 'br', etc.)
  * @param {string} args.bootProto - Boot protocol ('dhcp', 'static', etc.)
  * @param {string} args.interfaceName - Name of the interface associated to this connection
- * @param {string} args.ip - IP address
- * @param {string} args.label - IP label
+ * @param {string} args.addresses - Addresses configurations
  * @param {boolean} args.virtual - Whether the associated device should be virtual
+ * @returns {Interface}
  */
 export const createConnection = ({
     name,
@@ -116,6 +117,31 @@ const propsByConnectionType = {
 };
 
 /**
+ * Returns an address configuration object
+ *
+ * @param {object} args - Configuration attributes
+ * @param {string} args.type - Address type ('IPv4' or 'IPv6')
+ * @param {string} args.proto - Boot protocol ('DHCP', 'STATIC', etc.)
+ * @param {string} args.address - IP address
+ * @param {string} args.label - IP label
+ * @return {object}
+ * @todo The IP address deserves its own type
+ */
+export const createAddressConfig = ({
+    type = addressType.IPV4,
+    proto = bootProtocol.STATIC,
+    address,
+    label = ""
+}) => {
+    return {
+        type,
+        proto,
+        address,
+        label
+    };
+};
+
+/**
  * Returns an object representing an interface
  *
  * @param {object} args - Interface properties
@@ -132,8 +158,8 @@ export const createInterface = ({
     driver,
     mac,
     type = "eth",
-    virtual = false
 }) => {
+    const virtual = interfaceType.isVirtual(type);
     return {
         id: interfaceIndex++,
         name,
@@ -143,4 +169,11 @@ export const createInterface = ({
         type,
         virtual
     };
+};
+
+export default {
+    createInterface,
+    createConnection,
+    createRoute,
+    createAddressConfig
 };

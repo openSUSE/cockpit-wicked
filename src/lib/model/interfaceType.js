@@ -46,7 +46,10 @@ const labels = {
     [VLAN]: NC_("VLAN")
 };
 
-const label = (mode) => _(labels[mode]);
+const label = (type) => _(labels[type]);
+
+const virtualTypes = [BONDING, BRIDGE, VLAN];
+const isVirtual = (type) => virtualTypes.includes(type);
 
 export default {
     ETHERNET,
@@ -55,5 +58,6 @@ export default {
     BRIDGE,
     VLAN,
     values,
-    label
+    label,
+    isVirtual
 };

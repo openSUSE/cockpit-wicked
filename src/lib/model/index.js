@@ -69,9 +69,7 @@ export const createConnection = ({
     bootProto,
     interfaceName,
     startMode = startModeEnum.AUTO,
-    ip,
-    label,
-    virtual = false,
+    addresses,
     ...rest
 }) => {
     return {
@@ -82,9 +80,8 @@ export const createConnection = ({
         bootProto,
         interfaceName,
         startMode,
-        ip,
-        label,
-        virtual,
+        addresses,
+        virtual: interfaceType.isVirtual(type),
         ...propsByType(type, rest)
     };
 };

@@ -44,13 +44,12 @@ const elementToJson = (element, listElements) => {
         if (listElements.includes(key)) {
             value = value.map(v => Object.values(v)[0]);
         } else {
-            value = value.reduce((all, child) => ({...all, ...child}), {});
+            value = value.reduce((all, child) => ({ ...all, ...child }), {});
         }
 
         return { [key]: value };
     }
 };
-
 
 /* @ignore */
 const emptyTagsRegExp = new RegExp(/<\w+\/>/, 'g');
@@ -64,7 +63,7 @@ const emptyTagsRegExp = new RegExp(/<\w+\/>/, 'g');
  */
 const sanitizeXml = (xmlString) => {
     return xmlString.replace(emptyTagsRegExp, '');
-}
+};
 
 /**
  * Returns a plain object representing the given string
@@ -84,7 +83,7 @@ const XmlToJson = (xmlString, listElements = []) => {
     const [body] = dom.getElementsByTagName('body');
     const result = elementToJson(body, listElements);
     return result.body;
-}
+};
 
 /**
  * Class to interact with Wicked.
@@ -95,7 +94,6 @@ const XmlToJson = (xmlString, listElements = []) => {
  * parsing the XML output.
  */
 class WickedClient {
-    
     /**
      * Returns a promise that resolves to an array of objects representing interfaces
      *
@@ -104,11 +102,11 @@ class WickedClient {
     getInterfaces() {
         return new Promise((resolve, reject) => {
             cockpit.spawn(['/usr/sbin/wicked', 'show-xml'])
-                   .then(stdout => {
-                       const result = XmlToJson(stdout, ['body']);
-                       resolve(result);
-                   })
-                   .catch(console.error);
+                    .then(stdout => {
+                        const result = XmlToJson(stdout, ['body']);
+                        resolve(result);
+                    })
+                    .catch(console.error);
         });
     }
 
@@ -120,11 +118,11 @@ class WickedClient {
     getConfigurations() {
         return new Promise((resolve, reject) => {
             cockpit.spawn(['/usr/sbin/wicked', 'show-config'])
-                   .then(stdout => {
-                       const result = XmlToJson(stdout, ['body', 'slaves', 'addresses']);
-                       resolve(result);
-                   })
-                   .catch(console.error);
+                    .then(stdout => {
+                        const result = XmlToJson(stdout, ['body', 'slaves', 'addresses']);
+                        resolve(result);
+                    })
+                    .catch(console.error);
         });
     }
 }

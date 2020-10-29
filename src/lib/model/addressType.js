@@ -25,4 +25,4 @@ const IPV6 = 'ipv6';
 export default {
     IPV4,
     IPV6
-}
+};

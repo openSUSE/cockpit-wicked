@@ -23,6 +23,7 @@ import startModeEnum from './startMode';
 import bondingModeEnum from './bondingMode';
 import interfaceType from './interfaceType';
 import addressType from './addressType';
+import bootProtocol from './bootProtocol';
 
 let connectionIndex = 0;
 let interfaceIndex = 0;
@@ -67,7 +68,6 @@ export const createRoute = ({ isDefault, destination, gateway, device, options }
         options
     };
 };
-
 
 /**
  * @typedef {Object} Connection

@@ -33,7 +33,9 @@ const PROPERTY_TO_TYPE = {
  * @returns {string} Interface type
  */
 const typeFromWicked = (wickedJson) => {
-    const property = Object.keys(PROPERTY_TO_TYPE).find(k => wickedJson.hasOwnProperty(k));
+    const property = Object.keys(PROPERTY_TO_TYPE).find(k => {
+        return Object.prototype.hasOwnProperty.call(wickedJson, k);
+    });
     return property ? PROPERTY_TO_TYPE[property] : interfaceType.ETHERNET;
 };
 

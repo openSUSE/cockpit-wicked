@@ -20,7 +20,6 @@
  */
 
 import { createInterface } from './interfaces';
-import { typeFromWicked } from './utils'
 
 describe('#createInterface', () => {
     const wickedInterface = {
@@ -36,13 +35,13 @@ describe('#createInterface', () => {
     it('returns an interface', () => {
         const iface = createInterface(wickedInterface);
         expect(iface)
-            .toEqual(expect.objectContaining({
-                name: 'eth0',
-                driver: 'virtio_net',
-                mac: '52:54:00:11:22:33',
-                description: '',
-                type: 'eth',
-                virtual: false,
-            }));
+                .toEqual(expect.objectContaining({
+                    name: 'eth0',
+                    driver: 'virtio_net',
+                    mac: '52:54:00:11:22:33',
+                    description: '',
+                    type: 'eth',
+                    virtual: false,
+                }));
     });
 });

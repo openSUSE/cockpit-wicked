@@ -45,7 +45,7 @@ describe('#getConfigurations', () => {
             // Check list data
             const bond0 = data.find(c => c.name === 'bond0');
             const bond0Slaves = bond0.bond.slaves.map(s => s.device);
-            expect(bond0Slaves).toEqual(['eth1', 'eth2'])
+            expect(bond0Slaves).toEqual(['eth1', 'eth2']);
         });
     });
-})
+});

@@ -48,9 +48,9 @@ describe('#createConnection', () => {
     };
 
     describe('when it is an ethernet connection', () => {
-        it('sets the type to \"ethernet\"', () => {
+        it('sets the type to "ethernet"', () => {
             const connection = createConnection(wickedConfig);
-            expect(connection.type).toEqual(interfaceType.ETHERNET)
+            expect(connection.type).toEqual(interfaceType.ETHERNET);
             expect(connection.startMode).toEqual(startMode.NFSROOT);
         });
     });
@@ -68,7 +68,8 @@ describe('#createConnection', () => {
             },
             {
                 type: addressType.IPV4, proto: bootProtocol.STATIC,
-                address: '192.168.1.2/24', label: 'backup' },
+                address: '192.168.1.2/24', label: 'backup'
+            },
             {
                 type: addressType.IPV4, proto: bootProtocol.STATIC,
                 address: '192.168.2.1/24', label: 'private'

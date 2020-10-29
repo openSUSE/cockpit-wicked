@@ -63,5 +63,5 @@ export default {
     DHCP_AUTOIP,
     NONE,
     values,
-    labels
+    label
 };

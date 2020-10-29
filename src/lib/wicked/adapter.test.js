@@ -21,7 +21,6 @@
 
 import Adapter from './adapter';
 import Client from './client';
-import { createConnection } from '../model';
 
 jest.mock('./client');
 
@@ -35,7 +34,7 @@ describe('#connections', () => {
 
     const resolveTo = (result) => () => {
         return new Promise((resolve) => {
-            process.nextTick(() => resolve(result))
+            process.nextTick(() => resolve(result));
         });
     };
 
@@ -44,7 +43,7 @@ describe('#connections', () => {
             return {
                 getConfigurations: resolveTo(configurations),
                 getInterfaces: resolveTo(interfaces)
-            }
+            };
         });
     });
 
@@ -56,7 +55,7 @@ describe('#connections', () => {
         return adapter.connections().then(conns => {
             expect(conns).toEqual([
                 expect.objectContaining({ name: 'eth0', type: 'eth' }),
-                expect.objectContaining({ type: 'br0', type: 'br' }),
+                expect.objectContaining({ name: 'br0', type: 'br' }),
             ]);
         });
     });

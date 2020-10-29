@@ -44,7 +44,7 @@ const createInterface = (iface) => {
     const mac = iface?.ethernet?.address;
     const type = typeFromWicked(iface);
 
-    return model.createInterface({name, description, type, driver, mac, virtual: false});
+    return model.createInterface({ name, description, type, driver, mac, virtual: false });
 };
 
 export {

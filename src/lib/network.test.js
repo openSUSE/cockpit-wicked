@@ -42,7 +42,7 @@ describe("NetworkClient", () => {
         it("returns the list of interfaces", () => {
             expect.assertions(2);
             return client.getInterfaces().then(data => {
-                expect(data.length).toEqual(5);
+                expect(data).toHaveLength(5);
 
                 const eth0 = data.find(i => i.name == 'eth0');
                 expect(eth0).toEqual(

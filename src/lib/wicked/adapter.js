@@ -42,12 +42,12 @@ class WickedAdapter {
      * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces
      */
     connections() {
-        return new Promise((resolve, _reject) => {
+        return new Promise((resolve, reject) => {
             this.client.getConfigurations()
-                  .then(configurations => {
-                      // TODO: memoize connections into _connections (?)
-                      resolve(configurations.map(createConnection));
-                  });
+                    .then(configurations => {
+                        // TODO: memoize connections into _connections (?)
+                        resolve(configurations.map(createConnection));
+                    });
         });
     }
 
@@ -57,14 +57,13 @@ class WickedAdapter {
      * @return {Promise.<Array.<Interface>>} Promise that resolves to a list of interfaces
      */
     interfaces() {
-        return new Promise((resolve, _reject) => {
+        return new Promise((resolve, reject) => {
             this.client.getInterfaces()
-                .then(interfaces => {
-                    resolve(interfaces.map(createInterface));
-                })
+                    .then(interfaces => {
+                        resolve(interfaces.map(createInterface));
+                    });
         });
     }
-
 }
 
 export default WickedAdapter;

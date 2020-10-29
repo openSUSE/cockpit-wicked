@@ -27,7 +27,6 @@
  */
 
 import model from '../model';
-import interfaceType from '../model/interfaceType';
 import startMode from '../model/startMode';
 import addressType from '../model/addressType';
 import bootProtocol from '../model/bootProtocol';
@@ -46,8 +45,8 @@ const startModeFor = (config) => {
     const { mode, boot_stage, persistent } = config.control;
 
     if (mode === 'boot') {
-        return (boot_stage === 'localfs' && persistent === 'true') ?
-            startMode.NFSROOT : startMode.AUTO;
+        return (boot_stage === 'localfs' && persistent === 'true')
+            ? startMode.NFSROOT : startMode.AUTO;
     } else {
         return START_MODE[mode];
     }
@@ -65,7 +64,7 @@ const bootProtoFor = (config) => {
     } else {
         return bootProtocol.NONE;
     }
-}
+};
 
 const staticAddressesConfigurations = (type, addresses) => {
     return addresses.map(addr => {
@@ -106,7 +105,7 @@ const addressesConfigurations = (config) => {
     }
 
     return addresses;
-}
+};
 
 /**
  * Creates a connection from a Wicked configuration
@@ -129,8 +128,8 @@ const createConnection = (config) => {
         addresses: addressesConfigurations(config),
         bootProto: bootProtoFor(config)
     });
-}
+};
 
 export {
     createConnection
-}
+};

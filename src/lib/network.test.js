@@ -30,7 +30,9 @@ describe("NetworkClient", () => {
             return client.getConnections().then(data => {
                 const conn = data[0];
                 expect(conn).toEqual(
-                    { id: 1, description: "Ethernet Card #1", name: "eth0" }
+                    // TODO: filter out the loopback interface
+                    expect.objectContaining({ name: "lo" }),
+                    expect.objectContaining({ name: "eth0" })
                 );
             });
         });
@@ -38,11 +40,21 @@ describe("NetworkClient", () => {
 
     describe("#getInterfaces", () => {
         it("returns the list of interfaces", () => {
-            expect.assertions(1);
+            expect.assertions(2);
             return client.getInterfaces().then(data => {
-                const conn = data[0];
-                expect(conn).toEqual(
-                    { name: "eth0", type: "eth" }
+                expect(data.length).toEqual(5);
+
+                const eth0 = data.find(i => i.name == 'eth0');
+                expect(eth0).toEqual(
+                    {
+                        id: 1,
+                        name: 'eth0',
+                        description: '',
+                        driver: 'virtio_net',
+                        mac: '52:54:00:ab:66:d3',
+                        type: 'eth',
+                        virtual: false
+                    }
                 );
             });
         });

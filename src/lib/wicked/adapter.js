@@ -24,13 +24,23 @@ import { createConnection } from './connections';
 import { createInterface } from './interfaces';
 
 /**
- * This class is responsible for retrieving and transforming the information needed from Wicked.
+ * This class is responsible for retrieving and updating Wicked's configuration.
+ *
+ * It relies on WickedClient to get the needed information from Wicked. However,
+ * it uses the `sysconfig` files as the mechanism to modify the configuration.
+ *
+ * @class
  */
-export default class Adapter {
+class WickedAdapter {
     constructor(client) {
         this.client = client || new Client();
     }
 
+    /**
+     * Returns a promise that resolves to an array of model Connection objects.
+     *
+     * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces
+     */
     connections() {
         return new Promise((resolve, _reject) => {
             this.client.getConfigurations()
@@ -41,6 +51,11 @@ export default class Adapter {
         });
     }
 
+    /**
+     * Returns a promise that resolves to an array of model Interface objects.
+     *
+     * @return {Promise.<Array.<Interface>>} Promise that resolves to a list of interfaces
+     */
     interfaces() {
         return new Promise((resolve, _reject) => {
             this.client.getInterfaces()
@@ -51,3 +66,5 @@ export default class Adapter {
     }
 
 }
+
+export default WickedAdapter;

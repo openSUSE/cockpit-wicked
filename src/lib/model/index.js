@@ -29,6 +29,24 @@ let interfaceIndex = 0;
 let routeIndex = 0;
 
 /**
+ * This module offers a set of factory functions for domain concepts like connections,
+ * interfaces or routes.
+ *
+ * @module model
+ */
+
+/**
+ * @typedef {Object} Route
+ * @property {boolean} isDefault - Whether the route is the default one
+ * @property {string} destination - Destination network (?)
+ * @property {string} gateway - Gateway
+ * @property {string} interface - Name of the interface associated to this connection
+ * @property {string} options - Additional options like metric
+ */
+
+/**
+ * @function
+ *
  * Returns an object representing a route
  *
  * @param {object} args - Route properties
@@ -37,8 +55,8 @@ let routeIndex = 0;
  * @param {string} args.gateway - Gateway
  * @param {string} args.interface - Name of the interface associated to this connection
  * @param {string} args.options - Additional options like metric
+ * @return {Route} Route object
  */
-
 export const createRoute = ({ isDefault, destination, gateway, device, options }) => {
     return {
         id: routeIndex++,
@@ -50,7 +68,21 @@ export const createRoute = ({ isDefault, destination, gateway, device, options }
     };
 };
 
+
 /**
+ * @typedef {Object} Connection
+ * @property {string} name - Connection name
+ * @property {string} description - Connection description
+ * @property {string} type - Connection type (@see model/interfaceType)
+ * @property {string} bootProto - Boot protocol (@see model/bootProtocol)
+ * @property {string} interfaceName - Associated interface name
+ * @property {Array<Object>} addresses - Address configurations
+ * @property {boolean} virtual - Whether it corresponds to a virtual interface or not
+ */
+
+/**
+ * @function
+ *
  * Returns an object representing a connection
  *
  * @param {object} args - Connection properties
@@ -59,9 +91,8 @@ export const createRoute = ({ isDefault, destination, gateway, device, options }
  * @param {string} args.type - Connection type ('eth', 'br', etc.)
  * @param {string} args.bootProto - Boot protocol ('dhcp', 'static', etc.)
  * @param {string} args.interfaceName - Name of the interface associated to this connection
- * @param {string} args.addresses - Addresses configurations
- * @param {boolean} args.virtual - Whether the associated device should be virtual
- * @returns {Interface}
+ * @param {string} args.addresses - Address configurations
+ * @return {Connection} Connection object
  */
 export const createConnection = ({
     name,
@@ -88,10 +119,14 @@ export const createConnection = ({
 };
 
 /**
+ * @function
+ *
  * Returns an object representing additional properties based on the connection type
  *
  * @param {string} type - Connection type ('eth', 'br', etc.)
  * @param {object} props - Additional connection properties
+ *
+ * @ignore
  */
 const propsByType = (type, props) => {
     const fn = propsByConnectionType[type];
@@ -101,6 +136,8 @@ const propsByType = (type, props) => {
 
 /**
  * An object holding additional properties per connection.
+ *
+ * @ignore
  */
 const propsByConnectionType = {
     [interfaceType.BONDING]: ({ bondingMode = bondingModeEnum.ACTIVE_BACKUP, options = "" }) => {
@@ -117,6 +154,8 @@ const propsByConnectionType = {
 };
 
 /**
+ * @function
+ *
  * Returns an address configuration object
  *
  * @param {object} args - Configuration attributes
@@ -142,15 +181,27 @@ export const createAddressConfig = ({
 };
 
 /**
- * Returns an object representing an interface
+ * @typedef {Object} Interface
+ * @property {string} name - Connection name
+ * @property {string} description - Connection description
+ * @property {string} type - Connection type (@see model/interfaceType)
+ * @property {string} mac - MAC address
+ * @property {string} driver - Kernel driver
+ * @property {boolean} virtual - Whether the device is virtual or physical
+ */
+
+/**
+ * @function
+ *
+ * Returns an object representing a Network interface
  *
  * @param {object} args - Interface properties
  * @param {string} args.name - Name
  * @param {string} args.description - Description
- * @param {string} args.driver - Kernel driver
  * @param {string} args.type - Connection type ('eth', 'br', etc.)
  * @param {string} args.mac - MAC address
- * @param {boolean} args.virtual - Whether the device is virtual or physical
+ * @param {string} args.driver - Kernel driver
+ * @return {Interface}
  */
 export const createInterface = ({
     name,

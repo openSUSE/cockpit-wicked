@@ -23,7 +23,19 @@ import model from '../model';
 import { typeFromWicked } from './utils';
 
 /**
+ * Set of factory functions to convert JSON data from Wicked into model interface objects.
+ *
+ * @module wicked/interfaces
+ * @see module:model
+ */
+
+/**
  * Creates an interface from a Wicked interface
+ *
+ * @function createInterface(iface)
+ *
+ * @param {object} iface - Interface data from Wicked
+ * @return {Interface} Interface model object
  */
 const createInterface = (iface) => {
     const { name } = iface.interface;

@@ -24,9 +24,13 @@ import cockpit from 'cockpit';
 /**
  * Converts a HTML element to a plain object
  *
+ * @function
+ *
  * @param {HTMLElement} element - Element to convert to JSON
  * @param {Array<string>} listElement - Special elements to be considered lists
- * @returns {Object} Plain object representing the element (and its children)
+ * @return {Object} Plain object representing the element (and its children)
+ *
+ * @ignore
  */
 const elementToJson = (element, listElements) => {
     const children = Array.from(element.children);
@@ -48,11 +52,15 @@ const elementToJson = (element, listElements) => {
 };
 
 
+/* @ignore */
 const emptyTagsRegExp = new RegExp(/<\w+\/>/, 'g');
+
 /**
- * Sanitize the xmlString
+ * Sanitize the XML string before it gets processed
  *
- * @param {string} xmlString - Removes empty tags, as they will cause troubles when parsing
+ * Removes empty tags, as they will cause troubles when parsing.
+ *
+ * @param {string} xmlString - XML string to sanitize
  */
 const sanitizeXml = (xmlString) => {
     return xmlString.replace(emptyTagsRegExp, '');
@@ -65,8 +73,10 @@ const sanitizeXml = (xmlString) => {
  * is parsed as HTML and some additional tweak is needed (@see sanitizeXml).
  *
  * @param {string} xmlString - XML string to convert to JSON
- * @param {Array<string>} listElement - Special elements to be considered lists
- * @returns {Object} Plain object representing the given XML
+ * @param {Array<string>} listElements - Special elements to be considered lists
+ * @return {Object} Plain object representing the given XML
+ *
+ * @ignore
  */
 const XmlToJson = (xmlString, listElements = []) => {
     const parser = new DOMParser();
@@ -77,11 +87,20 @@ const XmlToJson = (xmlString, listElements = []) => {
 }
 
 /**
- * Class to interact with wicked.
+ * Class to interact with Wicked.
  *
- * This class is responsible for communicating with wicked.
+ * @class
+ *
+ * This class is responsible for communicating with Wicked using its CLI and
+ * parsing the XML output.
  */
-export default class WickedClient {
+class WickedClient {
+    
+    /**
+     * Returns a promise that resolves to an array of objects representing interfaces
+     *
+     * @return {Promise.<Array.<Object>>} Promise that resolves to a list of interfaces
+     */
     getInterfaces() {
         return new Promise((resolve, reject) => {
             cockpit.spawn(['/usr/sbin/wicked', 'show-xml'])
@@ -93,6 +112,11 @@ export default class WickedClient {
         });
     }
 
+    /**
+     * Returns a promise that resolves to an array of objects representing configurations
+     *
+     * @return {Promise.<Array.<Object>>} Promise that resolves to a list of interfaces
+     */
     getConfigurations() {
         return new Promise((resolve, reject) => {
             cockpit.spawn(['/usr/sbin/wicked', 'show-config'])
@@ -104,3 +128,5 @@ export default class WickedClient {
         });
     }
 }
+
+export default WickedClient;

@@ -18,25 +18,14 @@
  * To contact SUSE LLC about this file by physical or electronic mail, you may
  * find current contact information at www.suse.com.
  */
-
-import interfaceType from '../model/interfaceType';
-
-const PROPERTY_TO_TYPE = {
-    bond: interfaceType.BONDING,
-    bridge: interfaceType.BRIDGE
-};
-
-/**
- * Try to infer the interface type from an object (interface or configuration) coming Wicked
- *
- * @param {object} wickedJson - Information from Wicked (an interface or a configuration object)
- * @returns {string} Interface type
- */
-const typeFromWicked = (wickedJson) => {
-    const property = Object.keys(PROPERTY_TO_TYPE).find(k => wickedJson.hasOwnProperty(k));
-    return property ? PROPERTY_TO_TYPE[property] : interfaceType.ETHERNET;
-};
-
-export {
-    typeFromWicked
+module.exports = {
+    plugins: [
+        'plugins/markdown',
+    ],
+    recurseDepth: 10,
+    sourceType: "module",
+    source: {
+        includePattern: ".+\\.js(doc|x)?$",
+        excludePattern: "(^|\\/|\\\\)_"
+    }
 };

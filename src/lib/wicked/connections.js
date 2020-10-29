@@ -19,6 +19,12 @@
  * find current contact information at www.suse.com.
  */
 
+/**
+ * Set of factory functions to convert JSON data from Wicked into connection model objects.
+ *
+ * @module wicked/connections
+ * @see module:model
+ */
 
 import model from '../model';
 import interfaceType from '../model/interfaceType';
@@ -104,6 +110,11 @@ const addressesConfigurations = (config) => {
 
 /**
  * Creates a connection from a Wicked configuration
+ *
+ * @function createConnection(config)
+ *
+ * @param {object} config - Connection configuration data from Wicked
+ * @return {Connection} Connection configuration model object
  */
 const createConnection = (config) => {
     const { name } = config;

@@ -23,16 +23,27 @@ import React, { useState, useEffect } from 'react';
 import cockpit from 'cockpit';
 
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
+import { useNetworkState } from '../NetworkContext';
+import RoutesDataList from "./RoutesDataList";
 
 const _ = cockpit.gettext;
 
 const AddressSettingsForm = ({ isOpen, onClose }) => {
+    const { routes: currentRoutes } = useNetworkState();
+
+    const [routes, setRoutes] = useState(currentRoutes);
+
     return (
         <Modal
             variant={ModalVariant.small}
             title={_("Address Settings")}
             isOpen={isOpen}
-            onClose={() => { console.log("Triggering #onClose"); onClose() }}
+            onClose={() => {
+                console.log("Now routes are", routes);
+                console.log("Triggering #onClose");
+
+                onClose();
+            }}
             actions={[
                 <Button key="confirm" variant="primary" onClick={() => {}}>
                     {_("Apply")}
@@ -43,7 +54,7 @@ const AddressSettingsForm = ({ isOpen, onClose }) => {
             ]}
         >
 
-            This is the dialog for editing the address settings.
+            <RoutesDataList routes={routes} updateRoutes={setRoutes} />
         </Modal>
     );
 };

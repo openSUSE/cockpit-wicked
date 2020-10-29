@@ -20,13 +20,17 @@
  */
 
 import cockpit from 'cockpit';
-import reader from './model/reader';
 import WickedAdapter from './wicked/adapter';
 
-// TODO: reduce duplication in get* methods
+/**
+ * Class responsible for interacting with the network.
+ *
+ * This class should be the entry point when it comes to read or modify the
+ * network configuration.
+ */
 export class NetworkClient {
-    constructor() {
-        this.adapter = new WickedAdapter();
+    constructor(adapter) {
+        this.adapter = adapter || new WickedAdapter();
     }
 
     /**
@@ -53,12 +57,7 @@ export class NetworkClient {
     * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
     */
     getRoutes() {
-        return new Promise((resolve, reject) => {
-            const client = cockpit.dbus("org.opensuse.YaST2.Network");
-            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "GetRoutes")
-                    .then(result => resolve(result[0].map(dataFromDBus)))
-                    .catch(reject);
-        });
+        return new Promise((resolve, reject) => resolve([]));
     }
 
     /**
@@ -68,15 +67,7 @@ export class NetworkClient {
      * @returns {Promise<Array|Error>} Resolves to an array of connection objects in case of success
      */
     updateConnections(connections) {
-        const dbusConnections = Object.values(connections).map(dataToDBus);
-        console.log("DBUS", dbusConnections);
-
-        return new Promise((resolve, reject) => {
-            const client = cockpit.dbus("org.opensuse.YaST2.Network");
-            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "UpdateConnections", [dbusConnections])
-                    .then(result => resolve(result[0].map(dataFromDBus)))
-                    .catch(reject);
-        });
+        return new Promise((resolve, reject) => resolve([]));
     }
 
     /**
@@ -86,14 +77,7 @@ export class NetworkClient {
      * @returns {Promise<Array|Error>} Resolves to an array of connection objects in case of success
      */
     updateRoutes(routes) {
-        const dbusRoutes = routes.map(dataToDBus);
-
-        return new Promise((resolve, reject) => {
-            const client = cockpit.dbus("org.opensuse.YaST2.Network");
-            client.call("/org/opensuse/YaST2/Network", "org.opensuse.YaST2.Network", "UpdateRoutes", [dbusRoutes])
-                    .then(result => resolve(result[0].map(dataFromDBus)))
-                    .catch(reject);
-        });
+        return new Promise((resolve, reject) => resolve([]));
     }
 
     getEssidList(iface) {

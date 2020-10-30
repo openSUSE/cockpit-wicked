@@ -48,28 +48,32 @@ const _ = cockpit.gettext;
 
 const FIELDS = {
     address: { component: IPInput, props: { placeholder: _("Address"), "aria-label": _("Address") } },
-    label: { component: IPInput, props: { placeholder: _("Label"), "aria-label": _("Label") } }
+    label: { component: TextInput, props: { placeholder: _("Label"), "aria-label": _("Label") } }
 };
 
 const AddressesDataList = ({ addresses, updateAddresses }) => {
+    console.log("Addresses are", addresses);
     const addAddress = () => {
         const address = createAddressConfig();
-        updateAddresses({ ...addresses, [address.id]: address });
+        const currentAddresses = [...addresses];
+        currentAddresses.push(address);
+        updateAddresses(currentAddresses);
     };
 
     const updateAddress = (id, field, value) => {
-        const address = { ...addresses[id] };
+        const nextAddresses = [...addresses];
+        const address = nextAddresses.find((addr) => addr.id == id);
         address[field] = value;
+
         // TODO: check if this do not generate not needed re-renders
-        updateAddresses({ ...addresses, [id]: address });
+        updateAddresses(nextAddresses);
     };
 
     const deleteAddress = (id) => {
-        const nextAddress = Object.fromEntries(
-            Object.entries(addresses).filter(([key, address]) => key != id)
-        );
-
-        updateAddresses(nextAddress);
+        const nextAddresses = [...addresses];
+        const addressIdx = nextAddresses.findIndex((addr) => addr.id == id);
+        nextAddresses.splice(addressIdx, 1);
+        updateAddresses(nextAddresses);
     };
 
     const renderAddress = ({ id, ...address }) => {
@@ -122,7 +126,7 @@ const AddressesDataList = ({ addresses, updateAddresses }) => {
             </StackItem>
             <StackItem>
                 <DataList isCompact aria-label={_("Addresses data list")}>
-                    {Object.values(addresses).map((address) => renderAddress(address))}
+                    {addresses.map((address) => renderAddress(address))}
                 </DataList>
             </StackItem>
         </Stack>

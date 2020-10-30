@@ -41,12 +41,15 @@ import RoutesDataList from "./RoutesDataList";
 
 const _ = cockpit.gettext;
 
+// TODO: create a connection when it does not exist yet?
 const AddressSettingsForm = ({ connection, isOpen, onClose }) => {
     const { routes: currentRoutes } = useNetworkState();
+    const currentAddresses = connection?.addresses || [];
+    const additionalAddresses = currentAddresses.filter((addr) => addr.proto === bootProtocol.STATIC);
 
     const [bootProto, setBootProto] = useState(connection?.bootProto || bootProtocol.STATIC);
     const [routes, setRoutes] = useState(currentRoutes);
-    const [addresses, setAddresses] = useState({});
+    const [addresses, setAddresses] = useState(additionalAddresses);
 
     return (
         <Modal
@@ -54,6 +57,7 @@ const AddressSettingsForm = ({ connection, isOpen, onClose }) => {
             title={_("Address Settings")}
             isOpen={isOpen}
             onClose={() => {
+                // TODO: implement the business logic
                 console.log("Now boot proto id", bootProto);
                 console.log("Now addresses are", addresses);
                 console.log("Now routes are", routes);

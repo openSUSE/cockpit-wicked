@@ -22,6 +22,8 @@
 import Client from './client';
 import { createConnection } from './connections';
 import { createInterface } from './interfaces';
+import { IfcfgFile } from './files';
+import cockpit from 'cockpit';
 
 /**
  * This class is responsible for retrieving and updating Wicked's configuration.
@@ -63,6 +65,25 @@ class WickedAdapter {
                         resolve(interfaces.map(createInterface));
                     });
         });
+    }
+
+    updateConnection(connection) {
+        return new Promise((resolve, reject) => {
+            this.updateConnectionConfig(connection)
+                    .then(() => this.reloadConnection(connection.name))
+                    .then(() => resolve(connection))
+                    .catch(reject);
+        });
+    }
+
+    updateConnectionConfig(connection) {
+        const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
+        const file = new IfcfgFile(filePath);
+        return file.update(connection);
+    }
+
+    reloadConnection(name) {
+        return cockpit.spawn(['/usr/sbin/wicked', 'ifreload', name], { superuser: "require" });
     }
 }
 

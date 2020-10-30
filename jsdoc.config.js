@@ -18,46 +18,14 @@
  * To contact SUSE LLC about this file by physical or electronic mail, you may
  * find current contact information at www.suse.com.
  */
-
-import cockpit from 'cockpit';
-
-const _ = cockpit.gettext;
-const NC_ = cockpit.noop;
-
-const ETHERNET = "eth";
-const WIRELESS = "wlan";
-const BONDING = "bond";
-const BRIDGE = "br";
-const VLAN = "vlan";
-
-const values = [
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN
-];
-
-const labels = {
-    [ETHERNET]: NC_("Ethernet"),
-    [WIRELESS]: NC_("Wireless"),
-    [BONDING]: NC_("Bonding"),
-    [BRIDGE]: NC_("Bridge"),
-    [VLAN]: NC_("VLAN")
-};
-
-const label = (type) => _(labels[type]);
-
-const virtualTypes = [BONDING, BRIDGE, VLAN];
-const isVirtual = (type) => virtualTypes.includes(type);
-
-export default {
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN,
-    values,
-    label,
-    isVirtual
+module.exports = {
+    plugins: [
+        'plugins/markdown',
+    ],
+    recurseDepth: 10,
+    sourceType: "module",
+    source: {
+        includePattern: ".+\\.js(doc|x)?$",
+        excludePattern: "(^|\\/|\\\\)_"
+    }
 };

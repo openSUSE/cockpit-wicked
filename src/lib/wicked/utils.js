@@ -19,45 +19,26 @@
  * find current contact information at www.suse.com.
  */
 
-import cockpit from 'cockpit';
+import interfaceType from '../model/interfaceType';
 
-const _ = cockpit.gettext;
-const NC_ = cockpit.noop;
-
-const ETHERNET = "eth";
-const WIRELESS = "wlan";
-const BONDING = "bond";
-const BRIDGE = "br";
-const VLAN = "vlan";
-
-const values = [
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN
-];
-
-const labels = {
-    [ETHERNET]: NC_("Ethernet"),
-    [WIRELESS]: NC_("Wireless"),
-    [BONDING]: NC_("Bonding"),
-    [BRIDGE]: NC_("Bridge"),
-    [VLAN]: NC_("VLAN")
+const PROPERTY_TO_TYPE = {
+    bond: interfaceType.BONDING,
+    bridge: interfaceType.BRIDGE
 };
 
-const label = (type) => _(labels[type]);
+/**
+ * Try to infer the interface type from an object (interface or configuration) coming Wicked
+ *
+ * @param {object} wickedJson - Information from Wicked (an interface or a configuration object)
+ * @returns {string} Interface type
+ */
+const typeFromWicked = (wickedJson) => {
+    const property = Object.keys(PROPERTY_TO_TYPE).find(k => {
+        return Object.prototype.hasOwnProperty.call(wickedJson, k);
+    });
+    return property ? PROPERTY_TO_TYPE[property] : interfaceType.ETHERNET;
+};
 
-const virtualTypes = [BONDING, BRIDGE, VLAN];
-const isVirtual = (type) => virtualTypes.includes(type);
-
-export default {
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN,
-    values,
-    label,
-    isVirtual
+export {
+    typeFromWicked
 };

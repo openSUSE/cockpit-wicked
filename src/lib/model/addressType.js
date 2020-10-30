@@ -19,45 +19,10 @@
  * find current contact information at www.suse.com.
  */
 
-import cockpit from 'cockpit';
-
-const _ = cockpit.gettext;
-const NC_ = cockpit.noop;
-
-const ETHERNET = "eth";
-const WIRELESS = "wlan";
-const BONDING = "bond";
-const BRIDGE = "br";
-const VLAN = "vlan";
-
-const values = [
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN
-];
-
-const labels = {
-    [ETHERNET]: NC_("Ethernet"),
-    [WIRELESS]: NC_("Wireless"),
-    [BONDING]: NC_("Bonding"),
-    [BRIDGE]: NC_("Bridge"),
-    [VLAN]: NC_("VLAN")
-};
-
-const label = (type) => _(labels[type]);
-
-const virtualTypes = [BONDING, BRIDGE, VLAN];
-const isVirtual = (type) => virtualTypes.includes(type);
+const IPV4 = 'ipv4';
+const IPV6 = 'ipv6';
 
 export default {
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN,
-    values,
-    label,
-    isVirtual
+    IPV4,
+    IPV6
 };

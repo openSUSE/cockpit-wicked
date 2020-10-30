@@ -13,7 +13,8 @@
     "eslint:fix": "eslint --fix --ext .js --ext .jsx src/",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage --colors"
+    "test:coverage": "jest --coverage --colors",
+    "doc": "jsdoc --configure jsdoc.config.js --recurse --destination doc/ src/"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
@@ -43,6 +44,7 @@
     "jed": "^1.1.1",
     "jest": "^26.5.3",
     "jest-transform-stub": "^2.0.0",
+    "jsdoc": "^3.6.6",
     "mini-css-extract-plugin": "^0.11.0",
     "node-sass": "^4.14.1",
     "po2json": "^1.0.0-alpha",

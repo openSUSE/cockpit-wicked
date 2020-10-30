@@ -24,40 +24,44 @@ import cockpit from 'cockpit';
 const _ = cockpit.gettext;
 const NC_ = cockpit.noop;
 
-const ETHERNET = "eth";
-const WIRELESS = "wlan";
-const BONDING = "bond";
-const BRIDGE = "br";
-const VLAN = "vlan";
+const STATIC = 'static';
+const DHCP = 'dhcp';
+const DHCP4 = 'dhcp4';
+const DHCP6 = 'dhcp6';
+const AUTOIP = 'autoip';
+const DHCP_AUTOIP = 'dhcp+autoip';
+const NONE = 'none';
 
 const values = [
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN
+    STATIC,
+    DHCP,
+    DHCP4,
+    DHCP6,
+    AUTOIP,
+    DHCP_AUTOIP,
+    NONE
 ];
 
 const labels = {
-    [ETHERNET]: NC_("Ethernet"),
-    [WIRELESS]: NC_("Wireless"),
-    [BONDING]: NC_("Bonding"),
-    [BRIDGE]: NC_("Bridge"),
-    [VLAN]: NC_("VLAN")
+    [STATIC]: NC_("Static"),
+    [DHCP]: NC_("DHCP"),
+    [DHCP4]: NC_("DHCPv4"),
+    [DHCP6]: NC_("DHCPv6"),
+    [AUTOIP]: NC_("AUTOIP"),
+    [DHCP_AUTOIP]: NC_("DHCP+AUTOIP"),
+    [NONE]: NC_("None")
 };
 
-const label = (type) => _(labels[type]);
-
-const virtualTypes = [BONDING, BRIDGE, VLAN];
-const isVirtual = (type) => virtualTypes.includes(type);
+const label = (proto) => _(labels[proto]);
 
 export default {
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN,
+    STATIC,
+    DHCP,
+    DHCP4,
+    DHCP6,
+    AUTOIP,
+    DHCP_AUTOIP,
+    NONE,
     values,
-    label,
-    isVirtual
+    label
 };

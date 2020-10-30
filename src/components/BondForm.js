@@ -86,7 +86,7 @@ const BondForm = ({ isOpen, onClose, bond }) => {
         } else {
             setCandidateInterfaces(Object.values(interfaces));
         }
-    }, [interfaces]);
+    }, [interfaces, bond.id, isEditing]);
 
     const addConnection = () => {
         const { mode, ...rest } = parseOptions(options);

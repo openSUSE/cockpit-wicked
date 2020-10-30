@@ -19,43 +19,29 @@
  * find current contact information at www.suse.com.
  */
 
-const connectionsFromDBus = [
-    [
-        {
-            Description: { t: "s", v: "Ethernet Card #1" },
-            Id:          { t: "i", v: 1 },
-            Name:        { t: "s", v: "eth0" }
-        }
-    ]
-];
+const fs = require('fs');
+const path = require('path');
 
-const interfacesFromDBus = [
-    [
-        {
-            Name: { t: "s", v: "eth0" },
-            Type: { t: "s", v: "eth" }
-        }
-    ]
-];
+const wickedShowXml = fs.readFileSync(path.join(__dirname, 'show-xml.xml')).toString();
+const wickedShowConfig = fs.readFileSync(path.join(__dirname, 'show-config.xml')).toString();
 
-const dbusData = {
-    GetConnections: connectionsFromDBus,
-    GetInterfaces:  interfacesFromDBus
+const spawnResponses = {
+    '/usr/sbin/wicked show-xml': wickedShowXml,
+    '/usr/sbin/wicked show-config': wickedShowConfig
 };
-
-const dbusClient = {
-    call: (object_path, iface, method) => {
-        return new Promise((resolve, reject) => {
-            process.nextTick(() => {
-                resolve(dbusData[method]);
-            });
-        });
-    }
-}
 
 const cockpit = {
     gettext: (text) => text,
-    dbus: () => dbusClient
+    noop: (args) => args,
+    spawn: (args) => {
+        return new Promise((resolve, reject) => {
+            process.nextTick(() => {
+                const cmd = args.join(' ');
+                const response = spawnResponses[cmd];
+                resolve(response);
+            });
+        });
+    }
 }
 
 export default cockpit;

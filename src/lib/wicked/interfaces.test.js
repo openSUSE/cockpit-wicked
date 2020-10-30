@@ -19,45 +19,29 @@
  * find current contact information at www.suse.com.
  */
 
-import cockpit from 'cockpit';
+import { createInterface } from './interfaces';
 
-const _ = cockpit.gettext;
-const NC_ = cockpit.noop;
+describe('#createInterface', () => {
+    const wickedInterface = {
+        interface: { name: 'eth0' },
+        ethtool: {
+            driver_info: { driver: 'virtio_net' }
+        },
+        ethernet: {
+            address: '52:54:00:11:22:33'
+        }
+    };
 
-const ETHERNET = "eth";
-const WIRELESS = "wlan";
-const BONDING = "bond";
-const BRIDGE = "br";
-const VLAN = "vlan";
-
-const values = [
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN
-];
-
-const labels = {
-    [ETHERNET]: NC_("Ethernet"),
-    [WIRELESS]: NC_("Wireless"),
-    [BONDING]: NC_("Bonding"),
-    [BRIDGE]: NC_("Bridge"),
-    [VLAN]: NC_("VLAN")
-};
-
-const label = (type) => _(labels[type]);
-
-const virtualTypes = [BONDING, BRIDGE, VLAN];
-const isVirtual = (type) => virtualTypes.includes(type);
-
-export default {
-    ETHERNET,
-    WIRELESS,
-    BONDING,
-    BRIDGE,
-    VLAN,
-    values,
-    label,
-    isVirtual
-};
+    it('returns an interface', () => {
+        const iface = createInterface(wickedInterface);
+        expect(iface)
+                .toEqual(expect.objectContaining({
+                    name: 'eth0',
+                    driver: 'virtio_net',
+                    mac: '52:54:00:11:22:33',
+                    description: '',
+                    type: 'eth',
+                    virtual: false,
+                }));
+    });
+});

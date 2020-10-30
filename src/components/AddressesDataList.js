@@ -21,6 +21,7 @@
 
 import React, { useState } from 'react';
 import cockpit from 'cockpit';
+import { createAddressConfig } from '../lib/model';
 
 import {
     Button,
@@ -42,39 +43,37 @@ import {
 import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-icon';
 import MinusIcon from '@patternfly/react-icons/dist/js/icons/minus-icon';
 import IPInput from './IPInput';
-import { createRoute } from '../lib/model';
 
 const _ = cockpit.gettext;
 
 const FIELDS = {
-    destination: { component: IPInput, props: { placeholder: _("Destination"), "aria-label": _("Destination") } },
-    gateway: { component: IPInput, props: { placeholder: _("Gateway"), "aria-label": _("Gateway") } },
-    options: { component: TextInput, props: { placeholder: _("Options"), "aria-label": _("Options") } },
+    address: { component: IPInput, props: { placeholder: _("Address"), "aria-label": _("Address") } },
+    label: { component: IPInput, props: { placeholder: _("Label"), "aria-label": _("Label") } }
 };
 
-const RoutesDataList = ({ routes, updateRoutes }) => {
-    const addRoute = () => {
-        const route = createRoute();
-        updateRoutes({ ...routes, [route.id]: route });
+const AddressesDataList = ({ addresses, updateAddresses }) => {
+    const addAddress = () => {
+        const address = createAddressConfig();
+        updateAddresses({ ...addresses, [address.id]: address });
     };
 
-    const updateRoute = (id, field, value) => {
-        const route = { ...routes[id] };
-        route[field] = value;
+    const updateAddress = (id, field, value) => {
+        const address = { ...addresses[id] };
+        address[field] = value;
         // TODO: check if this do not generate not needed re-renders
-        updateRoutes({ ...routes, [id]: route });
+        updateAddresses({ ...addresses, [id]: address });
     };
 
-    const deleteRoute = (id) => {
-        const nextRoutes = Object.fromEntries(
-            Object.entries(routes).filter(([key, route]) => key != id)
+    const deleteAddress = (id) => {
+        const nextAddress = Object.fromEntries(
+            Object.entries(addresses).filter(([key, address]) => key != id)
         );
 
-        updateRoutes(nextRoutes);
+        updateAddresses(nextAddress);
     };
 
-    const renderRoute = ({ id, ...route }) => {
-        const cells = Object.keys(route).map((fieldKey) => {
+    const renderAddress = ({ id, ...address }) => {
+        const cells = Object.keys(address).map((fieldKey) => {
             const field = FIELDS[fieldKey];
 
             if (!field) return null;
@@ -82,11 +81,11 @@ const RoutesDataList = ({ routes, updateRoutes }) => {
             const FieldComponent = field.component;
 
             return (
-                <DataListCell key={`route-${id}-${fieldKey}`}>
+                <DataListCell key={`address-${id}-${fieldKey}`}>
                     <FieldComponent
-                      defaultValue={route[fieldKey]}
-                      onChange={(value) => updateRoute(id, fieldKey, value)}
-                      onError={(value) => console.log("Invalid value", value, "for", fieldKey, "on route", id)}
+                      defaultValue={address[fieldKey]}
+                      onChange={(value) => updateAddress(id, fieldKey, value)}
+                      onError={(value) => console.log("Invalid value", value, "for", fieldKey, "on address", id)}
                       {...field.props}
                     />
                 </DataListCell>
@@ -94,11 +93,11 @@ const RoutesDataList = ({ routes, updateRoutes }) => {
         });
 
         return (
-            <DataListItem key={`route-${id}`}>
+            <DataListItem key={`address-${id}`}>
                 <DataListItemRow>
                     <DataListItemCells dataListCells={cells} />
                     <DataListAction>
-                        <Button variant="secondory" className="btn-sm" onClick={() => deleteRoute(id)}>
+                        <Button variant="secondory" className="btn-sm" onClick={() => deleteAddress(id)}>
                             <MinusIcon />
                         </Button>
                     </DataListAction>
@@ -112,22 +111,22 @@ const RoutesDataList = ({ routes, updateRoutes }) => {
             <StackItem>
                 <Split hasGutter>
                     <SplitItem isFilled>
-                        <Title headingLevel="h2">{_("Routes")}</Title>
+                        <Title headingLevel="h2">{_("Addresses")}</Title>
                     </SplitItem>
                     <SplitItem>
-                        <Button variant="primary" className="btn-sm" onClick={() => addRoute() }>
+                        <Button variant="primary" className="btn-sm" onClick={() => addAddress() }>
                             <PlusIcon />
                         </Button>
                     </SplitItem>
                 </Split>
             </StackItem>
             <StackItem>
-                <DataList isCompact aria-label={_("Routes data list")}>
-                    {Object.values(routes).map((route) => renderRoute(route))}
+                <DataList isCompact aria-label={_("Addresses data list")}>
+                    {Object.values(addresses).map((address) => renderAddress(address))}
                 </DataList>
             </StackItem>
         </Stack>
     );
 };
 
-export default RoutesDataList;
+export default AddressesDataList;

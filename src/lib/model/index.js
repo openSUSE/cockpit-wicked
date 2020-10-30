@@ -25,6 +25,7 @@ import interfaceType from './interfaceType';
 import addressType from './addressType';
 import bootProtocol from './bootProtocol';
 
+let addressConfigIndex = 0;
 let connectionIndex = 0;
 let interfaceIndex = 0;
 let routeIndex = 0;
@@ -172,8 +173,9 @@ export const createAddressConfig = ({
     proto = bootProtocol.STATIC,
     address,
     label = ""
-}) => {
+} = {}) => {
     return {
+        id: addressConfigIndex++,
         type,
         proto,
         address,

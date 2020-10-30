@@ -22,8 +22,9 @@
 import React, { useState, useEffect } from 'react';
 import cockpit from 'cockpit';
 
-import { Button, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, Modal, ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 import { useNetworkState } from '../NetworkContext';
+import AddressesDataList from "./AddressesDataList";
 import RoutesDataList from "./RoutesDataList";
 
 const _ = cockpit.gettext;
@@ -32,6 +33,7 @@ const AddressSettingsForm = ({ isOpen, onClose }) => {
     const { routes: currentRoutes } = useNetworkState();
 
     const [routes, setRoutes] = useState(currentRoutes);
+    const [addresses, setAddresses] = useState({});
 
     return (
         <Modal
@@ -39,6 +41,7 @@ const AddressSettingsForm = ({ isOpen, onClose }) => {
             title={_("Address Settings")}
             isOpen={isOpen}
             onClose={() => {
+                console.log("Now addresses are", addresses);
                 console.log("Now routes are", routes);
                 console.log("Triggering #onClose");
 
@@ -54,7 +57,15 @@ const AddressSettingsForm = ({ isOpen, onClose }) => {
             ]}
         >
 
-            <RoutesDataList routes={routes} updateRoutes={setRoutes} />
+            <Stack hasGutter>
+                <StackItem>
+                    <AddressesDataList addresses={addresses} updateAddresses={setAddresses} />
+                </StackItem>
+
+                <StackItem>
+                    <RoutesDataList routes={routes} updateRoutes={setRoutes} />
+                </StackItem>
+            </Stack>
         </Modal>
     );
 };

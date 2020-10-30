@@ -41,13 +41,14 @@ import {
 
 import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-icon';
 import MinusIcon from '@patternfly/react-icons/dist/js/icons/minus-icon';
-import { createRoute } from "../lib/model";
+import IPInput from './IPInput';
+import { createRoute } from '../lib/model';
 
 const _ = cockpit.gettext;
 
 const FIELDS = {
-    destination: { component: TextInput, props: { placeholder: _("Destination"), "aria-label": _("Destination") } },
-    gateway: { component: TextInput, props: { placeholder: _("Gateway"), "aria-label": _("Gateway") } },
+    destination: { component: IPInput, props: { placeholder: _("Destination"), "aria-label": _("Destination") } },
+    gateway: { component: IPInput, props: { placeholder: _("Gateway"), "aria-label": _("Gateway") } },
     options: { component: TextInput, props: { placeholder: _("Options"), "aria-label": _("Options") } },
 };
 
@@ -58,11 +59,10 @@ const RoutesDataList = ({ routes, updateRoutes }) => {
     };
 
     const updateRoute = (id, field, value) => {
-        // TODO: this is directly mutating given list of routes. Check if it is acceptable.
-        routes[id][field] = value;
-
-        // FIXME: let's avoid not needed re-renders.
-        // updateRoutes({ ...routes })
+        const route = { ...routes[id] };
+        route[field] = value;
+        // TODO: check if this do not generate not needed re-renders
+        updateRoutes({ ...routes, [id]: route })
     };
 
     const deleteRoute = (id) => {
@@ -83,7 +83,12 @@ const RoutesDataList = ({ routes, updateRoutes }) => {
 
             return (
                 <DataListCell key={`route-${id}-${fieldKey}`}>
-                    <FieldComponent defaultValue={route[fieldKey]} {...field.props} />
+                    <FieldComponent
+                      defaultValue={route[fieldKey]}
+                      onChange={(value) => updateRoute(id, fieldKey, value)}
+                      onError={(value) => console.log("Invalid value", value, "for", fieldKey, "on route", id)}
+                      {...field.props}
+                    />
                 </DataListCell>
             );
         });

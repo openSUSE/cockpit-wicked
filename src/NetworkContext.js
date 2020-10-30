@@ -20,7 +20,8 @@
  */
 
 import React from 'react';
-import { createConnection, createInterface, createRoute } from './lib/model';
+import { createConnection, createInterface, createRoute, mergeConnection } from './lib/model';
+import NetworkClient from './lib/NetworkClient';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
@@ -90,11 +91,9 @@ function networkReducer(state, action) {
     }
 
     case UPDATE_CONNECTION: {
-        const { id, changes } = action.payload;
+        const { id } = action.payload;
         const { connections } = state;
-        const conn = connections[id];
-        // FIXME: what about updating the interface name?
-        return { ...state, connections: { ...connections, [id]: { ...conn, ...changes, modified: true } } };
+        return { ...state, connections: { ...connections, [id]: action.payload } };
     }
 
     case UPDATE_ROUTE: {
@@ -141,10 +140,38 @@ function NetworkProvider({ children }) {
     );
 }
 
+/**
+ * FIXME: needed to use a function in order to delay building the object and make the tests to work
+ */
+const networkClient = () => new NetworkClient();
+
+/**
+ * Updates a connection using the NetworkClient
+ *
+ * If the update was successful, it dispatches the UPDATE_CONNECTION action.
+ *
+ * @todo Notify when something went wrong.
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Connection} connection - Connection to update
+ * @param {Object|Connection} changes - Changes to apply to the connection
+ * @return {Promise}
+ */
+function updateConnection(dispatch, connection, changes) {
+    return new Promise((resolve, reject) => {
+        networkClient().updateConnection(mergeConnection(connection, changes))
+                .then(updatedConn => {
+                    dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
+                    resolve(updatedConn);
+                })
+                .catch(reject);
+    });
+}
+
 export {
     NetworkProvider,
     useNetworkState,
     useNetworkDispatch,
-    actionTypes
-
+    actionTypes,
+    updateConnection
 };

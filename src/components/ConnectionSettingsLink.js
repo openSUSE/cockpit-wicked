@@ -21,12 +21,12 @@
 
 import React, { useState } from 'react';
 import { Button } from '@patternfly/react-core';
-import AddressSettingsForm from './AddressSettingsForm';
+import ConnectionSettingsForm from './ConnectionSettingsForm';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const AddressSettingsLink = ({ connection }) => {
+const ConnectionSettingsLink = ({ connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     const renderLinkText = () => {
@@ -39,9 +39,9 @@ const AddressSettingsLink = ({ connection }) => {
     return (
         <>
             <Button variant="link" onClick={() => setFormOpen(true)}>{renderLinkText()}</Button>
-            { isFormOpen && <AddressSettingsForm connection={connection} isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
+            { isFormOpen && <ConnectionSettingsForm connection={connection} isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };
 
-export default AddressSettingsLink;
+export default ConnectionSettingsLink;

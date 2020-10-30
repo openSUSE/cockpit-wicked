@@ -42,7 +42,7 @@ import RoutesDataList from "./RoutesDataList";
 const _ = cockpit.gettext;
 
 // TODO: create a connection when it does not exist yet?
-const AddressSettingsForm = ({ connection, isOpen, onClose }) => {
+const ConnectionSettingsForm = ({ connection, isOpen, onClose }) => {
     const { routes: currentRoutes } = useNetworkState();
     const currentAddresses = connection?.addresses || [];
     const additionalAddresses = currentAddresses.filter((addr) => addr.proto === bootProtocol.STATIC);
@@ -54,7 +54,7 @@ const AddressSettingsForm = ({ connection, isOpen, onClose }) => {
     return (
         <Modal
             variant={ModalVariant.small}
-            title={_("Address Settings")}
+            title={_("Connection Settings")}
             isOpen={isOpen}
             onClose={() => {
                 // TODO: implement the business logic
@@ -98,4 +98,4 @@ const AddressSettingsForm = ({ connection, isOpen, onClose }) => {
     );
 };
 
-export default AddressSettingsForm;
+export default ConnectionSettingsForm;

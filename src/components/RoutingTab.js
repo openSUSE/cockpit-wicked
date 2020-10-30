@@ -22,7 +22,7 @@
 import cockpit from 'cockpit';
 import React, { useState, useEffect } from 'react';
 import SaveChanges from './SaveChanges';
-import { NetworkClient } from '../lib/network';
+import NetworkClient from '../lib/NetworkClient';
 import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import { Card, CardBody, CardTitle, Toolbar, ToolbarContent, ToolbarItem, Switch } from '@patternfly/react-core';
 import RoutesList from './RoutesList';

@@ -26,7 +26,7 @@ import AddBridge from './AddBridge';
 import SaveChanges from './SaveChanges';
 import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
-import { NetworkClient } from '../lib/network';
+import NetworkClient from '../lib/NetworkClient';
 
 const client = new NetworkClient();
 

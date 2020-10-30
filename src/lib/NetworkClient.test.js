@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import { NetworkClient } from './network';
+import NetworkClient from '../lib/NetworkClient';
 
 const client = new NetworkClient();
 

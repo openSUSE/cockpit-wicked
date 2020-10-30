@@ -21,17 +21,30 @@
 
 import React, { useState, useEffect } from 'react';
 import cockpit from 'cockpit';
+import bootProtocol from '../lib/model/bootProtocol';
 
-import { Button, Modal, ModalVariant, Stack, StackItem } from '@patternfly/react-core';
+import {
+    Button,
+    Modal,
+    ModalVariant,
+    Split,
+    SplitItem,
+    Stack,
+    StackItem,
+    Title
+} from '@patternfly/react-core';
+
 import { useNetworkState } from '../NetworkContext';
+import BootProtoSelector from "./BootProtoSelector";
 import AddressesDataList from "./AddressesDataList";
 import RoutesDataList from "./RoutesDataList";
 
 const _ = cockpit.gettext;
 
-const AddressSettingsForm = ({ isOpen, onClose }) => {
+const AddressSettingsForm = ({ connection, isOpen, onClose }) => {
     const { routes: currentRoutes } = useNetworkState();
 
+    const [bootProto, setBootProto] = useState(connection?.bootProto || bootProtocol.STATIC);
     const [routes, setRoutes] = useState(currentRoutes);
     const [addresses, setAddresses] = useState({});
 
@@ -41,6 +54,7 @@ const AddressSettingsForm = ({ isOpen, onClose }) => {
             title={_("Address Settings")}
             isOpen={isOpen}
             onClose={() => {
+                console.log("Now boot proto id", bootProto);
                 console.log("Now addresses are", addresses);
                 console.log("Now routes are", routes);
                 console.log("Triggering #onClose");
@@ -56,8 +70,18 @@ const AddressSettingsForm = ({ isOpen, onClose }) => {
                 </Button>
             ]}
         >
-
             <Stack hasGutter>
+                <StackItem>
+                    <Split hasGutter>
+                        <SplitItem isFilled>
+                            <Title headingLevel="h2">{_("Boot Protocol")}</Title>
+                        </SplitItem>
+                        <SplitItem>
+                            <BootProtoSelector value={bootProto} onChange={setBootProto} />
+                        </SplitItem>
+                    </Split>
+                </StackItem>
+
                 <StackItem>
                     <AddressesDataList addresses={addresses} updateAddresses={setAddresses} />
                 </StackItem>

@@ -20,28 +20,25 @@
  */
 
 import React, { useState } from 'react';
-import { Button } from '@patternfly/react-core';
-import AddressSettingsForm from './AddressSettingsForm';
 import cockpit from 'cockpit';
+import bootProtocol from '../lib/model/bootProtocol';
+
+import { FormSelect, FormSelectOption } from '@patternfly/react-core';
 
 const _ = cockpit.gettext;
 
-const AddressSettingsLink = ({ connection }) => {
-    const [isFormOpen, setFormOpen] = useState(false);
+const bootProtocolOptions = bootProtocol.values.map(bootProto => {
+    return { value: bootProto, label: bootProtocol.label(bootProto) };
+});
 
-    const renderLinkText = () => {
-        if (!connection) return _("Not configured");
-        if (connection.bootProto !== "static") return connection.bootProto;
-
-        return connection.iP;
-    };
-
+const BootProtoSelector = ({ value, onChange }) => {
     return (
-        <>
-            <Button variant="link" onClick={() => setFormOpen(true)}>{renderLinkText()}</Button>
-            { isFormOpen && <AddressSettingsForm connection={connection} isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
-        </>
+        <FormSelect value={value} onChange={onChange} id="bootProto">
+            {bootProtocolOptions.map((option, index) => (
+                <FormSelectOption key={index} value={option.value} label={option.label} />
+            ))}
+        </FormSelect>
     );
 };
 
-export default AddressSettingsLink;
+export default BootProtoSelector;

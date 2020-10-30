@@ -41,7 +41,8 @@ const cockpit = {
                 resolve(response);
             });
         });
-    }
-}
+    },
+    file: () => ({})
+};
 
 export default cockpit;

@@ -100,10 +100,10 @@ export const createConnection = ({
     name,
     description,
     type = interfaceType.ETHERNET,
-    bootProto = bootProtocol.NONE,
     interfaceName,
     startMode = startModeEnum.AUTO,
-    addresses,
+    ipv4 = { addresses: [], bootProto: bootProtocol.NONE },
+    ipv6 = { addresses: [], bootProto: bootProtocol.NONE },
     ...rest
 }) => {
     return {
@@ -111,10 +111,10 @@ export const createConnection = ({
         name,
         description,
         type,
-        bootProto,
         interfaceName,
         startMode,
-        addresses,
+        ipv4,
+        ipv6,
         virtual: interfaceType.isVirtual(type),
         ...propsByType(type, rest)
     };

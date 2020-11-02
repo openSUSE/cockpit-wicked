@@ -20,10 +20,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { isValidIP } from '../lib/utils';
 import cockpit from 'cockpit';
 import bootProtocol from '../lib/model/bootProtocol';
 
 import {
+    Alert,
     Button,
     Form,
     FormGroup,
@@ -42,28 +44,93 @@ import AddressesDataList from "./AddressesDataList";
 
 const _ = cockpit.gettext;
 
+const sanitize = (addresses) => {
+  return addresses.filter((addr, index, collection) => {
+    // Reject addresses without IP
+    if (addr.address === undefined || addr.address.trim() === "") return false;
+
+    // If duplicated (same address, same label), keep only one
+    const idx = collection.findIndex((item) => item.address === addr.address && item.label === addr.label);
+    return idx === index;
+  });
+};
+
+const findInvalidIP = addresses => addresses.find((addr) => !isValidIP(addr.address));
+
+const findRepeatedLabel = (addresses) => {
+  return addresses.find((addr, idx, collection) => {
+    const firstIdx = collection.findIndex((item) => item.label === addr.label);
+    return idx !== firstIdx;
+  });
+};
+
+
 const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => {
     const dispatch = useNetworkDispatch();
     const settings = connection[ipVersion];
     const [bootProto, setBootProto] = useState(settings.bootProto);
     const [addresses, setAddresses] = useState(settings.addresses);
+    const [errorMessages, setErrorMessages] = useState([]);
+    const [isApplying, setIsApplying] = useState(false);
 
     const handleSubmit = () => {
-        /**
-         * TODO: performs a clean up:
-         *    1. Remove duplicates: same address and same label
-         * TODO: performs validations:
-         *    2. Validate addresses ips
-         *    3. Check if addresses using more than one label
-         *    4. Check labels being used more than once
-         * TODO: show messages in the form
-         *    5. General error/warning
-         *    6. If possible, highlight affected addresses
-         */
+        setErrorMessages([]);
+        setIsApplying(true);
 
-        const promise = updateConnection(dispatch, connection, { [ipVersion]: { bootProto, addresses } });
-        promise.then(onClose).catch(console.error);
+        /**
+         * TODO: improve validations
+         * TODO: highlight addresses with errors?
+         */
+        let errors = [];
+        const sanitizedAddresses = sanitize(addresses);
+
+        if (findInvalidIP(sanitizedAddresses)) {
+          errors.push(_("There are invalid IPs"));
+        }
+
+        if (findRepeatedLabel(sanitizedAddresses)) {
+          errors.push(_("There are repeated labels"));
+        }
+
+        // Do not proceed if errors were found
+        if (errors.length) {
+            setAddresses(sanitizedAddresses);
+            setErrorMessages(errors);
+            setIsApplying(false);
+            return;
+        }
+
+        // If everything looks good, try to apply requested changes
+        const promise = updateConnection(
+            dispatch,
+            connection,
+            { [ipVersion]: { bootProto, addresses: sanitizedAddresses } }
+        );
+
+        promise
+            .then(() => {
+                setIsApplying(false);
+                onClose();
+            })
+            .catch((error) => {
+                console.error(error)
+                setErrorMessages([_("Something went wrong. Please, try it again.")]);
+                setIsApplying(false);
+            });
     };
+
+    const renderErrors = () => {
+      if (errorMessages.length === 0) return null;
+
+      return errorMessages.map((error, idx) => (
+          <Alert key={idx}
+              variant="danger"
+              title={error}
+              aria-live="polite"
+              isInline
+          />
+      ));
+    }
 
     return (
         <Modal
@@ -72,8 +139,13 @@ const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => 
             isOpen={isOpen}
             onClose={onClose}
             actions={[
-                <Button key="confirm" variant="primary" onClick={handleSubmit}>
-                    {_("Apply")}
+            <Button
+              spinnerAriaValueText={isApplying ? _("Applying changes") : undefined}
+              isLoading={isApplying}
+              isDisabled={isApplying}
+              key="confirm" variant="primary"
+              onClick={handleSubmit}>
+                    {isApplying ? _("Applying changes") : _("Apply")}
                 </Button>,
                 <Button key="cancel" variant="link" onClick={onClose}>
                     {_("Cancel")}
@@ -81,6 +153,8 @@ const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => 
             ]}
         >
             <Form>
+                {renderErrors()}
+
                 <FormGroup label={_("Boot Protocol")} isRequired>
                     <BootProtoSelector value={bootProto} onChange={setBootProto} />
                 </FormGroup>

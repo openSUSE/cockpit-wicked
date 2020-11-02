@@ -32,7 +32,7 @@ import {
     TextInput
 } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../NetworkContext';
 import interfaceType from '../lib/model/interfaceType';
 import bondingModes from '../lib/model/bondingMode';
 
@@ -86,48 +86,25 @@ const BondForm = ({ isOpen, onClose, bond }) => {
         } else {
             setCandidateInterfaces(Object.values(interfaces));
         }
-    }, [interfaces, bond.id, isEditing]);
-
-    const addConnection = () => {
-        const { mode, ...rest } = parseOptions(options);
-
-        dispatch({
-            type: actionTypes.ADD_CONNECTION,
-            payload: {
-                name,
-                interfaces: selectedInterfaces,
-                type: interfaceType.BONDING,
-                // TODO: re-evaluate if we actually want this
-                bondingMode: parseInt(mode) || bondingMode,
-                options: serializeOptions(rest)
-            }
-        });
-    };
-
-    const updateConnection = () => {
-        const { mode, ...rest } = parseOptions(options);
-
-        dispatch({
-            type: actionTypes.UPDATE_CONNECTION,
-            payload: {
-                id: bond.id,
-                changes: {
-                    name,
-                    bondingMode: parseInt(mode) || bondingMode,
-                    interfaces: selectedInterfaces,
-                    options: serializeOptions(rest)
-                }
-            }
-        });
-    };
+    }, [bond, isEditing, interfaces]);
 
     const addOrUpdateConnection = () => {
+        const { mode, ...rest } = parseOptions(options);
+        const bondingAttrs = {
+            name,
+            bondingMode: parseInt(mode) || bondingMode, // TODO: re-evaluate if we actually want this
+            interfaces: selectedInterfaces,
+            options: serializeOptions(rest)
+        };
+        let promise = null;
+
         if (isEditing) {
-            updateConnection();
+            promise = updateConnection(dispatch, bond, bondingAttrs);
         } else {
-            addConnection();
+            promise = addConnection(dispatch, { ...bondingAttrs, type: interfaceType.BONDING });
         }
-        closeForm();
+
+        promise.then(onClose).catch(console.error);
     };
 
     const closeForm = () => {

@@ -30,7 +30,7 @@ import {
     TextInput
 } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../NetworkContext';
 import interfaceType from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
@@ -51,27 +51,16 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
         }
     }, [bridge, isEditing, interfaces]);
 
-    const addConnection = () => {
-        dispatch({
-            type: actionTypes.ADD_CONNECTION,
-            payload: { name, ports: selectedPorts, type: interfaceType.BRIDGE }
-        });
-    };
-
-    const updateConnection = () => {
-        dispatch({
-            type: actionTypes.UPDATE_CONNECTION,
-            payload: { id: bridge.id, changes: { name, ports: selectedPorts } }
-        });
-    };
-
     const addOrUpdateConnection = () => {
+        let promise = null;
+
         if (isEditing) {
-            updateConnection();
+            promise = updateConnection(dispatch, bridge, { name, ports: selectedPorts });
         } else {
-            addConnection();
+            promise = addConnection(dispatch, { name, ports: selectedPorts, type: interfaceType.BRIDGE });
         }
-        onClose();
+
+        promise.then(onClose).catch(console.error);
     };
 
     const handleSelectedPorts = (name) => (value) => {

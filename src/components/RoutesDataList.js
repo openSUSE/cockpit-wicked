@@ -112,7 +112,6 @@ const RoutesDataList = ({ routes, updateRoutes }) => {
             <StackItem>
                 <Split hasGutter>
                     <SplitItem isFilled>
-                        <Title headingLevel="h2">{_("Routes")}</Title>
                     </SplitItem>
                     <SplitItem>
                         <Button variant="primary" className="btn-sm" onClick={() => addRoute() }>

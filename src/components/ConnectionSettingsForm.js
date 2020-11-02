@@ -25,6 +25,8 @@ import bootProtocol from '../lib/model/bootProtocol';
 
 import {
     Button,
+    Form,
+    FormGroup,
     Modal,
     ModalVariant,
     Split,
@@ -53,7 +55,7 @@ const ConnectionSettingsForm = ({ connection, isOpen, onClose }) => {
 
     return (
         <Modal
-            variant={ModalVariant.small}
+            variant={ModalVariant.medium}
             title={_("Connection Settings")}
             isOpen={isOpen}
             onClose={() => {
@@ -74,26 +76,19 @@ const ConnectionSettingsForm = ({ connection, isOpen, onClose }) => {
                 </Button>
             ]}
         >
-            <Stack hasGutter>
-                <StackItem>
-                    <Split hasGutter>
-                        <SplitItem isFilled>
-                            <Title headingLevel="h2">{_("Boot Protocol")}</Title>
-                        </SplitItem>
-                        <SplitItem>
-                            <BootProtoSelector value={bootProto} onChange={setBootProto} />
-                        </SplitItem>
-                    </Split>
-                </StackItem>
+            <Form>
+                <FormGroup label={_("Boot Protocol")} isRequired>
+                    <BootProtoSelector value={bootProto} onChange={setBootProto} />
+                </FormGroup>
 
-                <StackItem>
+                <FormGroup label={_("Addresses")}>
                     <AddressesDataList addresses={addresses} updateAddresses={setAddresses} />
-                </StackItem>
+                </FormGroup>
 
-                <StackItem>
+                <FormGroup label={_("Routes")}>
                     <RoutesDataList routes={routes} updateRoutes={setRoutes} />
-                </StackItem>
-            </Stack>
+                </FormGroup>
+            </Form>
         </Modal>
     );
 };

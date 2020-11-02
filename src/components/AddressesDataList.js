@@ -115,7 +115,6 @@ const AddressesDataList = ({ addresses, updateAddresses }) => {
             <StackItem>
                 <Split hasGutter>
                     <SplitItem isFilled>
-                        <Title headingLevel="h2">{_("Addresses")}</Title>
                     </SplitItem>
                     <SplitItem>
                         <Button variant="primary" className="btn-sm" onClick={() => addAddress() }>

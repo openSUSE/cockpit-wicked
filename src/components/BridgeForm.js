@@ -35,9 +35,10 @@ import interfaceType from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
 
-const BridgeForm = ({ isOpen, onClose, bridge }) => {
-    const isEditing = !!bridge;
-    const [name, setName] = useState(bridge?.name || "");
+const BridgeForm = ({ isOpen, onClose, connection }) => {
+    const { bridge } = connection || {};
+    const isEditing = !!connection;
+    const [name, setName] = useState(connection?.name || "");
     const [selectedPorts, setSelectedPorts] = useState(bridge?.ports || []);
     const [candidatePorts, setCandidatePorts] = useState([]);
     const { interfaces } = useNetworkState();
@@ -45,19 +46,23 @@ const BridgeForm = ({ isOpen, onClose, bridge }) => {
 
     useEffect(() => {
         if (isEditing) {
-            setCandidatePorts(Object.values(interfaces).filter(i => i.id !== bridge.id));
+            setCandidatePorts(Object.values(interfaces).filter(i => i.id !== connection.id));
         } else {
             setCandidatePorts(Object.values(interfaces));
         }
-    }, [bridge, isEditing, interfaces]);
+    }, [connection, isEditing, interfaces]);
 
     const addOrUpdateConnection = () => {
         let promise = null;
 
         if (isEditing) {
-            promise = updateConnection(dispatch, bridge, { name, ports: selectedPorts });
+            promise = updateConnection(
+                dispatch, connection, { name, bridge: { ports: selectedPorts } }
+            );
         } else {
-            promise = addConnection(dispatch, { name, ports: selectedPorts, type: interfaceType.BRIDGE });
+            promise = addConnection(
+                dispatch, { name, type: interfaceType.BRIDGE, bridge: { ports: selectedPorts, } }
+            );
         }
 
         promise.then(onClose).catch(console.error);

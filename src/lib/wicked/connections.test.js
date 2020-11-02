@@ -24,6 +24,7 @@ import interfaceType from '../model/interfaceType';
 import startMode from '../model/startMode';
 import bootProtocol from '../model/bootProtocol';
 import addressType from '../model/addressType';
+import bondingMode from '../model/bondingMode';
 
 describe('#createConnection', () => {
     const wickedConfig = {
@@ -66,5 +67,44 @@ describe('#createConnection', () => {
     it('do not set a boot protocol', () => {
         const connection = createConnection(wickedConfig);
         expect(connection.bootProto).toBeUndefined();
+    });
+
+    describe('when it is a brige device', () => {
+        const wickedConfig = {
+            name: 'br0',
+            bridge: {
+                stp: true,
+                ports: ['eth0', 'eth1']
+            }
+
+        };
+
+        it('sets the bridge specific properties', () => {
+            const connection = createConnection(wickedConfig);
+            expect(connection.bridge).toEqual({
+                ports: ['eth0', 'eth1']
+            });
+        });
+    });
+
+    describe('when it is a bond device', () => {
+        const wickedConfig = {
+            name: 'bond0',
+            bond: {
+                mode: 'balance-rr',
+                miimon: { frequency: "100", "carrier-detect": "netif" },
+                slaves: ['eth0', 'eth1'],
+                options: 'some-option'
+            },
+        };
+
+        it('sets the bonding specific properties', () => {
+            const conn = createConnection(wickedConfig);
+            expect(conn.bond).toEqual({
+                mode: bondingMode.BALANCE_RR,
+                interfaces: ['eth0', 'eth1'],
+                options: 'some-option'
+            });
+        });
     });
 });

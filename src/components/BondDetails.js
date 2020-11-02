@@ -25,13 +25,13 @@ import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const BondDetails = ({ bond }) => {
+const BondDetails = ({ connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (
         <>
             <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
-            { isFormOpen && <BondForm isOpen={isFormOpen} bond={bond} onClose={() => setFormOpen(false)} /> }
+            { isFormOpen && <BondForm isOpen={isFormOpen} connection={connection} onClose={() => setFormOpen(false)} /> }
         </>
     );
 };

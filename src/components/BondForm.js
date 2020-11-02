@@ -38,7 +38,7 @@ import bondingModes from '../lib/model/bondingMode';
 
 const _ = cockpit.gettext;
 
-const bondingModeOptions = bondingModes.values.map(mode => {
+const modeOptions = bondingModes.values.map(mode => {
     return { value: mode, label: bondingModes.label(mode) };
 });
 
@@ -70,10 +70,11 @@ const serializeOptions = (options) => (
             .join(" ")
 );
 
-const BondForm = ({ isOpen, onClose, bond }) => {
-    const isEditing = !!bond;
-    const [name, setName] = useState(bond?.name || "");
-    const [bondingMode, setBondingMode] = useState(bond?.bondingMode || bondingModes.ACTIVE_BACKUP);
+const BondForm = ({ isOpen, onClose, connection }) => {
+    const { bond } = connection || {};
+    const isEditing = !!connection;
+    const [name, setName] = useState(connection?.name || "");
+    const [mode, setMode] = useState(bond?.mode || bondingModes.ACTIVE_BACKUP);
     const [options, setOptions] = useState(bond?.options || "");
     const [selectedInterfaces, setSelectedInterfaces] = useState(bond?.interfaces || []);
     const [candidateInterfaces, setCandidateInterfaces] = useState([]);
@@ -82,24 +83,26 @@ const BondForm = ({ isOpen, onClose, bond }) => {
 
     useEffect(() => {
         if (isEditing) {
-            setCandidateInterfaces(Object.values(interfaces).filter(i => i.id !== bond.id));
+            setCandidateInterfaces(Object.values(interfaces).filter(i => i.id !== connection.id));
         } else {
             setCandidateInterfaces(Object.values(interfaces));
         }
-    }, [bond, isEditing, interfaces]);
+    }, [connection, isEditing, interfaces]);
 
     const addOrUpdateConnection = () => {
         const { mode, ...rest } = parseOptions(options);
         const bondingAttrs = {
             name,
-            bondingMode: parseInt(mode) || bondingMode, // TODO: re-evaluate if we actually want this
-            interfaces: selectedInterfaces,
-            options: serializeOptions(rest)
+            bond: {
+                mode: parseInt(mode) || bondingMode, // TODO: re-evaluate if we actually want this
+                interfaces: selectedInterfaces,
+                options: serializeOptions(rest)
+            }
         };
         let promise = null;
 
         if (isEditing) {
-            promise = updateConnection(dispatch, bond, bondingAttrs);
+            promise = updateConnection(dispatch, connection, bondingAttrs);
         } else {
             promise = addConnection(dispatch, { ...bondingAttrs, type: interfaceType.BONDING });
         }
@@ -172,8 +175,8 @@ const BondForm = ({ isOpen, onClose, bond }) => {
                     isRequired
                     fieldId="bonding-mode"
                 >
-                    <FormSelect value={bondingMode} onChange={setBondingMode} id="bonding-mode">
-                        {bondingModeOptions.map((option, index) => (
+                    <FormSelect value={mode} onChange={setMode} id="bonding-mode">
+                        {modeOptions.map((option, index) => (
                             <FormSelectOption key={index} {...option} />
                         ))}
                     </FormSelect>

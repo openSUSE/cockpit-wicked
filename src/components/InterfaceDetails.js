@@ -47,20 +47,20 @@ const macAddress = (iface) => {
     );
 };
 
-const bondDetails = (bond) => {
+const bondDetails = (connection) => {
     return (
         <>
             <dt>{_("Bond")}</dt>
-            <dd><BondDetails bond={bond} /></dd>
+            <dd><BondDetails connection={connection} /></dd>
         </>
     );
 };
 
-const bridgeDetails = (bridge) => {
+const bridgeDetails = (connection) => {
     return (
         <>
             <dt>{_("Bridge")}</dt>
-            <dd><BridgeDetails bridge={bridge} /></dd>
+            <dd><BridgeDetails connection={connection} /></dd>
         </>
     );
 };

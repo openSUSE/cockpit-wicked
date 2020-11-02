@@ -52,7 +52,6 @@ const FIELDS = {
 };
 
 const AddressesDataList = ({ addresses, updateAddresses }) => {
-    console.log("Addresses are", addresses);
     const addAddress = () => {
         const address = createAddressConfig();
         const currentAddresses = [...addresses];

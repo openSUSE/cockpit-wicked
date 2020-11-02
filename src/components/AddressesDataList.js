@@ -114,8 +114,7 @@ const AddressesDataList = ({ addresses, updateAddresses }) => {
         <Stack className="data-list-form" hasGutter>
             <StackItem>
                 <Split hasGutter>
-                    <SplitItem isFilled>
-                    </SplitItem>
+                    <SplitItem isFilled />
                     <SplitItem>
                         <Button variant="primary" className="btn-sm" onClick={() => addAddress() }>
                             <PlusIcon />

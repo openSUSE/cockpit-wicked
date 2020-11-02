@@ -65,6 +65,6 @@ describe('#createConnection', () => {
 
     it('do not set a boot protocol', () => {
         const connection = createConnection(wickedConfig);
-        expect(connection.bootProto).toEqual(undefined);
+        expect(connection.bootProto).toBeUndefined();
     });
 });

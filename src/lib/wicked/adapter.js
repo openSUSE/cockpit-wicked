@@ -22,6 +22,7 @@
 import Client from './client';
 import { createConnection } from './connections';
 import { createInterface } from './interfaces';
+import model from '../model';
 import { IfcfgFile } from './files';
 
 /**
@@ -35,6 +36,8 @@ import { IfcfgFile } from './files';
 class WickedAdapter {
     constructor(client) {
         this.client = client || new Client();
+        this._connections = undefined;
+        this._interfaces = undefined;
     }
 
     /**
@@ -42,14 +45,12 @@ class WickedAdapter {
      *
      * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces
      */
-    connections() {
-        return new Promise((resolve, reject) => {
-            this.client.getConfigurations()
-                    .then(configurations => {
-                        // TODO: memoize connections into _connections (?)
-                        resolve(configurations.map(createConnection));
-                    });
-        });
+    async connections() {
+        if (this._connections) return this._connections;
+
+        const conns = await this.client.getConfigurations();
+        this._connections = conns.map(createConnection);
+        return this._connections;
     }
 
     /**
@@ -57,13 +58,22 @@ class WickedAdapter {
      *
      * @return {Promise.<Array.<Interface>>} Promise that resolves to a list of interfaces
      */
-    interfaces() {
-        return new Promise((resolve, reject) => {
-            this.client.getInterfaces()
-                    .then(interfaces => {
-                        resolve(interfaces.map(createInterface));
-                    });
+    async interfaces() {
+        if (this._interfaces) return this._interfaces;
+
+        const ifaces = await this.client.getInterfaces();
+        this._interfaces = ifaces.map(createInterface);
+
+        const conns = await this.connections();
+        const names = this._interfaces.map(i => i.name);
+        conns.forEach(c => {
+            if (!names.includes(c.name)) {
+                const virtualInterface = model.createInterface({ name: c.name, type: c.type, virtual: true });
+                this._interfaces.push(virtualInterface);
+            }
         });
+
+        return this._interfaces;
     }
 
     /**

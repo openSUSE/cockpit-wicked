@@ -49,7 +49,7 @@ class WickedAdapter {
         if (this._connections) return this._connections;
 
         const conns = await this.client.getConfigurations();
-        this._connections = conns.map(createConnection);
+        this._connections = conns.map(createConnection).filter(c => c.name !== 'lo');
         return this._connections;
     }
 
@@ -62,7 +62,7 @@ class WickedAdapter {
         if (this._interfaces) return this._interfaces;
 
         const ifaces = await this.client.getInterfaces();
-        this._interfaces = ifaces.map(createInterface);
+        this._interfaces = ifaces.map(createInterface).filter(i => i.name !== 'lo');
 
         const conns = await this.connections();
         const names = this._interfaces.map(i => i.name);

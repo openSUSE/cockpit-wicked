@@ -38,8 +38,8 @@ class NetworkClient {
      *
      * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
      */
-    getConnections() {
-        return this.adapter.connections();
+    async getConnections() {
+        return await this.adapter.connections();
     }
 
     /**
@@ -47,8 +47,9 @@ class NetworkClient {
      *
      * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
      */
-    getInterfaces() {
-        return this.adapter.interfaces();
+    async getInterfaces() {
+        const ifaces = await this.adapter.interfaces();
+        return ifaces.filter(i => i.name !== 'lo');
     }
 
     /**

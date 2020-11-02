@@ -98,7 +98,7 @@ export const createConnection = ({
     name,
     description,
     type = interfaceType.ETHERNET,
-    bootProto,
+    bootProto = bootProtocol.NONE,
     interfaceName,
     startMode = startModeEnum.AUTO,
     addresses,

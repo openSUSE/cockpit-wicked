@@ -60,6 +60,10 @@ class NetworkClient {
         return new Promise((resolve, reject) => resolve([]));
     }
 
+    addConnection(connection) {
+        return this.adapter.addConnection(connection);
+    }
+
     /**
      * Update the given connection
      *

@@ -75,12 +75,12 @@ function networkReducer(state, action) {
 
     case ADD_CONNECTION: {
         const { interfaces, connections } = state;
-        const conn = createConnection(action.payload);
+        const conn = action.payload;
         const iface = createInterface({ name: conn.name, type: conn.type });
         return {
             ...state,
             interfaces: { ...interfaces, [iface.id]: iface },
-            connections: { ...connections, [conn.id]: { ...conn, modified: true } }
+            connections: { ...connections, [conn.id]: conn }
         };
     }
 
@@ -141,9 +141,32 @@ function NetworkProvider({ children }) {
 }
 
 /**
- * FIXME: needed to use a function in order to delay building the object and make the tests to work
+ * FIXME: needed to use a function in order to delay building the object and
+ * make the tests to work
  */
 const networkClient = () => new NetworkClient();
+
+/**
+ * Creates a connection using the NetworkClient
+ *
+ * If the create was successful, it dispatches the ADD_CONNECTION action.
+ *
+ * @todo Notify when something went wrong.
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Object} attrs - Attributes for the new connection
+ * @return {Promise}
+ */
+function addConnection(dispatch, attrs) {
+    return new Promise((resolve, reject) => {
+        networkClient().addConnection(createConnection(attrs))
+                .then(addedConn => {
+                    dispatch({ type: ADD_CONNECTION, payload: addedConn });
+                    resolve(addedConn);
+                })
+                .catch(reject);
+    });
+}
 
 /**
  * Updates a connection using the NetworkClient
@@ -173,5 +196,6 @@ export {
     useNetworkState,
     useNetworkDispatch,
     actionTypes,
+    addConnection,
     updateConnection
 };

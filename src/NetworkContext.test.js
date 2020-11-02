@@ -19,11 +19,32 @@
  * find current contact information at www.suse.com.
  */
 
-import { updateConnection, actionTypes } from './NetworkContext';
+import { addConnection, updateConnection, actionTypes } from './NetworkContext';
 import model from './lib/model';
+import interfaceType from './lib/model/interfaceType';
 import NetworkClient from './lib/NetworkClient';
 
 jest.mock('./lib/NetworkClient');
+
+describe('#addConnection', () => {
+    beforeAll(() => {
+        NetworkClient.mockImplementation(() => {
+            return {
+                addConnection: (conn) => Promise.resolve(conn)
+            };
+        });
+    });
+
+    it('asks the network client to add the connection', () => {
+        const dispatchFn = jest.fn();
+
+        expect.assertions(1);
+        return addConnection(dispatchFn, { name: 'eth0', type: interfaceType.BRIDGE })
+                .then(result => {
+                    expect(result).toEqual(expect.objectContaining({ name: 'eth0' }));
+                });
+    });
+});
 
 describe('#updateConnection', () => {
     beforeAll(() => {

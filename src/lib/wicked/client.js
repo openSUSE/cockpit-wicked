@@ -125,6 +125,17 @@ class WickedClient {
                     .catch(console.error);
         });
     }
+
+    /**
+     * Reloads a connection
+     *
+     * TODO: better error handling
+     *
+     * @return {Promise} Result of the operation
+     */
+    reloadConnection(name) {
+        return cockpit.spawn(['/usr/sbin/wicked', 'ifreload', name], { superuser: "require" });
+    }
 }
 
 export default WickedClient;

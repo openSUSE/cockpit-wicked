@@ -98,7 +98,7 @@ export const createConnection = ({
     name,
     description,
     type = interfaceType.ETHERNET,
-    bootProto,
+    bootProto = bootProtocol.NONE,
     interfaceName,
     startMode = startModeEnum.AUTO,
     addresses,
@@ -222,9 +222,17 @@ export const createInterface = ({
     };
 };
 
+/**
+ * Updates a connection with a set of changes
+ */
+export const mergeConnection = (connection, changes) => {
+    return { ...connection, ...changes };
+};
+
 export default {
     createInterface,
     createConnection,
     createRoute,
-    createAddressConfig
+    createAddressConfig,
+    mergeConnection
 };

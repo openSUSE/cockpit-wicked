@@ -28,7 +28,7 @@ import WickedAdapter from './wicked/adapter';
  * This class should be the entry point when it comes to read or modify the
  * network configuration.
  */
-export class NetworkClient {
+class NetworkClient {
     constructor(adapter) {
         this.adapter = adapter || new WickedAdapter();
     }
@@ -52,22 +52,35 @@ export class NetworkClient {
     }
 
     /**
-    * Returns the list of configured routes
-    *
-    * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
-    */
+     * Returns the list of configured routes
+     *
+     * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
+     */
     getRoutes() {
         return new Promise((resolve, reject) => resolve([]));
     }
 
+    addConnection(connection) {
+        return this.adapter.addConnection(connection);
+    }
+
     /**
-     * Update connections
+     * Update the given connection
      *
-     * @param {Array<Object>} connections - List of connections to update
-     * @returns {Promise<Array|Error>} Resolves to an array of connection objects in case of success
+     * It asks the network system to update the information for the given connection
+     *
+     * @param {Connection} Connection - Connection to update
+     * @return {Promise<Connection|Error>}
      */
-    updateConnections(connections) {
-        return new Promise((resolve, reject) => resolve([]));
+    updateConnection(connection) {
+        return new Promise((resolve, reject) => {
+            this.adapter.updateConnection(connection)
+                    .then(() => resolve(connection))
+                    .catch(error => {
+                        console.error("Error while updating the connection:", error);
+                        reject(error);
+                    });
+        });
     }
 
     /**
@@ -91,3 +104,5 @@ export class NetworkClient {
         });
     }
 }
+
+export default NetworkClient;

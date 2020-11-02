@@ -22,6 +22,7 @@
 import Client from './client';
 import { createConnection } from './connections';
 import { createInterface } from './interfaces';
+import { IfcfgFile } from './files';
 
 /**
  * This class is responsible for retrieving and updating Wicked's configuration.
@@ -37,7 +38,7 @@ class WickedAdapter {
     }
 
     /**
-     * Returns a promise that resolves to an array of model Connection objects.
+     * Return a promise that resolves to an array of model Connection objects.
      *
      * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces
      */
@@ -52,7 +53,7 @@ class WickedAdapter {
     }
 
     /**
-     * Returns a promise that resolves to an array of model Interface objects.
+     * Return a promise that resolves to an array of model Interface objects.
      *
      * @return {Promise.<Array.<Interface>>} Promise that resolves to a list of interfaces
      */
@@ -63,6 +64,56 @@ class WickedAdapter {
                         resolve(interfaces.map(createInterface));
                     });
         });
+    }
+
+    /**
+     * Add a new connection to Wicked
+     *
+     * @param {Connection} connection - Connection to add
+     * @return {Promise<Connection,Error>} Promise that resolve to the added connection
+     */
+    addConnection(connection) {
+        return new Promise((resolve, reject) => {
+            this.updateConnectionConfig(connection)
+                    .then(() => resolve(connection))
+                    .catch(reject);
+        });
+    }
+
+    /**
+     * Update the configuration of a connection
+     *
+     * @param {Connection} connection - Connection to update
+     * @return {Promise<Connection,Error>} Promise that resolve to the added connection
+     */
+    updateConnection(connection) {
+        return new Promise((resolve, reject) => {
+            this.updateConnectionConfig(connection)
+                    .then(() => this.reloadConnection(connection.name))
+                    .then(() => resolve(connection))
+                    .catch(reject);
+        });
+    }
+
+    /**
+     * Update the configuration file of a connection
+     *
+     * @param {Connection} connection - Connection to update
+     * @return {Promise<Connection,Error>} Promise that resolve to the added connection
+     */
+    updateConnectionConfig(connection) {
+        const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
+        const file = new IfcfgFile(filePath);
+        return file.update(connection);
+    }
+
+    /**
+     * Reload a connection
+     *
+     * @return {Promise} Result of the operation
+     */
+    reloadConnection(name) {
+        return this.client.reloadConnection(name);
     }
 }
 

@@ -20,7 +20,8 @@
  */
 
 import React from 'react';
-import { createConnection, createInterface, createRoute } from './lib/model';
+import { createConnection, createInterface, createRoute, mergeConnection } from './lib/model';
+import NetworkClient from './lib/NetworkClient';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
@@ -74,12 +75,12 @@ function networkReducer(state, action) {
 
     case ADD_CONNECTION: {
         const { interfaces, connections } = state;
-        const conn = createConnection(action.payload);
+        const conn = action.payload;
         const iface = createInterface({ name: conn.name, type: conn.type });
         return {
             ...state,
             interfaces: { ...interfaces, [iface.id]: iface },
-            connections: { ...connections, [conn.id]: { ...conn, modified: true } }
+            connections: { ...connections, [conn.id]: conn }
         };
     }
 
@@ -90,11 +91,9 @@ function networkReducer(state, action) {
     }
 
     case UPDATE_CONNECTION: {
-        const { id, changes } = action.payload;
+        const { id } = action.payload;
         const { connections } = state;
-        const conn = connections[id];
-        // FIXME: what about updating the interface name?
-        return { ...state, connections: { ...connections, [id]: { ...conn, ...changes, modified: true } } };
+        return { ...state, connections: { ...connections, [id]: action.payload } };
     }
 
     case UPDATE_ROUTE: {
@@ -141,10 +140,62 @@ function NetworkProvider({ children }) {
     );
 }
 
+/**
+ * FIXME: needed to use a function in order to delay building the object and
+ * make the tests to work
+ */
+const networkClient = () => new NetworkClient();
+
+/**
+ * Creates a connection using the NetworkClient
+ *
+ * If the create was successful, it dispatches the ADD_CONNECTION action.
+ *
+ * @todo Notify when something went wrong.
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Object} attrs - Attributes for the new connection
+ * @return {Promise}
+ */
+function addConnection(dispatch, attrs) {
+    return new Promise((resolve, reject) => {
+        networkClient().addConnection(createConnection(attrs))
+                .then(addedConn => {
+                    dispatch({ type: ADD_CONNECTION, payload: addedConn });
+                    resolve(addedConn);
+                })
+                .catch(reject);
+    });
+}
+
+/**
+ * Updates a connection using the NetworkClient
+ *
+ * If the update was successful, it dispatches the UPDATE_CONNECTION action.
+ *
+ * @todo Notify when something went wrong.
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Connection} connection - Connection to update
+ * @param {Object|Connection} changes - Changes to apply to the connection
+ * @return {Promise}
+ */
+function updateConnection(dispatch, connection, changes) {
+    return new Promise((resolve, reject) => {
+        networkClient().updateConnection(mergeConnection(connection, changes))
+                .then(updatedConn => {
+                    dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
+                    resolve(updatedConn);
+                })
+                .catch(reject);
+    });
+}
+
 export {
     NetworkProvider,
     useNetworkState,
     useNetworkDispatch,
-    actionTypes
-
+    actionTypes,
+    addConnection,
+    updateConnection
 };

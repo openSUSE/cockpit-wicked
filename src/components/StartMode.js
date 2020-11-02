@@ -21,7 +21,7 @@
 
 import React, { useState } from 'react';
 import { Modal, ModalVariant, Button, FormSelect, FormSelectOption } from '@patternfly/react-core';
-import { useNetworkDispatch, actionTypes } from '../NetworkContext';
+import { useNetworkDispatch, updateConnection } from '../NetworkContext';
 import startModeEnum from '../lib/model/startMode';
 import cockpit from 'cockpit';
 
@@ -36,13 +36,12 @@ const StartMode = ({ connection }) => {
     const [startMode, setStartMode] = useState(connection.startMode);
     const dispatch = useNetworkDispatch();
 
-    const updateConnection = () => {
-        dispatch({
-            type: actionTypes.UPDATE_CONNECTION,
-            payload: { id: connection.id, changes: { startMode: startMode } }
-        });
-        setModal(false);
-    };
+    function handleSubmit() {
+        // TODO: notify that something went wrong.
+        updateConnection(dispatch, connection, { startMode })
+                .then(() => setModal(false))
+                .catch(console.log);
+    }
 
     return (
         <>
@@ -52,7 +51,7 @@ const StartMode = ({ connection }) => {
                 title={_("Start Mode")}
                 isOpen={modal}
                 actions={[
-                    <Button key="confirm" variant="primary" onClick={updateConnection}>
+                    <Button key="confirm" variant="primary" onClick={handleSubmit}>
                         {_("Change")}
                     </Button>,
                     <Button key="cancel" variant="link" onClick={() => setModal(false)}>

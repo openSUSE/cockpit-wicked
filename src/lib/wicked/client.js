@@ -99,15 +99,9 @@ class WickedClient {
      *
      * @return {Promise.<Array.<Object>>} Promise that resolves to a list of interfaces
      */
-    getInterfaces() {
-        return new Promise((resolve, reject) => {
-            cockpit.spawn(['/usr/sbin/wicked', 'show-xml'])
-                    .then(stdout => {
-                        const result = XmlToJson(stdout, ['body']);
-                        resolve(result);
-                    })
-                    .catch(console.error);
-        });
+    async getInterfaces() {
+        const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-xml']);
+        return XmlToJson(stdout, ['body']);
     }
 
     /**
@@ -115,15 +109,9 @@ class WickedClient {
      *
      * @return {Promise.<Array.<Object>>} Promise that resolves to a list of interfaces
      */
-    getConfigurations() {
-        return new Promise((resolve, reject) => {
-            cockpit.spawn(['/usr/sbin/wicked', 'show-config'])
-                    .then(stdout => {
-                        const result = XmlToJson(stdout, ['body', 'slaves', 'addresses']);
-                        resolve(result);
-                    })
-                    .catch(console.error);
-        });
+    async getConfigurations() {
+        const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-config']);
+        return XmlToJson(stdout, ['body', 'slaves', 'addresses']);
     }
 
     /**

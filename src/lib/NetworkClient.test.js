@@ -30,8 +30,6 @@ describe("NetworkClient", () => {
             return client.getConnections().then(data => {
                 const conn = data[0];
                 expect(conn).toEqual(
-                    // TODO: filter out the loopback interface
-                    expect.objectContaining({ name: "lo" }),
                     expect.objectContaining({ name: "eth0" })
                 );
             });
@@ -42,7 +40,7 @@ describe("NetworkClient", () => {
         it("returns the list of interfaces", () => {
             expect.assertions(2);
             return client.getInterfaces().then(data => {
-                expect(data).toHaveLength(5);
+                expect(data).toHaveLength(4);
 
                 const eth0 = data.find(i => i.name == 'eth0');
                 expect(eth0).toEqual(

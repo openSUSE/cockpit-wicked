@@ -66,7 +66,8 @@ describe('#connections', () => {
 
         return adapter.interfaces().then(interfaces => {
             expect(interfaces).toEqual([
-                expect.objectContaining({ name: 'eth0', type: 'eth' }),
+                expect.objectContaining({ name: 'eth0', type: 'eth', virtual: false }),
+                expect.objectContaining({ name: 'br0', type: 'br', virtual: true }),
             ]);
         });
     });

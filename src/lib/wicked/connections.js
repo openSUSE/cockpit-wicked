@@ -66,45 +66,35 @@ const bootProtoFor = (config) => {
     }
 };
 
-const staticAddressesConfigurations = (type, addresses) => {
+const addressesFromConfig = (type, addresses) => {
     return addresses.map(addr => {
         const { local, label } = addr;
         return model.createAddressConfig(
-            { type, proto: bootProtocol.STATIC, address: local, label }
+            { type, label, address: local }
         );
     });
 };
 
-const addressesConfigurations = (config) => {
+const ipConfig = (config) => {
     let addresses = [];
-
-    if (config['ipv4:dhcp']?.enabled === 'true') {
-        addresses.push(
-            model.createAddressConfig({ type: addressType.IPV4, proto: bootProtocol.DHCP })
-        );
-    }
-
-    if (config['ipv6:dhcp']?.enabled === 'true') {
-        addresses.push(
-            model.createAddressConfig({ type: addressType.IPV6, proto: bootProtocol.DHCP })
-        );
-    }
+    let bootProto;
 
     if (config['ipv4:static']?.addresses) {
-        addresses = [
-            ...addresses,
-            ...staticAddressesConfigurations(addressType.IPV4, config['ipv4:static'].addresses)
-        ];
+        addresses = addressesFromConfig(addressType.IPV4, config['ipv4:static'].addresses);
     }
 
-    if (config['ipv6:static']?.addresses) {
-        addresses = [
-            ...addresses,
-            ...staticAddressesConfigurations(addressType.IPV6, config['ipv6:static'].addresses)
-        ];
+    if (config['ipv4:dhcp']?.enabled === 'true') {
+        bootProto = bootProtocol.DHCP;
+    } else if (addresses.length > 0) {
+        bootProto = bootProtocol.STATIC;
+    } else {
+        bootProto = bootProtocol.NONE;
     }
 
-    return addresses;
+    return {
+        bootProto,
+        addresses
+    };
 };
 
 /**
@@ -125,7 +115,7 @@ const createConnection = (config) => {
         type,
         startMode: startModeFor(config),
         mtu,
-        addresses: addressesConfigurations(config),
+        ipv4: ipConfig(config),
         bootProto: bootProtoFor(config)
     });
 };

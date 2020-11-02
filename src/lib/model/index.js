@@ -170,14 +170,12 @@ const propsByConnectionType = {
  */
 export const createAddressConfig = ({
     type = addressType.IPV4,
-    proto = bootProtocol.STATIC,
     address,
     label = ""
 } = {}) => {
     return {
         id: addressConfigIndex++,
         type,
-        proto,
         address,
         label
     };

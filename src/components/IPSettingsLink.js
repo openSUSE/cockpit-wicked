@@ -21,27 +21,37 @@
 
 import React, { useState } from 'react';
 import { Button } from '@patternfly/react-core';
-import ConnectionSettingsForm from './ConnectionSettingsForm';
+import IPSettingsForm from './IPSettingsForm';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const ConnectionSettingsLink = ({ connection }) => {
+const IPSettingsLink = ({ ipVersion = 'ipv4', connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     const renderLinkText = () => {
-        if (!connection) return _("Not configured");
-        if (connection.bootProto !== "static") return connection.bootProto;
-
-        return connection.iP;
+        return connection[ipVersion].bootProto || _("Not configured");
     };
+
+    const renderForm = () => {
+      if (!isFormOpen) return null;
+
+      return(
+          <IPSettingsForm
+              ipVersion={ipVersion}
+              connection={connection}
+              isOpen={isFormOpen}
+              onClose={() => setFormOpen(false)}
+          />
+      )
+    }
 
     return (
         <>
             <Button variant="link" onClick={() => setFormOpen(true)}>{renderLinkText()}</Button>
-            { isFormOpen && <ConnectionSettingsForm connection={connection} isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
+            {renderForm()}
         </>
     );
 };
 
-export default ConnectionSettingsLink;
+export default IPSettingsLink;

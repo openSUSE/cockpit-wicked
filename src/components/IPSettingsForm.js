@@ -36,39 +36,43 @@ import {
     Title
 } from '@patternfly/react-core';
 
-import { useNetworkState } from '../NetworkContext';
+import { useNetworkDispatch, updateConnection } from '../NetworkContext';
 import BootProtoSelector from "./BootProtoSelector";
 import AddressesDataList from "./AddressesDataList";
-import RoutesDataList from "./RoutesDataList";
 
 const _ = cockpit.gettext;
 
-// TODO: create a connection when it does not exist yet?
-const ConnectionSettingsForm = ({ connection, isOpen, onClose }) => {
-    const { routes: currentRoutes } = useNetworkState();
-    const currentAddresses = connection?.addresses || [];
-    const additionalAddresses = currentAddresses.filter((addr) => addr.proto === bootProtocol.STATIC);
+const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => {
+    const dispatch = useNetworkDispatch();
+    const settings = connection[ipVersion];
+    const [bootProto, setBootProto] = useState(settings.bootProto);
+    const [addresses, setAddresses] = useState(settings.addresses);
 
-    const [bootProto, setBootProto] = useState(connection?.bootProto || bootProtocol.STATIC);
-    const [routes, setRoutes] = useState(currentRoutes);
-    const [addresses, setAddresses] = useState(additionalAddresses);
+    const handleSubmit = () => {
+        /**
+         * TODO: performs a clean up:
+         *    1. Remove duplicates: same address and same label
+         * TODO: performs validations:
+         *    2. Validate addresses ips
+         *    3. Check if addresses using more than one label
+         *    4. Check labels being used more than once
+         * TODO: show messages in the form
+         *    5. General error/warning
+         *    6. If possible, highlight affected addresses
+         */
+
+        const promise = updateConnection(dispatch, connection, { [ipVersion]: { bootProto, addresses } });
+        promise.then(onClose).catch(console.error);
+    };
 
     return (
         <Modal
             variant={ModalVariant.medium}
-            title={_("Connection Settings")}
+            title={_(`${ipVersion.toUpperCase()} Settings`)}
             isOpen={isOpen}
-            onClose={() => {
-                // TODO: implement the business logic
-                console.log("Now boot proto id", bootProto);
-                console.log("Now addresses are", addresses);
-                console.log("Now routes are", routes);
-                console.log("Triggering #onClose");
-
-                onClose();
-            }}
+            onClose={onClose}
             actions={[
-                <Button key="confirm" variant="primary" onClick={() => {}}>
+                <Button key="confirm" variant="primary" onClick={handleSubmit}>
                     {_("Apply")}
                 </Button>,
                 <Button key="cancel" variant="link" onClick={onClose}>
@@ -84,13 +88,9 @@ const ConnectionSettingsForm = ({ connection, isOpen, onClose }) => {
                 <FormGroup label={_("Addresses")}>
                     <AddressesDataList addresses={addresses} updateAddresses={setAddresses} />
                 </FormGroup>
-
-                <FormGroup label={_("Routes")}>
-                    <RoutesDataList routes={routes} updateRoutes={setRoutes} />
-                </FormGroup>
             </Form>
         </Modal>
     );
 };
 
-export default ConnectionSettingsForm;
+export default IPSettingsForm;

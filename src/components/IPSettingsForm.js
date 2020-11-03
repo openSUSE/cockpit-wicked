@@ -41,15 +41,15 @@ const _ = cockpit.gettext;
 const sanitize = (addresses) => {
     return addresses.filter((addr, index, collection) => {
     // Reject addresses without IP
-        if (addr.address === undefined || addr.address.trim() === "") return false;
+        if (addr.local === undefined || addr.local.trim() === "") return false;
 
         // If duplicated (same address, same label), keep only one
-        const idx = collection.findIndex((item) => item.address === addr.address && item.label === addr.label);
+        const idx = collection.findIndex((item) => item.local === addr.local && item.label === addr.label);
         return idx === index;
     });
 };
 
-const findInvalidIP = addresses => addresses.find((addr) => !isValidIP(addr.address));
+const findInvalidIP = addresses => addresses.find((addr) => !isValidIP(addr.local));
 
 const findRepeatedLabel = (addresses) => {
     return addresses.find((addr, idx, collection) => {

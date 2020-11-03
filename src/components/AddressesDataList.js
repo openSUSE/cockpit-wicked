@@ -45,7 +45,7 @@ import IPInput from './IPInput';
 const _ = cockpit.gettext;
 
 const FIELDS = {
-    address: { component: IPInput, props: { placeholder: _("Address"), "aria-label": _("Address") } },
+    local: { component: IPInput, props: { placeholder: _("Address"), "aria-label": _("Address") } },
     label: { component: TextInput, props: { placeholder: _("Label"), "aria-label": _("Label") } }
 };
 

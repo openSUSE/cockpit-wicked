@@ -91,12 +91,12 @@ const addressesToSysconfig = (connection) => {
 const ipToSysconfig = (ip, initialIndex = 0) => {
     if (ip === undefined || ip.addresses === undefined) return {};
 
-    return ip.addresses.reduce((all, item, n) => {
+    return ip.addresses.reduce((all, address, n) => {
         const addressIndex = n + initialIndex;
-        const { address, label = "" } = item;
+        const { local, label = "" } = address;
         const suffix = (addressIndex === 0) ? "" : `_${addressIndex}`;
 
-        let data = { [`IPADDR${suffix}`]: address };
+        let data = { [`IPADDR${suffix}`]: local };
         if (label !== "") data = { ...data, [`LABEL${suffix}`]: label };
 
         return { ...all, ...data };

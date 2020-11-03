@@ -72,20 +72,22 @@ const addressesFromConfig = (type, addresses) => {
     return addresses.map(addr => {
         const { local, label } = addr;
         return model.createAddressConfig(
-            { type, label, address: local }
+            { type, local, label }
         );
     });
 };
 
-const ipConfig = (config) => {
+const ipConfig = (config, type = 'ipv4') => {
     let addresses = [];
     let bootProto;
+    const wickedAddresses = config[`${type}:static`];
+    const wickedDhcp = config[`${type}:dhcp`];
 
-    if (config['ipv4:static']?.addresses) {
-        addresses = addressesFromConfig(addressType.IPV4, config['ipv4:static'].addresses);
+    if (wickedAddresses) {
+        addresses = addressesFromConfig(addressType.IPV4, wickedAddresses);
     }
 
-    if (config['ipv4:dhcp']?.enabled === 'true') {
+    if (wickedDhcp?.enabled === 'true') {
         bootProto = bootProtocol.DHCP;
     } else if (addresses.length > 0) {
         bootProto = bootProtocol.STATIC;
@@ -125,7 +127,8 @@ const createConnection = (config) => {
         type,
         startMode: startModeFor(config),
         mtu,
-        ipv4: ipConfig(config),
+        ipv4: ipConfig(config, 'ipv4'),
+        ipv6: ipConfig(config, 'ipv6'),
         bootProto: bootProtoFor(config),
         usedBy,
         ...propsByType(type, config)

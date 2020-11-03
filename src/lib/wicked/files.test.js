@@ -54,13 +54,13 @@ describe('IfcfgFile', () => {
                 name: 'eth0', type: interfaceType.ETHERNET, ipv4: {
                     bootProto: bootProtocol.DHCP,
                     addresses: [
-                        { address: '192.168.1.100/24' }, { address: '10.0.0.1/10', label: 'private' },
-                        { address: '10.0.0.2/10' }
+                        { local: '192.168.1.100/24' }, { local: '10.0.0.1/10', label: 'private' },
+                        { local: '10.0.0.2/10' }
                     ]
                 }, ipv6: {
                     bootProto: bootProtocol.DHCP,
                     addresses: [
-                        { address: '2001:0db4:95b3:0000:0000:8a2e:0370:9335' }
+                        { local: '2001:0db4:95b3:0000:0000:8a2e:0370:9335' }
                     ]
                 }
             });

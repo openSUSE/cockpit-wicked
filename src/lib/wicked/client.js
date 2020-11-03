@@ -111,7 +111,7 @@ class WickedClient {
      */
     async getConfigurations() {
         const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-config']);
-        return XmlToJson(stdout, ['body', 'slaves', 'addresses', 'ports']);
+        return XmlToJson(stdout, ['body', 'slaves', 'ipv4:static', 'ipv6:static', 'ports']);
     }
 
     /**

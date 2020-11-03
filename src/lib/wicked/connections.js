@@ -84,7 +84,7 @@ const ipConfig = (config, type = 'ipv4') => {
     const wickedDhcp = config[`${type}:dhcp`];
 
     if (wickedAddresses) {
-        addresses = addressesFromConfig(addressType.IPV4, wickedAddresses);
+        addresses = addressesFromConfig(addressType[type.toUpperCase()], wickedAddresses);
     }
 
     if (wickedDhcp?.enabled === 'true') {

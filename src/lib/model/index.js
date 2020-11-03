@@ -142,15 +142,20 @@ const propsByType = (type, props) => {
  * @ignore
  */
 const propsByConnectionType = {
-    [interfaceType.BONDING]: ({ bondingMode = bondingModeEnum.ACTIVE_BACKUP, options = "" }) => {
+    [interfaceType.BONDING]: ({ bond = {} } = {}) => {
+        const { mode = bondingModeEnum.ACTIVE_BACKUP, options = "", interfaces = [] } = bond;
         return {
-            bondingMode,
-            options
+            bond: {
+                mode,
+                options,
+                interfaces
+            }
         };
     },
-    [interfaceType.BRIDGE]: ({ ports = [] }) => {
+    [interfaceType.BRIDGE]: ({ bridge = {} } = {}) => {
+        const { ports = [] } = bridge;
         return {
-            ports
+            bridge: { ports }
         };
     }
 };

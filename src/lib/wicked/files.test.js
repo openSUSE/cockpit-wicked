@@ -49,6 +49,37 @@ describe('IfcfgFile', () => {
                 STARTMODE: 'auto'
             });
         });
+
+        describe('when it is a bridge device', () => {
+            const conn = createConnection({
+                name: 'br0', type: interfaceType.BRIDGE, bridge: { ports: ['eth0', 'eth1'] }
+            });
+
+            it('includes bridge settings', () => {
+                ifcfg.update(conn);
+                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
+                    BRIDGE: 'yes',
+                    BRIDGE_PORTS: 'eth0 eth1'
+                }));
+            });
+        });
+
+        describe('when it is a bonding device', () => {
+            const conn = createConnection({
+                name: 'br0', type: interfaceType.BONDING,
+                bond: { interfaces: ['eth0', 'eth1'], options: 'some-option' }
+            });
+
+            it('includes bonding settings', () => {
+                ifcfg.update(conn);
+                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
+                    BONDING_MASTER: 'yes',
+                    BONDING_SLAVE_0: 'eth0',
+                    BONDING_SLAVE_1: 'eth1',
+                    BONDING_MODULE_OPTS: 'mode=active-backup some-option'
+                }));
+            });
+        });
     });
 });
 
@@ -64,6 +95,17 @@ describe('SysconfigParser', () => {
             expect(parser.stringify(data)).toEqual(
                 "BOOTPROTO=\"dhcp\"\nNAME=\"eth0\"\n"
             );
+        });
+
+        describe('when some value is undefined', () => {
+            const data = {
+                BOOTPROTO: undefined,
+                NAME: 'eth0'
+            };
+
+            it('does not include in the file', () => {
+                expect(parser.stringify(data)).toEqual("NAME=\"eth0\"\n");
+            });
         });
     });
 });

@@ -24,13 +24,13 @@ import cockpit from 'cockpit';
 const _ = cockpit.gettext;
 const NC_ = cockpit.noop;
 
-const BALANCE_RR = 0;
-const ACTIVE_BACKUP = 1;
-const BALANCE_XOR = 2;
-const BROADCAST = 3;
-const DLA_802_3AD = 4;
-const BALANCE_TLB = 5;
-const BALANCE_ALB = 6;
+const BALANCE_RR = 'balance-rr';
+const ACTIVE_BACKUP = 'active-backup';
+const BALANCE_XOR = 'balance-xor';
+const BROADCAST = 'broadcast';
+const DLA_802_3AD = '802.3ad';
+const BALANCE_TLB = 'balance-tlb';
+const BALANCE_ALB = 'balance-alb';
 
 const values = [
     BALANCE_RR,
@@ -45,11 +45,12 @@ const values = [
 const labels = {
     [BALANCE_RR]: NC_("Round Robin"),
     [ACTIVE_BACKUP]: NC_("Active Backup"),
-    [BALANCE_XOR]: NC_("XOR"),
+    [BALANCE_XOR]: NC_("Balance XOR"),
     [BROADCAST]: NC_("Broadcast"),
     [DLA_802_3AD]: NC_("802.3ad Dynamic Link Aggregation"),
     [BALANCE_TLB]: NC_("Adaptive Transmit Load Balancing"),
     [BALANCE_ALB]: NC_("Adaptive Load Balancing")
+
 };
 
 const label = (mode) => _(labels[mode]);

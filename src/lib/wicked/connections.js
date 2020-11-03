@@ -30,6 +30,8 @@ import model from '../model';
 import startMode from '../model/startMode';
 import addressType from '../model/addressType';
 import bootProtocol from '../model/bootProtocol';
+import interfaceType from '../model/interfaceType';
+import bondingMode from '../model/bondingMode';
 import { typeFromWicked } from './utils';
 
 const START_MODE = {
@@ -103,21 +105,49 @@ const ipConfig = (config) => {
  * @function createConnection(config)
  *
  * @param {object} config - Connection configuration data from Wicked
+ * @param {string} config.name - Connection name
+ * @param {object} config.link - Connection link settings
+ * @param {object} config.link.mtu - Connection MTU
+ * @param {object} config.link.master - Master interface
+ * @param {object} config.bridge - Bridge settings
+ * @param {object} config.bond - Bonding settings
  * @return {Connection} Connection configuration model object
  */
 const createConnection = (config) => {
     const { name } = config;
     const type = typeFromWicked(config);
     const mtu = config?.link?.mtu ? parseInt(config.link.mtu) : undefined;
+    const usedBy = config?.link?.master;
 
     return model.createConnection({
+        ...config,
         name,
         type,
         startMode: startModeFor(config),
         mtu,
         ipv4: ipConfig(config),
-        bootProto: bootProtoFor(config)
+        bootProto: bootProtoFor(config),
+        usedBy,
+        ...propsByType(type, config)
     });
+};
+
+const propsByType = (type, config) => {
+    const fn = propsByConnectionType[type];
+
+    return (fn && fn(config)) || {};
+};
+
+const propsByConnectionType = {
+    [interfaceType.BONDING]: ({ bond }) => {
+        // FIXME: wicked returns a 'miimon' element
+        const { slaves = [], mode = bondingMode.ACTIVE_BACKUP, options = "" } = bond;
+        return { bond: { interfaces: slaves, mode, options } };
+    },
+    [interfaceType.BRIDGE]: ({ bridge }) => {
+        const { ports } = bridge;
+        return { bridge: { ports } };
+    }
 };
 
 export {

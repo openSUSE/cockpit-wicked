@@ -34,7 +34,30 @@ const connectionToSysconfig = (connection) => {
     return {
         NAME: connection.name,
         BOOTPROTO: connection.bootProto,
-        STARTMODE: connection.startMode
+        STARTMODE: connection.startMode,
+        ...bridgeToSysconfig(connection.bridge),
+        ...bondToSysconfig(connection.bond)
+    };
+};
+
+const bridgeToSysconfig = (bridge) => {
+    if (bridge === undefined) return {};
+    return {
+        BRIDGE: 'yes',
+        BRIDGE_PORTS: bridge.ports.join(' ')
+        // FIXME: add stp
+        // BRIDGE_STP: bridge.stp ? 'on' : 'off',
+    };
+};
+
+const bondToSysconfig = (bond) => {
+    if (bond === undefined) return {};
+    const interfaces = bond.interfaces
+            .reduce((all, iface, n) => { return { ...all, [`BONDING_SLAVE_${n}`]: iface } }, {});
+    return {
+        BONDING_MASTER: 'yes',
+        BONDING_MODULE_OPTS: `mode=${bond.mode} ${bond.options}`,
+        ...interfaces
     };
 };
 
@@ -47,6 +70,7 @@ class SysconfigParser {
     stringify(data) {
         return Object
                 .entries(data)
+                .filter(([k, v]) => v !== undefined)
                 .map(([k, v]) => `${k}="${v}"`)
                 .join("\n")
                 .concat("\n");

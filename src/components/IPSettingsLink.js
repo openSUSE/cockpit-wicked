@@ -28,7 +28,6 @@ import cockpit from 'cockpit';
 const _ = cockpit.gettext;
 
 const IPSettingsLink = ({ ipVersion = 'ipv4', connection }) => {
-    console.log("CONN", connection);
     const [isFormOpen, setFormOpen] = useState(false);
 
     const renderLinkText = () => {

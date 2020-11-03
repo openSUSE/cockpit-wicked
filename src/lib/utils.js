@@ -50,4 +50,3 @@ const isValidIP = (value) => {
 export {
     isValidIP
 };
-

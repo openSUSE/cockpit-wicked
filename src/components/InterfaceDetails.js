@@ -72,7 +72,7 @@ const ipV4Details = (connection) => {
             <dd><IPSettingsLink connection={connection} /></dd>
         </>
     );
-}
+};
 
 const InterfaceDetails = ({ iface, connection }) => (
     <dl className="details-list">

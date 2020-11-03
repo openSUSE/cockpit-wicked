@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import cockpit from 'cockpit';
 import { createAddressConfig } from '../lib/model';
 
@@ -31,9 +31,7 @@ import {
     DataListItemCells,
     DataListCell,
     DataListAction,
-    Divider,
     TextInput,
-    Title,
     Stack,
     StackItem,
     Split,
@@ -47,7 +45,7 @@ import IPInput from './IPInput';
 const _ = cockpit.gettext;
 
 const FIELDS = {
-    address: { component: IPInput, props: { placeholder: _("Address"), "aria-label": _("Address") } },
+    local: { component: IPInput, props: { placeholder: _("Address"), "aria-label": _("Address") } },
     label: { component: TextInput, props: { placeholder: _("Label"), "aria-label": _("Label") } }
 };
 

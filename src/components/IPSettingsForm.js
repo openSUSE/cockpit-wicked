@@ -19,10 +19,9 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { isValidIP } from '../lib/utils';
 import cockpit from 'cockpit';
-import bootProtocol from '../lib/model/bootProtocol';
 
 import {
     Alert,
@@ -30,12 +29,7 @@ import {
     Form,
     FormGroup,
     Modal,
-    ModalVariant,
-    Split,
-    SplitItem,
-    Stack,
-    StackItem,
-    Title
+    ModalVariant
 } from '@patternfly/react-core';
 
 import { useNetworkDispatch, updateConnection } from '../NetworkContext';
@@ -45,25 +39,24 @@ import AddressesDataList from "./AddressesDataList";
 const _ = cockpit.gettext;
 
 const sanitize = (addresses) => {
-  return addresses.filter((addr, index, collection) => {
+    return addresses.filter((addr, index, collection) => {
     // Reject addresses without IP
-    if (addr.address === undefined || addr.address.trim() === "") return false;
+        if (addr.local === undefined || addr.local.trim() === "") return false;
 
-    // If duplicated (same address, same label), keep only one
-    const idx = collection.findIndex((item) => item.address === addr.address && item.label === addr.label);
-    return idx === index;
-  });
+        // If duplicated (same address, same label), keep only one
+        const idx = collection.findIndex((item) => item.local === addr.local && item.label === addr.label);
+        return idx === index;
+    });
 };
 
-const findInvalidIP = addresses => addresses.find((addr) => !isValidIP(addr.address));
+const findInvalidIP = addresses => addresses.find((addr) => !isValidIP(addr.local));
 
 const findRepeatedLabel = (addresses) => {
-  return addresses.find((addr, idx, collection) => {
-    const firstIdx = collection.findIndex((item) => item.label === addr.label);
-    return idx !== firstIdx;
-  });
+    return addresses.find((addr, idx, collection) => {
+        const firstIdx = collection.findIndex((item) => item.label === addr.label);
+        return idx !== firstIdx;
+    });
 };
-
 
 const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => {
     const dispatch = useNetworkDispatch();
@@ -81,15 +74,15 @@ const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => 
          * TODO: improve validations
          * TODO: highlight addresses with errors?
          */
-        let errors = [];
+        const errors = [];
         const sanitizedAddresses = sanitize(addresses);
 
         if (findInvalidIP(sanitizedAddresses)) {
-          errors.push(_("There are invalid IPs"));
+            errors.push(_("There are invalid IPs"));
         }
 
         if (findRepeatedLabel(sanitizedAddresses)) {
-          errors.push(_("There are repeated labels"));
+            errors.push(_("There are repeated labels"));
         }
 
         // Do not proceed if errors were found
@@ -108,29 +101,30 @@ const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => 
         );
 
         promise
-            .then(() => {
-                setIsApplying(false);
-                onClose();
-            })
-            .catch((error) => {
-                console.error(error)
-                setErrorMessages([_("Something went wrong. Please, try it again.")]);
-                setIsApplying(false);
-            });
+                .then(() => {
+                    setIsApplying(false);
+                    onClose();
+                })
+                .catch((error) => {
+                    console.error(error);
+                    setErrorMessages([_("Something went wrong. Please, try it again.")]);
+                    setIsApplying(false);
+                });
     };
 
     const renderErrors = () => {
-      if (errorMessages.length === 0) return null;
+        if (errorMessages.length === 0) return null;
 
-      return errorMessages.map((error, idx) => (
-          <Alert key={idx}
+        return errorMessages.map((error, idx) => (
+            <Alert
+key={idx}
               variant="danger"
               title={error}
               aria-live="polite"
               isInline
-          />
-      ));
-    }
+            />
+        ));
+    };
 
     return (
         <Modal
@@ -139,12 +133,13 @@ const IPSettingsForm = ({ ipVersion = 'ipv4', connection, isOpen, onClose }) => 
             isOpen={isOpen}
             onClose={onClose}
             actions={[
-            <Button
+                <Button
               spinnerAriaValueText={isApplying ? _("Applying changes") : undefined}
               isLoading={isApplying}
               isDisabled={isApplying}
               key="confirm" variant="primary"
-              onClick={handleSubmit}>
+              onClick={handleSubmit}
+                >
                     {isApplying ? _("Applying changes") : _("Apply")}
                 </Button>,
                 <Button key="cancel" variant="link" onClick={onClose}>

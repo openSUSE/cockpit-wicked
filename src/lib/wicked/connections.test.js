@@ -22,7 +22,6 @@
 import { createConnection } from './connections';
 import interfaceType from '../model/interfaceType';
 import startMode from '../model/startMode';
-import bootProtocol from '../model/bootProtocol';
 import addressType from '../model/addressType';
 import bondingMode from '../model/bondingMode';
 
@@ -37,12 +36,10 @@ describe('#createConnection', () => {
         'ipv4:dhcp': {
             enabled: 'true'
         },
-        'ipv4:static': {
-            addresses: [
-                { local: '192.168.1.2/24', label: 'backup' },
-                { local: '192.168.2.1/24', label: 'private' },
-            ],
-        },
+        'ipv4:static': [
+            { local: '192.168.1.2/24', label: 'backup' },
+            { local: '192.168.2.1/24', label: 'private' },
+        ],
         'ipv6:dhcp': {
             enabled: 'true'
         }
@@ -59,8 +56,8 @@ describe('#createConnection', () => {
     it('sets the IPV4 address configurations', () => {
         const connection = createConnection(wickedConfig);
         expect(connection.ipv4.addresses).toEqual([
-            expect.objectContaining({ type: addressType.IPV4, address: '192.168.1.2/24', label: 'backup' }),
-            expect.objectContaining({ type: addressType.IPV4, address: '192.168.2.1/24', label: 'private' })
+            expect.objectContaining({ type: addressType.IPV4, local: '192.168.1.2/24', label: 'backup' }),
+            expect.objectContaining({ type: addressType.IPV4, local: '192.168.2.1/24', label: 'private' })
         ]);
     });
 

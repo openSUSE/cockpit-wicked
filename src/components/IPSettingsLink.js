@@ -22,6 +22,7 @@
 import React, { useState } from 'react';
 import { Button } from '@patternfly/react-core';
 import IPSettingsForm from './IPSettingsForm';
+import bootProtocol from '../lib/model/bootProtocol';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
@@ -30,21 +31,22 @@ const IPSettingsLink = ({ ipVersion = 'ipv4', connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     const renderLinkText = () => {
-        return connection[ipVersion].bootProto || _("Not configured");
+        const bootProto = connection[ipVersion].bootProto;
+        return bootProto ? bootProtocol.label(bootProto) : _("Not configured");
     };
 
     const renderForm = () => {
-      if (!isFormOpen) return null;
+        if (!isFormOpen) return null;
 
-      return(
-          <IPSettingsForm
+        return (
+            <IPSettingsForm
               ipVersion={ipVersion}
               connection={connection}
               isOpen={isFormOpen}
               onClose={() => setFormOpen(false)}
-          />
-      )
-    }
+            />
+        );
+    };
 
     return (
         <>

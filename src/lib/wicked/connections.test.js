@@ -22,7 +22,6 @@
 import { createConnection } from './connections';
 import interfaceType from '../model/interfaceType';
 import startMode from '../model/startMode';
-import bootProtocol from '../model/bootProtocol';
 import addressType from '../model/addressType';
 import bondingMode from '../model/bondingMode';
 

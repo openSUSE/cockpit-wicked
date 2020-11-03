@@ -26,7 +26,7 @@
  */
 
 import cockpit from 'cockpit';
-import bootProtocol from '../model/bootProtocol'
+import bootProtocol from '../model/bootProtocol';
 
 /**
  * @ignore
@@ -55,11 +55,11 @@ const bootProtoFor = (connection) => {
     } else if (ipv6Proto === bootProtocol.DHCP) {
         return bootProtocol.DHCP6;
     } else if (ipv4Addresses.length > 0 || ipv6Addresses.length > 0) {
-        return bootProtocol.STATIC
+        return bootProtocol.STATIC;
     } else {
         return bootProtocol.NONE;
     }
-}
+};
 
 const bridgeToSysconfig = (bridge) => {
     if (bridge === undefined) return {};
@@ -86,7 +86,7 @@ const addressesToSysconfig = (connection) => {
     const ipv4 = ipToSysconfig(connection.ipv4);
     const ipv6 = ipToSysconfig(connection.ipv6, connection.ipv4.addresses.length);
     return { ...ipv4, ...ipv6 };
-}
+};
 
 const ipToSysconfig = (ip, initialIndex = 0) => {
     if (ip === undefined || ip.addresses === undefined) return {};

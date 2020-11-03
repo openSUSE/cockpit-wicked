@@ -19,13 +19,10 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState } from 'react';
-import cockpit from 'cockpit';
+import React from 'react';
 import bootProtocol from '../lib/model/bootProtocol';
 
 import { FormSelect, FormSelectOption } from '@patternfly/react-core';
-
-const _ = cockpit.gettext;
 
 const bootProtocolOptions = bootProtocol.values.map(bootProto => {
     return { value: bootProto, label: bootProtocol.label(bootProto) };

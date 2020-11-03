@@ -34,17 +34,17 @@ const IPSettingsLink = ({ ipVersion = 'ipv4', connection }) => {
     };
 
     const renderForm = () => {
-      if (!isFormOpen) return null;
+        if (!isFormOpen) return null;
 
-      return(
-          <IPSettingsForm
+        return (
+            <IPSettingsForm
               ipVersion={ipVersion}
               connection={connection}
               isOpen={isFormOpen}
               onClose={() => setFormOpen(false)}
-          />
-      )
-    }
+            />
+        );
+    };
 
     return (
         <>

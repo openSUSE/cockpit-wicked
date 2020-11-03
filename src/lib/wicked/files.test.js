@@ -76,7 +76,7 @@ describe('IfcfgFile', () => {
                     IPADDR_3: '2001:0db4:95b3:0000:0000:8a2e:0370:9335'
                 }));
             });
-        })
+        });
 
         describe('when it is a bridge device', () => {
             const conn = createConnection({

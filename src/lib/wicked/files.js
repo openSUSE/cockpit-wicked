@@ -26,6 +26,7 @@
  */
 
 import cockpit from 'cockpit';
+import bootProtocol from '../model/bootProtocol'
 
 /**
  * @ignore
@@ -33,12 +34,32 @@ import cockpit from 'cockpit';
 const connectionToSysconfig = (connection) => {
     return {
         NAME: connection.name,
-        BOOTPROTO: connection.bootProto,
+        BOOTPROTO: bootProtoFor(connection),
         STARTMODE: connection.startMode,
         ...bridgeToSysconfig(connection.bridge),
-        ...bondToSysconfig(connection.bond)
+        ...bondToSysconfig(connection.bond),
+        ...addressesToSysconfig(connection)
     };
 };
+
+const bootProtoFor = (connection) => {
+    const {
+        ipv4: { bootProto: ipv4Proto, addresses: ipv4Addresses },
+        ipv6: { bootProto: ipv6Proto, addresses: ipv6Addresses }
+    } = connection;
+
+    if (ipv4Proto === bootProtocol.DHCP && ipv6Proto === bootProtocol.DHCP) {
+        return bootProtocol.DHCP;
+    } else if (ipv4Proto === bootProtocol.DHCP) {
+        return bootProtocol.DHCP4;
+    } else if (ipv6Proto === bootProtocol.DHCP) {
+        return bootProtocol.DHCP6;
+    } else if (ipv4Addresses.length > 0 || ipv6Addresses.length > 0) {
+        return bootProtocol.STATIC
+    } else {
+        return bootProtocol.NONE;
+    }
+}
 
 const bridgeToSysconfig = (bridge) => {
     if (bridge === undefined) return {};
@@ -59,6 +80,27 @@ const bondToSysconfig = (bond) => {
         BONDING_MODULE_OPTS: `mode=${bond.mode} ${bond.options}`,
         ...interfaces
     };
+};
+
+const addressesToSysconfig = (connection) => {
+    const ipv4 = ipToSysconfig(connection.ipv4);
+    const ipv6 = ipToSysconfig(connection.ipv6, connection.ipv4.addresses.length);
+    return { ...ipv4, ...ipv6 };
+}
+
+const ipToSysconfig = (ip, initialIndex = 0) => {
+    if (ip === undefined || ip.addresses === undefined) return {};
+
+    return ip.addresses.reduce((all, item, n) => {
+        const addressIndex = n + initialIndex;
+        const { address, label = "" } = item;
+        const suffix = (addressIndex === 0) ? "" : `_${addressIndex}`;
+
+        let data = { [`IPADDR${suffix}`]: address };
+        if (label !== "") data = { ...data, [`LABEL${suffix}`]: label };
+
+        return { ...all, ...data };
+    }, {});
 };
 
 /**

@@ -27,8 +27,7 @@ import cockpit from 'cockpit';
 
 const conn = createConnection({
     name: 'eth0',
-    type: interfaceType.ETHERNET,
-    bootProto: bootProtocol.DHCP
+    type: interfaceType.ETHERNET
 });
 const replaceFn = jest.fn();
 const ifcfg = new IfcfgFile('/tmp/ifcfg-eth0');
@@ -44,11 +43,40 @@ describe('IfcfgFile', () => {
         it('updates file content', () => {
             ifcfg.update(conn);
             expect(replaceFn).toHaveBeenCalledWith({
-                BOOTPROTO: 'dhcp',
+                BOOTPROTO: 'none',
                 NAME: 'eth0',
                 STARTMODE: 'auto'
             });
         });
+
+        describe('when it contains multiple addresses', () => {
+            const conn = createConnection({
+                name: 'eth0', type: interfaceType.ETHERNET, ipv4: {
+                    bootProto: bootProtocol.DHCP,
+                    addresses: [
+                        { address: '192.168.1.100/24' }, { address: '10.0.0.1/10', label: 'private' },
+                        { address: '10.0.0.2/10' }
+                    ]
+                }, ipv6: {
+                    bootProto: bootProtocol.DHCP,
+                    addresses: [
+                        { address: '2001:0db4:95b3:0000:0000:8a2e:0370:9335' }
+                    ]
+                }
+            });
+
+            it('includes all the addresses and their labels', () => {
+                ifcfg.update(conn);
+                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
+                    BOOTPROTO: 'dhcp',
+                    IPADDR: '192.168.1.100/24',
+                    IPADDR_1: '10.0.0.1/10',
+                    LABEL_1: 'private',
+                    IPADDR_2: '10.0.0.2/10',
+                    IPADDR_3: '2001:0db4:95b3:0000:0000:8a2e:0370:9335'
+                }));
+            });
+        })
 
         describe('when it is a bridge device', () => {
             const conn = createConnection({

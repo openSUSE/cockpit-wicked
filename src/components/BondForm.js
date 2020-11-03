@@ -42,34 +42,6 @@ const modeOptions = bondingModes.values.map(mode => {
     return { value: mode, label: bondingModes.label(mode) };
 });
 
-/**
- * Returns given options string as an object
- *
- * @param {string} options - options in a key=value format, separated by space
- * @return {object} an object holding given options
- */
-const parseOptions = (options) => {
-    return options.split(" ").reduce((obj, option) => {
-        if (option) {
-            const [key, value] = option.split("=");
-            obj[key] = value;
-        }
-
-        return obj;
-    }, {});
-};
-
-/**
- * Returns given options object serialized as a key=value string
- *
- * @param {object} options - options object
- * @return {string} a key=value string
- */
-const serializeOptions = (options) => (
-    Object.keys(options).map((key) => `${key}=${options[key]}`)
-            .join(" ")
-);
-
 const BondForm = ({ isOpen, onClose, connection }) => {
     const { bond } = connection || {};
     const isEditing = !!connection;
@@ -90,13 +62,12 @@ const BondForm = ({ isOpen, onClose, connection }) => {
     }, [connection, isEditing, interfaces]);
 
     const addOrUpdateConnection = () => {
-        const { mode, ...rest } = parseOptions(options);
         const bondingAttrs = {
             name,
             bond: {
-                mode: parseInt(mode) || bondingMode, // TODO: re-evaluate if we actually want this
+                mode,
                 interfaces: selectedInterfaces,
-                options: serializeOptions(rest)
+                options
             }
         };
         let promise = null;

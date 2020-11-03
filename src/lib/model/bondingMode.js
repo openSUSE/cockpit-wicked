@@ -27,8 +27,8 @@ const NC_ = cockpit.noop;
 const BALANCE_RR = 'balance-rr';
 const ACTIVE_BACKUP = 'active-backup';
 const BALANCE_XOR = 'balance-xor';
-const BROADCAST = 'broadcast'
-const DLA_802_3AD = '802.3ad'
+const BROADCAST = 'broadcast';
+const DLA_802_3AD = '802.3ad';
 const BALANCE_TLB = 'balance-tlb';
 const BALANCE_ALB = 'balance-alb';
 

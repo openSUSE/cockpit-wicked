@@ -26,3 +26,17 @@ p {
     font-size: var(--pf-global--FontSize--md);
   }
 }
+
+/**
+ * Styles for mimic the appearance of Cockpit Networking module when managing addresses and routes
+ */
+.data-list-form {
+  li {
+    background: var(--pf-global--palette--black-150);
+  }
+  .btn-sm {
+    font-size: var(--pf-global--FontSize--xs);
+    padding-left: var(--pf-global--FontSize--xs);
+    padding-right: var(--pf-global--FontSize--xs);
+  }
+}

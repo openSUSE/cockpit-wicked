@@ -25,6 +25,7 @@ import interfaceType from './interfaceType';
 import addressType from './addressType';
 import bootProtocol from './bootProtocol';
 
+let addressConfigIndex = 0;
 let connectionIndex = 0;
 let interfaceIndex = 0;
 let routeIndex = 0;
@@ -51,14 +52,15 @@ let routeIndex = 0;
  * Returns an object representing a route
  *
  * @param {object} args - Route properties
- * @param {boolean} args.default - Whether the route is a default one
+ * @param {boolean} args.isDefault - Whether the route is a default one
  * @param {string} args.destination - Destination network
  * @param {string} args.gateway - Gateway
- * @param {string} args.interface - Name of the interface associated to this connection
+ * @param {string} args.device - Name of the interface associated to this connection
  * @param {string} args.options - Additional options like metric
  * @return {Route} Route object
  */
-export const createRoute = ({ isDefault, destination, gateway, device, options }) => {
+
+export const createRoute = ({ isDefault, destination, gateway, device, options } = {}) => {
     return {
         id: routeIndex++,
         isDefault,
@@ -98,10 +100,10 @@ export const createConnection = ({
     name,
     description,
     type = interfaceType.ETHERNET,
-    bootProto = bootProtocol.NONE,
     interfaceName,
     startMode = startModeEnum.AUTO,
-    addresses,
+    ipv4 = { addresses: [], bootProto: bootProtocol.NONE },
+    ipv6 = { addresses: [], bootProto: bootProtocol.NONE },
     ...rest
 }) => {
     return {
@@ -109,10 +111,10 @@ export const createConnection = ({
         name,
         description,
         type,
-        bootProto,
         interfaceName,
         startMode,
-        addresses,
+        ipv4,
+        ipv6,
         virtual: interfaceType.isVirtual(type),
         ...propsByType(type, rest)
     };
@@ -168,13 +170,12 @@ const propsByConnectionType = {
  */
 export const createAddressConfig = ({
     type = addressType.IPV4,
-    proto = bootProtocol.STATIC,
     address,
     label = ""
-}) => {
+} = {}) => {
     return {
+        id: addressConfigIndex++,
         type,
-        proto,
         address,
         label
     };

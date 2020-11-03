@@ -30,9 +30,7 @@ const _ = cockpit.gettext;
 
 const columns = [
     { title: _("Name"), cellFormatters: [expandable] },
-    { title: _("Type") },
-    { title: _("IP address") },
-    { title: _("Sending/Receiving") },
+    { title: _("Type") }
 ];
 
 // TODO: move this fn back to the component
@@ -46,13 +44,6 @@ const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, i
         setOpenRows(openRows.filter(k => k == rowKey));
     }
     setRows(clonedRows);
-};
-
-const ipAddress = (conn) => {
-    return !conn
-        ? _("Not configured")
-        : (conn.bootProto !== "static")
-            ? conn.bootProto : conn.iP;
 };
 
 const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
@@ -70,9 +61,7 @@ const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => 
                 isOpen: openRows.includes(parentId),
                 cells: [
                     i.name,
-                    i.type,
-                    ipAddress(conn),
-                    "0/0",
+                    i.type
                 ]
             }
         );

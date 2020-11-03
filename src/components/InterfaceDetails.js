@@ -24,6 +24,7 @@ import React from 'react';
 import StartMode from './StartMode';
 import BridgeDetails from './BridgeDetails';
 import BondDetails from './BondDetails';
+import IPSettingsLink from './IPSettingsLink';
 import interfaceTypeEnum from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
@@ -64,6 +65,15 @@ const bridgeDetails = (bridge) => {
     );
 };
 
+const ipV4Details = (connection) => {
+    return (
+        <>
+            <dt>{_("IPv4 settings")}</dt>
+            <dd><IPSettingsLink connection={connection} /></dd>
+        </>
+    );
+}
+
 const InterfaceDetails = ({ iface, connection }) => (
     <dl className="details-list">
         <dt>{_("Type")}</dt>
@@ -72,6 +82,7 @@ const InterfaceDetails = ({ iface, connection }) => (
         { connection && startMode(connection) }
         { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
         { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
+        { connection && ipV4Details(connection) }
     </dl>
 );
 

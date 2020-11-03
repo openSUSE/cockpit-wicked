@@ -55,30 +55,16 @@ describe('#createConnection', () => {
         });
     });
 
-    it('sets the address configurations', () => {
+    it('sets the IPV4 address configurations', () => {
         const connection = createConnection(wickedConfig);
-        expect(connection.addresses).toEqual([
-            {
-                type: addressType.IPV4, proto: bootProtocol.DHCP,
-                address: undefined, label: ""
-            },
-            {
-                type: addressType.IPV6, proto: bootProtocol.DHCP,
-                address: undefined, label: ""
-            },
-            {
-                type: addressType.IPV4, proto: bootProtocol.STATIC,
-                address: '192.168.1.2/24', label: 'backup'
-            },
-            {
-                type: addressType.IPV4, proto: bootProtocol.STATIC,
-                address: '192.168.2.1/24', label: 'private'
-            }
+        expect(connection.ipv4.addresses).toEqual([
+            expect.objectContaining({ type: addressType.IPV4, address: '192.168.1.2/24', label: 'backup' }),
+            expect.objectContaining({ type: addressType.IPV4, address: '192.168.2.1/24', label: 'private' })
         ]);
     });
 
-    it('sets the boot protocol', () => {
+    it('do not set a boot protocol', () => {
         const connection = createConnection(wickedConfig);
-        expect(connection.bootProto).toEqual(bootProtocol.DHCP);
+        expect(connection.bootProto).toBeUndefined();
     });
 });

@@ -49,7 +49,16 @@ const FIELDS = {
     label: { component: TextInput, props: { placeholder: _("Label"), "aria-label": _("Label") } }
 };
 
-const AddressesDataList = ({ addresses, updateAddresses }) => {
+/**
+ * Component for managing a collection of {@link module/model~AddressConfig}
+ *
+ * @param {Object} props - component props
+ * @param {Array<{module/modell~AddressConfig}>} addresses - the addresses collection
+ * @param {function} updateAddresses - callback function to be called when adding or removing
+ *    addresses
+ * @param {boolean} [allowEmpty=true] - whether the component should allow to delete all items
+ */
+const AddressesDataList = ({ addresses, updateAddresses, allowEmpty = true }) => {
     const addAddress = () => {
         const address = createAddressConfig();
         const currentAddresses = [...addresses];
@@ -93,15 +102,23 @@ const AddressesDataList = ({ addresses, updateAddresses }) => {
             );
         });
 
+        const renderDeleteAction = () => {
+            if (!allowEmpty && addresses.length === 1) return null;
+
+            return (
+                <DataListAction>
+                    <Button variant="secondory" className="btn-sm" onClick={() => deleteAddress(id)}>
+                        <MinusIcon />
+                    </Button>
+                </DataListAction>
+            );
+        };
+
         return (
             <DataListItem key={`address-${id}`}>
                 <DataListItemRow>
                     <DataListItemCells dataListCells={cells} />
-                    <DataListAction>
-                        <Button variant="secondory" className="btn-sm" onClick={() => deleteAddress(id)}>
-                            <MinusIcon />
-                        </Button>
-                    </DataListAction>
+                    { renderDeleteAction() }
                 </DataListItemRow>
             </DataListItem>
         );

@@ -62,6 +62,16 @@ describe('#createConnection', () => {
             });
         });
     });
+
+    describe('when it is a vlan device', () => {
+        it('sets the vlan configuration to the given values', () => {
+            const conn = createConnection({
+                name: 'vlan10', type: interfaceType.VLAN,
+                vlan: { parentDevice: 'eth0', vlanId: 10 }
+            });
+            expect(conn.vlan).toEqual({ vlanId: 10, parentDevice: 'eth0' });
+        });
+    });
 });
 
 describe('#mergeConnection', () => {

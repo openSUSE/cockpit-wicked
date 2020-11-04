@@ -24,6 +24,7 @@ import React from 'react';
 import StartMode from './StartMode';
 import BridgeDetails from './BridgeDetails';
 import BondDetails from './BondDetails';
+import VlanDetails from './VlanDetails';
 import IPSettingsLink from './IPSettingsLink';
 import interfaceTypeEnum from '../lib/model/interfaceType';
 
@@ -65,6 +66,15 @@ const bridgeDetails = (connection) => {
     );
 };
 
+const vlanDetails = (connection) => {
+    return (
+        <>
+            <dt>{_("VLAN")}</dt>
+            <dd><VlanDetails connection={connection} /></dd>
+        </>
+    );
+};
+
 const ipV4Details = (connection) => {
     return (
         <>
@@ -82,6 +92,7 @@ const InterfaceDetails = ({ iface, connection }) => (
         { connection && startMode(connection) }
         { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
         { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
+        { iface.type === interfaceTypeEnum.VLAN && vlanDetails(connection) }
         { connection && ipV4Details(connection) }
     </dl>
 );

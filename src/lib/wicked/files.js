@@ -36,9 +36,10 @@ const connectionToSysconfig = (connection) => {
         NAME: connection.name,
         BOOTPROTO: bootProtoFor(connection),
         STARTMODE: connection.startMode,
+        ...addressesToSysconfig(connection),
         ...bridgeToSysconfig(connection.bridge),
         ...bondToSysconfig(connection.bond),
-        ...addressesToSysconfig(connection)
+        ...vlanToSysconfig(connection.vlan)
     };
 };
 
@@ -59,6 +60,12 @@ const bootProtoFor = (connection) => {
     } else {
         return bootProtocol.NONE;
     }
+};
+
+const addressesToSysconfig = (connection) => {
+    const ipv4 = ipToSysconfig(connection.ipv4);
+    const ipv6 = ipToSysconfig(connection.ipv6, connection.ipv4.addresses.length);
+    return { ...ipv4, ...ipv6 };
 };
 
 const bridgeToSysconfig = (bridge) => {
@@ -82,12 +89,6 @@ const bondToSysconfig = (bond) => {
     };
 };
 
-const addressesToSysconfig = (connection) => {
-    const ipv4 = ipToSysconfig(connection.ipv4);
-    const ipv6 = ipToSysconfig(connection.ipv6, connection.ipv4.addresses.length);
-    return { ...ipv4, ...ipv6 };
-};
-
 const ipToSysconfig = (ip, initialIndex = 0) => {
     if (ip === undefined || ip.addresses === undefined) return {};
 
@@ -101,6 +102,14 @@ const ipToSysconfig = (ip, initialIndex = 0) => {
 
         return { ...all, ...data };
     }, {});
+};
+
+const vlanToSysconfig = (vlan) => {
+    if (vlan === undefined) return {};
+    return {
+        VLAN_ID: vlan.vlanId,
+        ETHERDEVICE: vlan.parentDevice
+    };
 };
 
 /**

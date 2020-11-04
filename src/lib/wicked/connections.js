@@ -113,6 +113,7 @@ const ipConfig = (config, type = 'ipv4') => {
  * @param {object} config.link.master - Master interface
  * @param {object} config.bridge - Bridge settings
  * @param {object} config.bond - Bonding settings
+ * @param {object} config.vlan - Vlan settings
  * @return {Connection} Connection configuration model object
  */
 const createConnection = (config) => {
@@ -121,7 +122,7 @@ const createConnection = (config) => {
     const mtu = config?.link?.mtu ? parseInt(config.link.mtu) : undefined;
     const usedBy = config?.link?.master;
 
-    return model.createConnection({
+    const connection = model.createConnection({
         ...config,
         name,
         type,
@@ -133,6 +134,8 @@ const createConnection = (config) => {
         usedBy,
         ...propsByType(type, config)
     });
+
+    return connection;
 };
 
 const propsByType = (type, config) => {
@@ -150,6 +153,10 @@ const propsByConnectionType = {
     [interfaceType.BRIDGE]: ({ bridge }) => {
         const { ports } = bridge;
         return { bridge: { ports } };
+    },
+    [interfaceType.VLAN]: ({ vlan }) => {
+        const { tag, device } = vlan;
+        return { vlan: { parentDevice: device, vlanId: tag } };
     }
 };
 

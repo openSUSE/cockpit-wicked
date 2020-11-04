@@ -28,19 +28,20 @@ import {
     FormSelectOption,
     Modal,
     ModalVariant,
-    TextInput
+    TextInput,
 } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../NetworkContext';
 import interfaceType from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
 
-const VlanForm = ({ isOpen, onClose, conn }) => {
-    const isEditing = !!conn;
-    const [name, setName] = useState(conn?.name);
-    const [vlanId, setVlanId] = useState(conn?.vlanId || 0);
-    const [parentDevice, setParentDevice] = useState(conn?.parentDevice);
+const VlanForm = ({ isOpen, onClose, connection }) => {
+    const { vlan } = connection || {};
+    const isEditing = !!connection;
+    const [name, setName] = useState(connection?.name);
+    const [vlanId, setVlanId] = useState(vlan?.vlanId || 0);
+    const [parentDevice, setParentDevice] = useState(vlan?.parentDevice);
     const [candidateInterfaces, setCandidateInterfaces] = useState([]);
     const { interfaces } = useNetworkState();
     const dispatch = useNetworkDispatch();
@@ -48,42 +49,23 @@ const VlanForm = ({ isOpen, onClose, conn }) => {
 
     useEffect(() => {
         setCandidateInterfaces([...Object.values(interfaces)]);
+        if (!parentDevice) setParentDevice(Object.values(interfaces)[0]?.name);
     }, [interfaces]);
 
+    useEffect(() => {
+        proposeName();
+    }, [vlanId, parentDevice]);
 
     const addOrUpdateConnection = () => {
+        let promise = null;
+
         if (isEditing) {
-            updateConnection();
+            promise = updateConnection(dispatch, connection, { vlan: { name, vlanId, parentDevice } });
         } else {
-            addConnection();
+            promise = addConnection(dispatch, { name, type: interfaceType.VLAN, vlan: { vlanId, parentDevice } });
         }
-        onClose();
-    };
 
-    const addConnection = () => {
-        dispatch({
-            type: actionTypes.ADD_CONNECTION,
-            payload: {
-                name,
-                parentDevice,
-                vlanId,
-                type: interfaceType.VLAN
-            }
-        });
-    };
-
-    const updateConnection = () => {
-        dispatch({
-            type: actionTypes.UPDATE_CONNECTION,
-            payload: {
-                id: conn.id,
-                changes: {
-                    name,
-                    parentDevice,
-                    vlanId
-                }
-            }
-        });
+        promise.then(onClose).catch(console.error);
     };
 
     const isIncomplete = () => {
@@ -94,8 +76,8 @@ const VlanForm = ({ isOpen, onClose, conn }) => {
         return false;
     };
 
-  const updateName = (value) => {
-        setName(value)
+    const updateName = (value) => {
+        setName(value);
         setSuggestName(false);
     };
 
@@ -104,16 +86,7 @@ const VlanForm = ({ isOpen, onClose, conn }) => {
         setName(`${parentDevice}.${vlanId}`);
     };
 
-    const updateParent = (value) => {
-        setParentDevice(value);
-        proposeName();
-    };
-
-    const updateVlanId = (value) => {
-        setVlanId(value);
-        proposeName();
-    };
-
+    if (!parentDevice) return null;
 
     return (
         <Modal
@@ -136,7 +109,8 @@ const VlanForm = ({ isOpen, onClose, conn }) => {
                     isRequired
                     fieldId="parentDevice"
                 >
-                  <FormSelect value={parentDevice} onChange={(value) => updateParent(value)} id="parentDevice">
+
+                    <FormSelect value={parentDevice} onChange={setParentDevice} id="parentDevice">
                         {candidateInterfaces.map(({ name }, index) => (
                             <FormSelectOption key={index} value={name} label={name} />
                         ))}
@@ -151,8 +125,8 @@ const VlanForm = ({ isOpen, onClose, conn }) => {
                     <TextInput
                         isRequired
                         id="vlan_id"
-                        defaultValue={vlanId}
-                        onChange={(value) => updateVlanId(value)}
+                        value={vlanId}
+                        onChange={setVlanId}
                         type="number"
                     />
                 </FormGroup>
@@ -166,7 +140,7 @@ const VlanForm = ({ isOpen, onClose, conn }) => {
                     <TextInput
                         isRequired
                         id="interface-name"
-                        devaultValue={name}
+                        value={name}
                         onChange={updateName}
                     />
                 </FormGroup>

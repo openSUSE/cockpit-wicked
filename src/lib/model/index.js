@@ -157,6 +157,12 @@ const propsByConnectionType = {
         return {
             bridge: { ports }
         };
+    },
+    [interfaceType.VLAN]: ({ vlan = {} } = {}) => {
+        const { vlanId = 0, parentDevice } = vlan;
+        return {
+            vlan: { vlanId, parentDevice }
+        };
     }
 };
 

@@ -48,7 +48,7 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
     const [suggestName, setSuggestName] = useState(!isEditing);
 
     useEffect(() => {
-        setCandidateInterfaces([...Object.values(interfaces)]);
+        setCandidateInterfaces(Object.values(interfaces).filter(i => i.type !== interfaceType.VLAN));
         if (!parentDevice) setParentDevice(Object.values(interfaces)[0]?.name);
     }, [interfaces]);
 

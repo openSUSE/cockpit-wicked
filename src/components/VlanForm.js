@@ -111,8 +111,8 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
                 >
 
                     <FormSelect value={parentDevice} onChange={setParentDevice} id="parentDevice">
-                        {candidateInterfaces.map(({ name }, index) => (
-                            <FormSelectOption key={index} value={name} label={name} />
+                        {candidateInterfaces.map(({ name }) => (
+                            <FormSelectOption key={name} value={name} label={name} />
                         ))}
                     </FormSelect>
                 </FormGroup>

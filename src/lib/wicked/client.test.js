@@ -57,3 +57,23 @@ describe('#getConfigurations', () => {
         });
     });
 });
+
+describe('#getInterfaceByPath', () => {
+    it('returns the configuration with the given D-Bus path', () => {
+        expect.assertions(1);
+
+        return client.getInterfaceByPath('/org/opensuse/Network/Interface/2').then(data => {
+            expect(data.interface.name).toEqual('eth0');
+        });
+    });
+
+    it('throws an error if the interface is not found', async () => {
+        expect.assertions(1);
+
+        try {
+            await client.getInterfaceByPath('/org/opensuse/Network/Interface/99');
+        } catch(e) {
+            expect(e.message).toEqual("Interface /org/opensuse/Network/Interface/99 not found")
+        };
+    })
+});

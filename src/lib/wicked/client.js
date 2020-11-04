@@ -130,6 +130,24 @@ class WickedClient {
     }
 
     /**
+     * Returns the interface under an given D-Bus path
+     *
+     * @return {Promise.<Object|Error>}
+     */
+    getInterfaceByPath(path) {
+        return new Promise((resolve, reject) => {
+            this.getInterfaces().then(data => {
+                const iface = data.find(i => i._attrs.path === path);
+                if (iface) {
+                    resolve(iface);
+                } else {
+                    reject(new Error(`Interface ${path} not found`));
+                }
+            });
+        });
+    }
+
+    /**
      * Reloads a connection
      *
      * TODO: better error handling

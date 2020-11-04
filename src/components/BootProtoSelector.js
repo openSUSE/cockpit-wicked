@@ -32,7 +32,7 @@ const BootProtoSelector = ({ value, onChange }) => {
     return (
         <FormSelect value={value} onChange={onChange} id="bootProto">
             {bootProtocolOptions.map((option, index) => (
-                <FormSelectOption key={index} value={option.value} label={option.label} />
+                <FormSelectOption key={option.value} value={option.value} label={option.label} />
             ))}
         </FormSelect>
     );

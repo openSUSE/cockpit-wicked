@@ -28,52 +28,56 @@ import TypesFilter from "./TypesFilter";
 
 const _ = cockpit.gettext;
 
-const columns = [
-    { title: _("Name"), cellFormatters: [expandable] },
-    { title: _("Type") }
-];
-
-const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
-    let parentId = 0;
-
-    return interfaces.reduce((list, i) => {
-        if (displayOnly.length && !displayOnly.includes(i.type)) {
-            return list;
-        }
-
-        const conn = connections.find(c => i.name == c.name);
-
-        list.push(
-            {
-                isOpen: openRows.includes(parentId),
-                cells: [
-                    i.name,
-                    i.type
-                ]
-            }
-        );
-        list.push(
-            {
-                parent: parentId,
-                cells: [
-                    {
-                        title: <InterfaceDetails iface={i} connection={conn} />
-                    }
-                ]
-            }
-        );
-
-        parentId += 2;
-
-        return list;
-    }, []);
-};
-
 const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const [rows, setRows] = useState([]);
     const [types, setTypes] = useState([]);
     const [filterByType, setFilterByType] = useState([]);
     const [openRows, setOpenRows] = useState([]);
+
+    const columns = [
+        { title: _("Name"), cellFormatters: [expandable] },
+        { title: _("Type") }
+    ];
+
+    /**
+     * Builds the needed structure for rendering the interfaces and their details in an expandable
+     * Patternfly/Table
+     */
+    const buildRows = () => {
+        let parentId = 0;
+
+        return interfaces.reduce((list, i) => {
+            if (filterByType.length && !filterByType.includes(i.type)) {
+                return list;
+            }
+
+            const conn = connections.find(c => i.name == c.name);
+
+            list.push(
+                {
+                    isOpen: openRows.includes(parentId),
+                    cells: [
+                        i.name,
+                        i.type
+                    ]
+                }
+            );
+            list.push(
+                {
+                    parent: parentId,
+                    cells: [
+                        {
+                            title: <InterfaceDetails iface={i} connection={conn} />
+                        }
+                    ]
+                }
+            );
+
+            parentId += 2;
+
+            return list;
+        }, []);
+    };
 
     /**
      * Keeps the openRows internal state up to date using the information provided by the
@@ -93,8 +97,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     }, [interfaces]);
 
     useEffect(() => {
-        const rows = buildRows(interfaces, connections, filterByType, openRows);
-        setRows(rows);
+        setRows(buildRows());
     }, [interfaces, connections, openRows, filterByType]);
 
     return (

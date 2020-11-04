@@ -24,7 +24,15 @@ import bootProtocol from '../lib/model/bootProtocol';
 
 import { FormSelect, FormSelectOption } from '@patternfly/react-core';
 
-const bootProtocolOptions = bootProtocol.values.map(bootProto => {
+// FIXME: These are the boot protocols supported by wicked. Improve the selector to choose them
+// dynamically according to the network backend in use.
+const supportedBootProtocols = [
+    bootProtocol.NONE,
+    bootProtocol.STATIC,
+    bootProtocol.DHCP
+];
+
+const bootProtocolOptions = supportedBootProtocols.map(bootProto => {
     return { value: bootProto, label: bootProtocol.label(bootProto) };
 });
 
@@ -32,7 +40,7 @@ const BootProtoSelector = ({ value, onChange }) => {
     return (
         <FormSelect value={value} onChange={onChange} id="bootProto">
             {bootProtocolOptions.map((option, index) => (
-                <FormSelectOption key={index} value={option.value} label={option.label} />
+                <FormSelectOption key={option.value} value={option.value} label={option.label} />
             ))}
         </FormSelect>
     );

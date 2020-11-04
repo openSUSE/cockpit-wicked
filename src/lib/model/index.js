@@ -167,16 +167,22 @@ const propsByConnectionType = {
 };
 
 /**
+ * @typedef {Object} AddressConfig
+ * @property {string} type - Address type ('IPv4' or 'IPv6')
+ * @property {string} local - Local IP address
+ * @property {string} label - IP label
+ */
+
+/**
  * @function
  *
  * Returns an address configuration object
  *
  * @param {object} args - Configuration attributes
  * @param {string} args.type - Address type ('IPv4' or 'IPv6')
- * @param {string} args.proto - Boot protocol ('DHCP', 'STATIC', etc.)
  * @param {string} args.local - Local IP address
  * @param {string} args.label - IP label
- * @return {object}
+ * @return {AddressConfig}
  * @todo The IP address deserves its own type
  */
 export const createAddressConfig = ({

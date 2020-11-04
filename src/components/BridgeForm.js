@@ -46,7 +46,7 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
 
     useEffect(() => {
         if (isEditing) {
-            setCandidatePorts(Object.values(interfaces).filter(i => i.id !== connection.id));
+            setCandidatePorts(Object.values(interfaces).filter(i => i.name !== connection.name));
         } else {
             setCandidatePorts(Object.values(interfaces));
         }

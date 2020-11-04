@@ -47,8 +47,17 @@ const elementToJson = (element, listElements) => {
             value = value.reduce((all, child) => ({ ...all, ...child }), {});
         }
 
+        const attrs = elementAttributes(element);
+        if (Object.keys(attrs).length > 0) value = { ...value, _attrs: attrs };
+
         return { [key]: value };
     }
+};
+
+const elementAttributes = (element) => {
+    return Array.from(element.attributes).reduce((all, attr) => (
+        { ...all, [attr.nodeName]: attr.nodeValue }
+    ), {});
 };
 
 /* @ignore */
@@ -112,6 +121,12 @@ class WickedClient {
     async getConfigurations() {
         const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-config']);
         return XmlToJson(stdout, ['body', 'slaves', 'ipv4:static', 'ipv6:static', 'ports']);
+    }
+
+    async getInterface(name) {
+        const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-xml', name]);
+        const [data] = XmlToJson(stdout, ['body']);
+        return data;
     }
 
     /**

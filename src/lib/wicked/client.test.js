@@ -25,11 +25,19 @@ const client = new Client();
 
 describe('#getInterfaces', () => {
     it('returns the active interfaces', () => {
-        expect.assertions(1);
+        expect.assertions(2);
 
         return client.getInterfaces().then(data => {
             const names = data.map(i => i.interface.name);
             expect(names).toEqual(['lo', 'eth0', 'eth1', 'eth2', 'bond0']);
+            const paths = data.map(i => i._attrs.path);
+            expect(paths).toEqual([
+                '/org/opensuse/Network/Interface/1',
+                '/org/opensuse/Network/Interface/2',
+                '/org/opensuse/Network/Interface/3',
+                '/org/opensuse/Network/Interface/4',
+                '/org/opensuse/Network/Interface/6'
+            ]);
         });
     });
 });

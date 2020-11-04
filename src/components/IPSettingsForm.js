@@ -101,11 +101,11 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
     /**
      * Performs an update of the internal addresses state
      *
-     * When the "Static" boot protocol is currently selected, it ensures that there is at least one
-     * {@link module:/model~AddressConfig} in the collection, which helps displaying needed fields
-     * in the UI.
+     * When the "Static" boot protocol is selected, it ensures that there is at least one {@link
+     * module:/model~AddressConfig} in the collection, which helps displaying needed fields in the
+     * UI.
      *
-     * @param {Array<module:model~AddressConfig>} [nextAddresses] - Addresses be used for the
+     * @param {Array<module:model~AddressConfig>} [nextAddresses] - Addresses to be used for the
      *   update. When not given, current addresses will be used.
      */
     const forceAddressesUpdate = (nextAddresses) => {

@@ -179,23 +179,14 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
             return;
         }
 
-        // If everything looks good, try to apply requested changes
-        const promise = updateConnection(
+        // If everything looks good, send requested changes and close
+        updateConnection(
             dispatch,
             connection,
             { [ipVersion]: { bootProto, addresses: sanitizedAddresses } }
         );
 
-        promise
-                .then(() => {
-                    setIsApplying(false);
-                    onClose();
-                })
-                .catch((error) => {
-                    console.error(error);
-                    setErrorMessages([_("Something went wrong. Please, try it again.")]);
-                    setIsApplying(false);
-                });
+        onClose();
     };
 
     /**

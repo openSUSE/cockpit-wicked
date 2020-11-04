@@ -31,8 +31,17 @@ const IPSettingsLink = ({ ipVersion = 'ipv4', connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     const renderLinkText = () => {
-        const bootProto = connection[ipVersion].bootProto;
-        return bootProto ? bootProtocol.label(bootProto) : _("Not configured");
+        const { bootProto, addresses } = connection[ipVersion];
+
+        if (!bootProto) return _("Not configured");
+
+        const bootProtoLabel = bootProtocol.label(bootProto);
+
+        if (bootProto === bootProtocol.STATIC) {
+            return [bootProtoLabel, addresses[0].local].join(" - ");
+        }
+
+        return bootProtoLabel;
     };
 
     const renderForm = () => {
@@ -50,7 +59,7 @@ const IPSettingsLink = ({ ipVersion = 'ipv4', connection }) => {
 
     return (
         <>
-            <Button variant="link" onClick={() => setFormOpen(true)}>{renderLinkText()}</Button>
+            <a href="#" onClick={() => setFormOpen(true)}>{renderLinkText()}</a>
             {renderForm()}
         </>
     );

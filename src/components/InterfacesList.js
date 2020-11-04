@@ -33,19 +33,6 @@ const columns = [
     { title: _("Type") }
 ];
 
-// TODO: move this fn back to the component
-const onCollapseFn = (rows, setRows, openRows, setOpenRows) => (event, rowKey, isOpen) => {
-    const clonedRows = [...rows];
-
-    clonedRows[rowKey].isOpen = isOpen;
-    if (isOpen && !openRows.includes(rowKey)) {
-        setOpenRows([...openRows, rowKey]);
-    } else {
-        setOpenRows(openRows.filter(k => k == rowKey));
-    }
-    setRows(clonedRows);
-};
-
 const buildRows = (interfaces, connections, displayOnly = [], openRows = []) => {
     let parentId = 0;
 
@@ -88,6 +75,18 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const [filterByType, setFilterByType] = useState([]);
     const [openRows, setOpenRows] = useState([]);
 
+    /**
+     * Keeps the openRows internal state up to date using the information provided by the
+     * Patternfly/Table#onCollapse event
+     */
+    const onCollapseFn = () => (event, rowKey, isOpen) => {
+        if (isOpen && !openRows.includes(rowKey)) {
+            setOpenRows([...openRows, rowKey]);
+        } else {
+            setOpenRows(openRows.filter(k => k != rowKey));
+        }
+    };
+
     useEffect(() => {
         const uniqueTypes = [...new Set(interfaces.map((i) => i.type))];
         setTypes(uniqueTypes);
@@ -116,7 +115,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 <Table
                     aria-label="Networking interfaces"
                     variant={TableVariant.compact}
-                    onCollapse={onCollapseFn(rows, setRows, openRows, setOpenRows)}
+                    onCollapse={onCollapseFn()}
                     cells={columns}
                     rows={rows}
                 >

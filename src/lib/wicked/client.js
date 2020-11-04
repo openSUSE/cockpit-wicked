@@ -99,31 +99,85 @@ const XmlToJson = (xmlString, listElements = []) => {
  *
  * @class
  *
- * This class is responsible for communicating with Wicked using its CLI and
- * parsing the XML output.
+ * This class is responsible for communicating with Wicked:
+ *
+ * - It uses the CLI to get interfaces and configurations information.
+ * - It listens to D-Bus signals and runs the given callbacks.
  */
 class WickedClient {
+    constructor() {
+        this._callbacks = [];
+        this._interfaces = undefined;
+        this._connections = undefined;
+        this._onInterfaceChange = [];
+
+        this.networkClient = cockpit.dbus('org.opensuse.Network', {
+            bus: 'system', superuser: 'require'
+        });
+
+        this._onSignal('deviceDelete', this._onDeviceDelete.bind(this));
+        this._onSignal(['deviceCreate', 'networkUp', 'linkUp', 'networkDown', 'linkDown', 'addressAcquired',
+                        'deviceReady', 'deviceChange'], this._onDeviceEvent.bind(this));
+
+        this.start();
+    }
+
+    /**
+     * Callback for interface changes
+     *
+     * @callback wickedInterfaceChangeCallback
+     * @param {string} signal - The signal which caused the change.
+     * @param {object} iface - Wicked representation of the affected interface.
+     */
+
+    /**
+     * Registers a callback to be called when an interface changes
+     *
+     * @param {wickedInterfaceChangeCallback} fn - Callback to be called when an interface changes
+     */
+    onInterfaceChange(fn) {
+        this._onInterfaceChange.push(fn);
+    }
+
+    start() {
+        // TODO: de-bouncing.
+        this.networkClient.subscribe(
+            { interface: 'org.opensuse.Network.Interface' },
+            this._runSignalCallbacks.bind(this)
+        );
+    }
+
     /**
      * Returns a promise that resolves to an array of objects representing interfaces
      *
+     * @param {object} options - Query options
+     * @param {boolean} options.cache - Use cached data if available
      * @return {Promise.<Array.<Object>>} Promise that resolves to a list of interfaces
      */
-    async getInterfaces() {
+    async getInterfaces({ cache = false } = {}) {
+        if (this._interfaces && cache) return this._interfaces;
+
         const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-xml']);
-        return XmlToJson(stdout, ['body']);
+        this._interfaces = XmlToJson(stdout, ['body']);
+        return this._interfaces;
     }
 
     /**
      * Returns a promise that resolves to an array of objects representing configurations
      *
+     * @param {object} options - Query options
+     * @param {boolean} options.cache - Use cached data if available
      * @return {Promise.<Array.<Object>>} Promise that resolves to a list of interfaces
      */
-    async getConfigurations() {
+    async getConfigurations({ cache = false } = {}) {
+        if (this._connections && cache) return this._connections;
+
         const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-config']);
-        return XmlToJson(stdout, ['body', 'slaves', 'ipv4:static', 'ipv6:static', 'ports']);
+        this._connections = XmlToJson(stdout, ['body', 'slaves', 'ipv4:static', 'ipv6:static', 'ports']);
+        return this._connections;
     }
 
-    async getInterface(name) {
+    async getInterfaceByName(name) {
         const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-xml', name]);
         const [data] = XmlToJson(stdout, ['body']);
         return data;
@@ -132,17 +186,16 @@ class WickedClient {
     /**
      * Returns the interface under an given D-Bus path
      *
-     * @return {Promise.<Object|Error>}
+     * @param {string} path - D-Bus path
+     * @param {object} options - Query options
+     * @param {boolean} options.cache - Use cached data if available
+     * @return {Promise.<Object|undefined>}
      */
-    getInterfaceByPath(path) {
+    getInterfaceByPath(path, opts = {}) {
         return new Promise((resolve, reject) => {
-            this.getInterfaces().then(data => {
+            this.getInterfaces(opts).then(data => {
                 const iface = data.find(i => i._attrs.path === path);
-                if (iface) {
-                    resolve(iface);
-                } else {
-                    reject(new Error(`Interface ${path} not found`));
-                }
+                resolve(iface);
             });
         });
     }
@@ -156,6 +209,70 @@ class WickedClient {
      */
     reloadConnection(name) {
         return cockpit.spawn(['/usr/sbin/wicked', 'ifreload', name], { superuser: "require" });
+    }
+
+    /**
+     * Register a callback for a set of signals
+     *
+     * @ignore
+     *
+     * @param {Array<string>} signals - List of signals (e.g., ['deviceCreate', 'deviceDelete'])
+     * @param {Function} fn - Function to call. It receives the signal and the affected interface.
+     */
+    _onSignal(signals, fn) {
+        this._callbacks.push({
+            fn,
+            signals: (typeof signals === "string") ? [signals] : signals
+        });
+    }
+
+    /**
+     * Run internal callbacks defined using the '_onSignal' method
+     *
+     * @ignore
+     */
+    async _runSignalCallbacks(path, dbusIface, signal, args) {
+        const callbacks = this._callbacks.filter(c => c.signals.includes(signal)).map(c => c.fn);
+        if (callbacks.length === 0) return;
+
+        callbacks.forEach(fn => fn(signal, path));
+    }
+
+    /**
+     * Handler of the 'deviceDelete' D-Bus signal
+     *
+     * It requires special handling because the interface will disappear.
+     *
+     * @ignore
+     *
+     * @param {string} signal - D-Bus signal
+     * @param {string} path - Device D-Bus path
+     */
+    async _onDeviceDelete(signal, path) {
+        const iface = await this.getInterfaceByPath(path, { cache: true });
+        if (!iface) return;
+
+        this._interfaces = this._interfaces.filter(i => i.interface.name !== iface.interface.name);
+        this._onInterfaceChange.forEach(fn => fn(signal, iface));
+    }
+
+    /**
+     * Generic handler for several device events
+     *
+     * This handler invokes the callbacks that were set using the 'onDeviceChange' method.
+     *
+     * @ignore
+     *
+     * @param {string} signal - D-Bus signal
+     * @param {string} path - Device D-Bus path
+     */
+    async _onDeviceEvent(signal, path) {
+        // FIXME: it re-reads the list of devices. We could use the cache
+        // and force the reloading of just the changed device.
+        const iface = await this.getInterfaceByPath(path, { cache: false });
+        if (!iface) return;
+
+        this._onInterfaceChange.forEach(fn => fn(signal, iface));
     }
 }
 

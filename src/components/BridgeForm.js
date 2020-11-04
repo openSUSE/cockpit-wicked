@@ -53,19 +53,15 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
     }, [connection, isEditing, interfaces]);
 
     const addOrUpdateConnection = () => {
-        let promise = null;
-
         if (isEditing) {
-            promise = updateConnection(
+            updateConnection(
                 dispatch, connection, { name, bridge: { ports: selectedPorts } }
             );
         } else {
-            promise = addConnection(
+            addConnection(
                 dispatch, { name, type: interfaceType.BRIDGE, bridge: { ports: selectedPorts, } }
             );
         }
-
-        promise.then(onClose).catch(console.error);
     };
 
     const handleSelectedPorts = (name) => (value) => {

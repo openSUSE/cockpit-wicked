@@ -36,35 +36,43 @@ const StartMode = ({ connection }) => {
     const [startMode, setStartMode] = useState(connection.startMode);
     const dispatch = useNetworkDispatch();
 
-    function handleSubmit() {
+    const closeForm = () => setModal(false);
+
+    const handleSubmit = () => {
         // TODO: notify that something went wrong.
         updateConnection(dispatch, connection, { startMode })
-                .then(() => setModal(false))
-                .catch(console.log);
+        closeForm();
+    }
+
+    const renderModal = () => {
+      return (
+          <Modal
+              variant={ModalVariant.small}
+              title={_("Start Mode")}
+              isOpen={modal}
+              onClose={closeForm}
+              actions={[
+                  <Button key="confirm" variant="primary" onClick={handleSubmit}>
+                      {_("Change")}
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={closeForm}>
+                      {_("Cancel")}
+                  </Button>
+              ]}
+          >
+              <FormSelect value={startMode} onChange={setStartMode} id="startMode">
+                  {startModeOptions.map((option, index) => (
+                      <FormSelectOption key={index} value={option.value} label={option.label} />
+                  ))}
+              </FormSelect>
+          </Modal>
+      )
     }
 
     return (
         <>
             <a href="#" onClick={() => setModal(true)}>{startModeEnum.label(connection.startMode)}</a>
-            <Modal
-                variant={ModalVariant.small}
-                title={_("Start Mode")}
-                isOpen={modal}
-                actions={[
-                    <Button key="confirm" variant="primary" onClick={handleSubmit}>
-                        {_("Change")}
-                    </Button>,
-                    <Button key="cancel" variant="link" onClick={() => setModal(false)}>
-                        {_("Cancel")}
-                    </Button>
-                ]}
-            >
-                <FormSelect value={startMode} onChange={setStartMode} id="startMode">
-                    {startModeOptions.map((option, index) => (
-                        <FormSelectOption key={index} value={option.value} label={option.label} />
-                    ))}
-                </FormSelect>
-            </Modal>
+            { modal && renderModal() }
         </>
     );
 };

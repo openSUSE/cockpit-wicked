@@ -57,15 +57,11 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
     }, [vlanId, parentDevice]);
 
     const addOrUpdateConnection = () => {
-        let promise = null;
-
         if (isEditing) {
-            promise = updateConnection(dispatch, connection, { vlan: { name, vlanId, parentDevice } });
+            updateConnection(dispatch, connection, { vlan: { name, vlanId, parentDevice } });
         } else {
-            promise = addConnection(dispatch, { name, type: interfaceType.VLAN, vlan: { vlanId, parentDevice } });
+            addConnection(dispatch, { name, type: interfaceType.VLAN, vlan: { vlanId, parentDevice } });
         }
-
-        promise.then(onClose).catch(console.error);
     };
 
     const isIncomplete = () => {

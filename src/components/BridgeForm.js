@@ -46,26 +46,22 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
 
     useEffect(() => {
         if (isEditing) {
-            setCandidatePorts(Object.values(interfaces).filter(i => i.id !== connection.id));
+            setCandidatePorts(Object.values(interfaces).filter(i => i.name !== connection.name));
         } else {
             setCandidatePorts(Object.values(interfaces));
         }
     }, [connection, isEditing, interfaces]);
 
     const addOrUpdateConnection = () => {
-        let promise = null;
-
         if (isEditing) {
-            promise = updateConnection(
+            updateConnection(
                 dispatch, connection, { name, bridge: { ports: selectedPorts } }
             );
         } else {
-            promise = addConnection(
+            addConnection(
                 dispatch, { name, type: interfaceType.BRIDGE, bridge: { ports: selectedPorts, } }
             );
         }
-
-        promise.then(onClose).catch(console.error);
     };
 
     const handleSelectedPorts = (name) => (value) => {

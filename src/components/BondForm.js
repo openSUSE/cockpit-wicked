@@ -70,15 +70,12 @@ const BondForm = ({ isOpen, onClose, connection }) => {
                 options
             }
         };
-        let promise = null;
 
         if (isEditing) {
-            promise = updateConnection(dispatch, connection, bondingAttrs);
+            updateConnection(dispatch, connection, bondingAttrs);
         } else {
-            promise = addConnection(dispatch, { ...bondingAttrs, type: interfaceType.BONDING });
+            addConnection(dispatch, { ...bondingAttrs, type: interfaceType.BONDING });
         }
-
-        promise.then(onClose).catch(console.error);
     };
 
     const closeForm = () => {

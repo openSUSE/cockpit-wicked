@@ -36,8 +36,6 @@ import { IfcfgFile } from './files';
 class WickedAdapter {
     constructor(client) {
         this.client = client || new Client();
-        this._connections = undefined;
-        this._interfaces = undefined;
     }
 
     /**
@@ -46,11 +44,8 @@ class WickedAdapter {
      * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces
      */
     async connections() {
-        if (this._connections) return this._connections;
-
         const conns = await this.client.getConfigurations();
-        this._connections = conns.map(createConnection).filter(c => c.name !== 'lo');
-        return this._connections;
+        return conns.map(createConnection).filter(c => c.name !== 'lo');
     }
 
     /**
@@ -59,21 +54,19 @@ class WickedAdapter {
      * @return {Promise.<Array.<Interface>>} Promise that resolves to a list of interfaces
      */
     async interfaces() {
-        if (this._interfaces) return this._interfaces;
-
-        const ifaces = await this.client.getInterfaces();
-        this._interfaces = ifaces.map(createInterface).filter(i => i.name !== 'lo');
+        const wickedIfaces = await this.client.getInterfaces();
+        const ifaces = wickedIfaces.map(createInterface).filter(i => i.name !== 'lo');
 
         const conns = await this.connections();
-        const names = this._interfaces.map(i => i.name);
+        const names = ifaces.map(i => i.name);
         conns.forEach(c => {
             if (!names.includes(c.name)) {
                 const virtualInterface = model.createInterface({ name: c.name, type: c.type, virtual: true });
-                this._interfaces.push(virtualInterface);
+                ifaces.push(virtualInterface);
             }
         });
 
-        return this._interfaces;
+        return ifaces;
     }
 
     /**

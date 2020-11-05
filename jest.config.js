@@ -14,5 +14,7 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   setupFilesAfterEnv: [
     '@testing-library/jest-dom/extend-expect',
-  ]
+  ],
+  collectCoverage: true,
+  coverageReporters: ["html", "lcov"]
 }

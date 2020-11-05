@@ -84,7 +84,8 @@ class WickedAdapter {
      */
     onInterfaceChange(fn) {
         this.client.onInterfaceChange((signal, iface) => {
-            fn(signal, createInterface(iface))
+            const data = (signal === 'deviceDelete') ? { ...iface, link: false } : iface;
+            fn(signal, createInterface(data));
         });
     }
 

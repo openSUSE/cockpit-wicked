@@ -25,7 +25,8 @@ describe('#createInterface', () => {
     const wickedInterface = {
         interface: { name: 'eth0' },
         ethtool: {
-            driver_info: { driver: 'virtio_net' }
+            driver_info: { driver: 'virtio_net' },
+            link_detected: "false"
         },
         ethernet: {
             address: '52:54:00:11:22:33'
@@ -42,6 +43,7 @@ describe('#createInterface', () => {
                     description: '',
                     type: 'eth',
                     virtual: false,
+                    link: false
                 }));
     });
 });

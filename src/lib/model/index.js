@@ -227,6 +227,7 @@ export const createInterface = ({
     driver,
     mac,
     type = "eth",
+    link = true
 }) => {
     const virtual = interfaceType.isVirtual(type);
     return {
@@ -236,7 +237,8 @@ export const createInterface = ({
         driver,
         mac,
         type,
-        virtual
+        virtual,
+        link
     };
 };
 

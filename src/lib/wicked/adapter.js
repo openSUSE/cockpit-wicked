@@ -70,6 +70,25 @@ class WickedAdapter {
     }
 
     /**
+     * Callback for interface changes
+     *
+     * @callback interfaceChangeCallback
+     * @param {string} signal - The signal which caused the change.
+     * @param {Interface} iface - Affected interface.
+     */
+
+    /**
+     * Registers a callback to be called when an interface changes
+     *
+     * @param {interfaceChangeCallback} fn - Callback to be called when an interface changes
+     */
+    onInterfaceChange(fn) {
+        this.client.onInterfaceChange((signal, iface) => {
+            fn(signal, createInterface(iface))
+        });
+    }
+
+    /**
      * Add a new connection to Wicked
      *
      * @param {Connection} connection - Connection to add

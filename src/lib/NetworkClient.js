@@ -104,6 +104,13 @@ class NetworkClient {
             cockpit.spawn(["bash", "-c", `${link_up} && ${scan} | ${grep_and_cut_essid} | ${sort}`], { superuser: true });
         });
     }
+
+    /**
+     * Callback that runs when an interface changes
+     */
+    onInterfaceChange(fn) {
+        this.adapter.onInterfaceChange(fn);
+    }
 }
 
 export default NetworkClient;

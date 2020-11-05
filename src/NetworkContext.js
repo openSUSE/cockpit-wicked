@@ -35,6 +35,7 @@ const ADD_CONNECTION = 'add_connection';
 const UPDATE_CONNECTION = 'update_connection';
 const ADD_ROUTE = 'add_route';
 const UPDATE_ROUTE = 'update_route';
+const UPDATE_INTERFACE = 'update_interface';
 
 const actionTypes = {
     SET_INTERFACES,
@@ -43,7 +44,8 @@ const actionTypes = {
     ADD_CONNECTION,
     UPDATE_CONNECTION,
     ADD_ROUTE,
-    UPDATE_ROUTE
+    UPDATE_ROUTE,
+    UPDATE_INTERFACE
 };
 
 function networkReducer(state, action) {
@@ -103,6 +105,19 @@ function networkReducer(state, action) {
         return { ...state, routes: { ...routes, [id]: { ...route, ...changes, modified: true } } };
     }
 
+    case UPDATE_INTERFACE: {
+        const { interfaces } = state;
+        const { name } = action.payload;
+        const oldIface = Object.values(interfaces).find(i => i.name === name);
+        if (!oldIface) return state;
+
+        // FIXME: we need to keep the old ID. Perhaps we should consider how we are handled the IDs.
+        return {
+            ...state, interfaces:
+            { ...interfaces, [oldIface.id]: { ...action.payload, id: oldIface.id } }
+        };
+    }
+
     default: {
         console.error("Unknown action", action.type, action.payload);
         return state;
@@ -144,7 +159,13 @@ function NetworkProvider({ children }) {
  * FIXME: needed to use a function in order to delay building the object and
  * make the tests to work
  */
-const networkClient = () => new NetworkClient();
+let _networkClient;
+const networkClient = () => {
+    if (_networkClient) return _networkClient;
+
+    _networkClient = new NetworkClient();
+    return _networkClient;
+}
 
 /**
  * Creates a connection using the NetworkClient

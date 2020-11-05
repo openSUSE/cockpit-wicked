@@ -25,6 +25,7 @@ import { Card, CardHeader, CardActions, CardTitle, CardBody } from '@patternfly/
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
 import InterfaceDetails from "./InterfaceDetails";
 import TypesFilter from "./TypesFilter";
+import interfaceType from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;
 
@@ -36,7 +37,8 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
     const columns = [
         { title: _("Name"), cellFormatters: [expandable] },
-        { title: _("Type") }
+        { title: _("Type") },
+        { title: _("Status") }
     ];
 
     /**
@@ -58,7 +60,8 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     isOpen: openRows.includes(parentId),
                     cells: [
                         i.name,
-                        i.type
+                        interfaceType.label(i.type),
+                        i.link ? _('Up') : _('Down')
                     ]
                 }
             );

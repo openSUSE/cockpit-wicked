@@ -253,7 +253,9 @@ class WickedClient {
         if (!iface) return;
 
         this._interfaces = this._interfaces.filter(i => i.interface.name !== iface.interface.name);
-        this._onInterfaceChange.forEach(fn => fn(signal, iface));
+        const { ethtool } = iface;
+        const updatedIface = { ...iface, ethtool: { ...ethtool, link: false } };
+        this._onInterfaceChange.forEach(fn => fn(signal, updatedIface));
     }
 
     /**

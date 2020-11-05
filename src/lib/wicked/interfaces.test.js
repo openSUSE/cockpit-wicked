@@ -54,13 +54,9 @@ describe('#createInterface', () => {
 
     it('includes the assigned addresses', () => {
         const iface = createInterface(wickedInterface);
-        expect(iface)
-            .toEqual(expect.objectContaining({
-                name: 'eth0',
-                adresses: [
-                    { local: '192.168.1.101/24' },
-                    { local: 'fe80::3091:4019:f740:9b97/64' }
-                ]
-            }));
+        expect(iface.addresses).toEqual(expect.arrayContaining([
+            expect.objectContaining({ type: 'ipv4', local: '192.168.1.101/24' }),
+            expect.objectContaining({ type: "ipv6", local: 'fe80::3091:4019:f740:9b97/64' })
+        ]));
     });
 });

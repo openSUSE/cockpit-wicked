@@ -71,7 +71,7 @@ describe('#createConnection', () => {
             name: 'br0',
             bridge: {
                 stp: true,
-                ports: ['eth0', 'eth1']
+                ports: [{ device: 'eth0' }, { device: 'eth1' }]
             }
 
         };

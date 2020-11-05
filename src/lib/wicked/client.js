@@ -111,15 +111,7 @@ class WickedClient {
         this._connections = undefined;
         this._onInterfaceChange = [];
 
-        this.networkClient = cockpit.dbus('org.opensuse.Network', {
-            bus: 'system', superuser: 'require'
-        });
-
-        this._onSignal('deviceDelete', this._onDeviceDelete.bind(this));
-        this._onSignal(['deviceCreate', 'networkUp', 'linkUp', 'networkDown', 'linkDown', 'addressAcquired',
-            'deviceReady', 'deviceChange'], this._onDeviceEvent.bind(this));
-
-        this.start();
+        this._setupDBus();
     }
 
     /**
@@ -137,14 +129,6 @@ class WickedClient {
      */
     onInterfaceChange(fn) {
         this._onInterfaceChange.push(fn);
-    }
-
-    start() {
-        // TODO: de-bouncing.
-        this.networkClient.subscribe(
-            { interface: 'org.opensuse.Network.Interface' },
-            this._runSignalCallbacks.bind(this)
-        );
     }
 
     /**
@@ -209,6 +193,27 @@ class WickedClient {
      */
     reloadConnection(name) {
         return cockpit.spawn(['/usr/sbin/wicked', 'ifreload', name], { superuser: "require" });
+    }
+
+    /**
+     * Sets up the DBus handling
+     *
+     * @ignore
+     */
+    _setupDBus() {
+        this.networkClient = cockpit.dbus('org.opensuse.Network', {
+            bus: 'system', superuser: 'require'
+        });
+
+        this._onSignal('deviceDelete', this._onDeviceDelete.bind(this));
+        this._onSignal(['deviceCreate', 'networkUp', 'linkUp', 'networkDown', 'linkDown', 'addressAcquired',
+            'deviceReady', 'deviceChange'], this._onDeviceEvent.bind(this));
+
+        // TODO: de-bouncing.
+        this.networkClient.subscribe(
+            { interface: 'org.opensuse.Network.Interface' },
+            this._runSignalCallbacks.bind(this)
+        );
     }
 
     /**

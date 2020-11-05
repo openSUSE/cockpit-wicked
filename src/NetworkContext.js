@@ -213,6 +213,50 @@ function updateConnection(dispatch, connection, changes) {
 }
 
 /**
+ * Fetches the interfaces using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function fetchInterfaces(dispatch) {
+    networkClient().getInterfaces()
+            .then(result => dispatch({ type: actionTypes.SET_INTERFACES, payload: result }))
+            .catch(console.error);
+}
+
+/**
+ * Fetches the connections list using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function fetchConnections(dispatch) {
+    networkClient().getConnections()
+            .then(result => dispatch({ type: actionTypes.SET_CONNECTIONS, payload: result }))
+            .catch(console.error);
+}
+
+/**
+ * Fetches the list of routes using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function fetchRoutes(dispatch) {
+    networkClient().getRoutes()
+            .then(result => dispatch({ type: actionTypes.SET_ROUTES, payload: result }))
+            .catch(console.error);
+}
+
+/**
+ * Starts listening for interface changes
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function listenToInterfacesChanges(dispatch) {
+    networkClient().onInterfaceChange((signal, iface) => {
+        dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: iface });
+    });
+}
+
+/**
  * Resets the network client
  *
  * @ignore
@@ -231,5 +275,9 @@ export {
     actionTypes,
     addConnection,
     updateConnection,
+    fetchInterfaces,
+    fetchConnections,
+    fetchRoutes,
+    listenToInterfacesChanges,
     resetClient
 };

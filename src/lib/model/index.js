@@ -190,7 +190,6 @@ export const createAddressConfig = ({
     local,
     label = ""
 } = {}) => {
-
     if (!type) {
         type = local ? addressType.from(local) : addressType.IPV4;
     }

@@ -26,7 +26,7 @@ jest.mock('./client');
 
 describe('#connections', () => {
     const eth0_conn = { name: 'eth0' };
-    const br1_conn = { name: 'br0', bridge: {} };
+    const br1_conn = { name: 'br0', bridge: { ports: ['eth0'] } };
     const eth0_iface = { interface: { name: 'eth0' } };
 
     const configurations = [eth0_conn, br1_conn];

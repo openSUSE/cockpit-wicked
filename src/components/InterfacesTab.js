@@ -24,32 +24,20 @@ import InterfacesList from './InterfacesList';
 import AddBond from './AddBond';
 import AddBridge from './AddBridge';
 import AddVlan from './AddVlan';
-import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
+import {
+    useNetworkDispatch, useNetworkState, fetchInterfaces, fetchConnections, listenToInterfacesChanges
+} from '../NetworkContext';
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
-import NetworkClient from '../lib/NetworkClient';
-
-const client = new NetworkClient();
 
 const InterfacesTab = () => {
     const dispatch = useNetworkDispatch();
     const { interfaces, connections } = useNetworkState();
 
-    // TODO: Only 1 call should be needed to get all this information
     useEffect(() => {
-        client.onInterfaceChange((signal, iface) => {
-            dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: iface });
-        });
-
-        client.getInterfaces()
-                .then(result => dispatch({ type: actionTypes.SET_INTERFACES, payload: result }))
-                .catch(console.error);
-    }, [dispatch]);
-
-    useEffect(() => {
-        client.getConnections()
-                .then(result => dispatch({ type: actionTypes.SET_CONNECTIONS, payload: result }))
-                .catch(console.error);
-    }, [dispatch]);
+        fetchConnections(dispatch);
+        fetchInterfaces(dispatch);
+        listenToInterfacesChanges(dispatch);
+    }, []);
 
     const interfacesList = interfaces ? Object.values(interfaces) : [];
     const connectionsList = connections ? Object.values(connections) : [];

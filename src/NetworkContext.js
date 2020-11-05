@@ -178,15 +178,10 @@ const networkClient = () => {
  * @param {Object} attrs - Attributes for the new connection
  * @return {Promise}
  */
-function addConnection(dispatch, attrs) {
-    return new Promise((resolve, reject) => {
-        networkClient().addConnection(createConnection(attrs))
-                .then(addedConn => {
-                    dispatch({ type: ADD_CONNECTION, payload: addedConn });
-                    resolve(addedConn);
-                })
-                .catch(reject);
-    });
+async function addConnection(dispatch, attrs) {
+    const addedConn = createConnection(attrs);
+    dispatch({ type: ADD_CONNECTION, payload: addedConn });
+    return await networkClient().addConnection(addedConn);
 }
 
 /**
@@ -201,14 +196,54 @@ function addConnection(dispatch, attrs) {
  * @param {Object|Connection} changes - Changes to apply to the connection
  * @return {Promise}
  */
-function updateConnection(dispatch, connection, changes) {
-    return new Promise((resolve, reject) => {
-        networkClient().updateConnection(mergeConnection(connection, changes))
-                .then(updatedConn => {
-                    dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
-                    resolve(updatedConn);
-                })
-                .catch(reject);
+async function updateConnection(dispatch, connection, changes) {
+    const updatedConn = mergeConnection(connection, changes);
+    dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
+    // FIXME: handle errors
+    return await networkClient().updateConnection(updatedConn);
+}
+
+/**
+ * Fetches the interfaces using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function fetchInterfaces(dispatch) {
+    networkClient().getInterfaces()
+            .then(result => dispatch({ type: actionTypes.SET_INTERFACES, payload: result }))
+            .catch(console.error);
+}
+
+/**
+ * Fetches the connections list using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function fetchConnections(dispatch) {
+    networkClient().getConnections()
+            .then(result => dispatch({ type: actionTypes.SET_CONNECTIONS, payload: result }))
+            .catch(console.error);
+}
+
+/**
+ * Fetches the list of routes using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function fetchRoutes(dispatch) {
+    networkClient().getRoutes()
+            .then(result => dispatch({ type: actionTypes.SET_ROUTES, payload: result }))
+            .catch(console.error);
+}
+
+/**
+ * Starts listening for interface changes
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function listenToInterfacesChanges(dispatch) {
+    networkClient().onInterfaceChange((signal, iface) => {
+        dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: iface });
     });
 }
 
@@ -231,5 +266,9 @@ export {
     actionTypes,
     addConnection,
     updateConnection,
+    fetchInterfaces,
+    fetchConnections,
+    fetchRoutes,
+    listenToInterfacesChanges,
     resetClient
 };

@@ -186,10 +186,14 @@ const propsByConnectionType = {
  * @todo The IP address deserves its own type
  */
 export const createAddressConfig = ({
-    type = addressType.IPV4,
+    type,
     local,
     label = ""
 } = {}) => {
+    if (!type) {
+        type = local ? addressType.from(local) : addressType.IPV4;
+    }
+
     return {
         id: addressConfigIndex++,
         type,
@@ -219,6 +223,7 @@ export const createAddressConfig = ({
  * @param {string} args.type - Connection type ('eth', 'br', etc.)
  * @param {string} args.mac - MAC address
  * @param {string} args.driver - Kernel driver
+ * @param {Array<object>} args.addresses - Assigned IP addresses
  * @return {Interface}
  */
 export const createInterface = ({
@@ -227,7 +232,8 @@ export const createInterface = ({
     driver,
     mac,
     type = "eth",
-    link = true
+    link = true,
+    addresses = []
 }) => {
     const virtual = interfaceType.isVirtual(type);
     return {
@@ -238,7 +244,8 @@ export const createInterface = ({
         mac,
         type,
         virtual,
-        link
+        link,
+        addresses
     };
 };
 

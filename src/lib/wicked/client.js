@@ -142,7 +142,7 @@ class WickedClient {
         if (this._interfaces && cache) return this._interfaces;
 
         const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-xml']);
-        this._interfaces = XmlToJson(stdout, ['body']);
+        this._interfaces = XmlToJson(stdout, ['body', 'addresses']);
         return this._interfaces;
     }
 

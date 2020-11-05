@@ -38,8 +38,15 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const columns = [
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
-        { title: _("Status") }
+        { title: _("Status") },
+        { title: _("IP") }
     ];
+
+    const interfaceAddresses = (iface) => {
+        if (iface.addresses.length === 0) return;
+
+        return iface.addresses.map(i => i.local).join(', ');
+    };
 
     /**
      * Builds the needed structure for rendering the interfaces and their details in an expandable
@@ -61,7 +68,8 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     cells: [
                         i.name,
                         interfaceType.label(i.type),
-                        i.link ? _('Up') : _('Down')
+                        i.link ? _('Up') : _('Down'),
+                        interfaceAddresses(i)
                     ]
                 }
             );

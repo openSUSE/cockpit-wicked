@@ -152,7 +152,7 @@ const propsByConnectionType = {
     },
     [interfaceType.BRIDGE]: ({ bridge }) => {
         const { ports } = bridge;
-        return { bridge: { ports: ports.map((p) => p.device) } };
+        return { bridge: { ports: ports.map(p => p.device) } };
     },
     [interfaceType.VLAN]: ({ vlan }) => {
         const { tag, device } = vlan;

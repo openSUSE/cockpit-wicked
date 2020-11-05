@@ -21,13 +21,10 @@
 
 import cockpit from 'cockpit';
 import React, { useState, useEffect } from 'react';
-import NetworkClient from '../lib/NetworkClient';
-import { useNetworkDispatch, useNetworkState, actionTypes } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, fetchRoutes } from '../NetworkContext';
 import { Card, CardBody, CardTitle, Toolbar, ToolbarContent, ToolbarItem, Switch } from '@patternfly/react-core';
 import RoutesList from './RoutesList';
 import AddRoute from './AddRoute';
-
-const client = new NetworkClient();
 
 const _ = cockpit.gettext;
 
@@ -54,11 +51,7 @@ const RoutingTab = () => {
     const dispatch = useNetworkDispatch();
     const { routes } = useNetworkState();
 
-    useEffect(() => {
-        client.getRoutes()
-                .then(result => dispatch({ type: actionTypes.SET_ROUTES, payload: result }))
-                .catch(console.error);
-    }, [dispatch]);
+    useEffect(() => { fetchRoutes(dispatch) }, [dispatch]);
 
     const routesList = routes ? Object.values(routes) : [];
 

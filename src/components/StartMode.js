@@ -40,13 +40,13 @@ const StartMode = ({ connection }) => {
 
     const handleSubmit = () => {
         // TODO: notify that something went wrong.
-        updateConnection(dispatch, connection, { startMode })
+        updateConnection(dispatch, connection, { startMode });
         closeForm();
-    }
+    };
 
     const renderModal = () => {
-      return (
-          <Modal
+        return (
+            <Modal
               variant={ModalVariant.small}
               title={_("Start Mode")}
               isOpen={modal}
@@ -59,15 +59,15 @@ const StartMode = ({ connection }) => {
                       {_("Cancel")}
                   </Button>
               ]}
-          >
-              <FormSelect value={startMode} onChange={setStartMode} id="startMode">
-                  {startModeOptions.map((option, index) => (
-                      <FormSelectOption key={index} value={option.value} label={option.label} />
-                  ))}
-              </FormSelect>
-          </Modal>
-      )
-    }
+            >
+                <FormSelect value={startMode} onChange={setStartMode} id="startMode">
+                    {startModeOptions.map((option, index) => (
+                        <FormSelectOption key={index} value={option.value} label={option.label} />
+                    ))}
+                </FormSelect>
+            </Modal>
+        );
+    };
 
     return (
         <>

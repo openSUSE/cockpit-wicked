@@ -43,18 +43,16 @@ describe("NetworkClient", () => {
                 expect(data).toHaveLength(6);
 
                 const eth0 = data.find(i => i.name == 'eth0');
-                expect(eth0).toEqual(
-                    {
-                        id: 1,
-                        name: 'eth0',
-                        description: '',
-                        driver: 'virtio_net',
-                        mac: '52:54:00:ab:66:d3',
-                        type: 'eth',
-                        virtual: false,
-                        link: true
-                    }
-                );
+                expect(eth0).toEqual(expect.objectContaining({
+                    id: 1,
+                    name: 'eth0',
+                    description: '',
+                    driver: 'virtio_net',
+                    mac: '52:54:00:ab:66:d3',
+                    type: 'eth',
+                    virtual: false,
+                    link: true,
+                }));
             });
         });
 

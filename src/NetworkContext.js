@@ -165,7 +165,7 @@ const networkClient = () => {
 
     _networkClient = new NetworkClient();
     return _networkClient;
-}
+};
 
 /**
  * Creates a connection using the NetworkClient
@@ -212,11 +212,24 @@ function updateConnection(dispatch, connection, changes) {
     });
 }
 
+/**
+ * Resets the network client
+ *
+ * @ignore
+ *
+ * @fixme Convenience method just for testing. We need to find a better
+ * way to mock the client so this function is not needed anymore.
+ */
+function resetClient() {
+    _networkClient = undefined;
+}
+
 export {
     NetworkProvider,
     useNetworkState,
     useNetworkDispatch,
     actionTypes,
     addConnection,
-    updateConnection
+    updateConnection,
+    resetClient
 };

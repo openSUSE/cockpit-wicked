@@ -48,7 +48,7 @@ describe('#getConfigurations', () => {
 
         return client.getConfigurations().then(data => {
             const names = data.map(c => c.name);
-            expect(names).toEqual(['lo', 'eth0', 'eth1', 'bond0', 'eth2']);
+            expect(names).toEqual(['lo', 'eth0', 'eth1', 'bond0', 'eth2', 'eth3', 'br0']);
 
             // Check list data
             const bond0 = data.find(c => c.name === 'bond0');
@@ -67,13 +67,10 @@ describe('#getInterfaceByPath', () => {
         });
     });
 
-    it('throws an error if the interface is not found', async () => {
+    it('returns undefined if the interface is not found', async () => {
         expect.assertions(1);
 
-        try {
-            await client.getInterfaceByPath('/org/opensuse/Network/Interface/99');
-        } catch(e) {
-            expect(e.message).toEqual("Interface /org/opensuse/Network/Interface/99 not found")
-        };
-    })
+        const iface = await client.getInterfaceByPath('/org/opensuse/Network/Interface/99');
+        expect(iface).toBeUndefined();
+    });
 });

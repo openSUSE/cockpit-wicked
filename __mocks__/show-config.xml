@@ -137,3 +137,60 @@
     <enabled>false</enabled>
   </ipv6>
 </interface>
+<interface origin="compat:suse:/etc/sysconfig/network/ifcfg-eth3">
+  <name>eth3</name>
+  <control>
+    <mode>boot</mode>
+  </control>
+  <firewall/>
+  <link>
+    <master>br0</master>
+  </link>
+  <ipv4>
+    <enabled>false</enabled>
+  </ipv4>
+  <ipv6>
+    <enabled>false</enabled>
+  </ipv6>
+</interface>
+<interface origin="compat:suse:/etc/sysconfig/network/ifcfg-br0">
+  <name>br0</name>
+  <control>
+    <mode>boot</mode>
+  </control>
+  <firewall/>
+  <bridge>
+    <stp>false</stp>
+    <ports>
+      <port>
+        <device>eth3</device>
+      </port>
+    </ports>
+  </bridge>
+  <link/>
+  <ipv4>
+    <enabled>true</enabled>
+    <forwarding>false</forwarding>
+    <arp-verify>true</arp-verify>
+  </ipv4>
+  <ipv4:dhcp>
+    <enabled>true</enabled>
+    <update>default-route,dns,nis,ntp,smb,nds,mtu,tz,boot</update>
+    <hostname>timple</hostname>
+    <defer-timeout>15</defer-timeout>
+    <recover-lease>true</recover-lease>
+    <release-lease>false</release-lease>
+  </ipv4:dhcp>
+  <ipv4:static>
+    <address>
+      <local>192.168.1.2/24</local>
+      <label>test</label>
+    </address>
+  </ipv4:static>
+  <ipv6>
+    <enabled>true</enabled>
+    <forwarding>false</forwarding>
+    <privacy>prefer-public</privacy>
+    <accept-redirects>false</accept-redirects>
+  </ipv6>
+</interface>

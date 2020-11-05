@@ -117,7 +117,7 @@ class WickedClient {
 
         this._onSignal('deviceDelete', this._onDeviceDelete.bind(this));
         this._onSignal(['deviceCreate', 'networkUp', 'linkUp', 'networkDown', 'linkDown', 'addressAcquired',
-                        'deviceReady', 'deviceChange'], this._onDeviceEvent.bind(this));
+            'deviceReady', 'deviceChange'], this._onDeviceEvent.bind(this));
 
         this.start();
     }

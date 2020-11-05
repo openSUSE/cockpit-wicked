@@ -191,9 +191,13 @@ export const createAddressConfig = ({
     label = ""
 } = {}) => {
 
+    if (!type) {
+        type = local ? addressType.from(local) : addressType.IPV4;
+    }
+
     return {
         id: addressConfigIndex++,
-        type: type || addressType.from(local),
+        type,
         local,
         label
     };

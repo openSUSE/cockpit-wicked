@@ -100,6 +100,7 @@ class WickedAdapter {
     addConnection(connection) {
         return new Promise((resolve, reject) => {
             this.updateConnectionConfig(connection)
+                    .then(() => this.reloadConnection(connection.name))
                     .then(() => resolve(connection))
                     .catch(reject);
         });

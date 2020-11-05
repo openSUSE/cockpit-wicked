@@ -178,15 +178,10 @@ const networkClient = () => {
  * @param {Object} attrs - Attributes for the new connection
  * @return {Promise}
  */
-function addConnection(dispatch, attrs) {
-    return new Promise((resolve, reject) => {
-        networkClient().addConnection(createConnection(attrs))
-                .then(addedConn => {
-                    dispatch({ type: ADD_CONNECTION, payload: addedConn });
-                    resolve(addedConn);
-                })
-                .catch(reject);
-    });
+async function addConnection(dispatch, attrs) {
+    const addedConn = createConnection(attrs);
+    dispatch({ type: ADD_CONNECTION, payload: addedConn });
+    return await networkClient().addConnection(addedConn);
 }
 
 /**
@@ -201,15 +196,11 @@ function addConnection(dispatch, attrs) {
  * @param {Object|Connection} changes - Changes to apply to the connection
  * @return {Promise}
  */
-function updateConnection(dispatch, connection, changes) {
-    return new Promise((resolve, reject) => {
-        networkClient().updateConnection(mergeConnection(connection, changes))
-                .then(updatedConn => {
-                    dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
-                    resolve(updatedConn);
-                })
-                .catch(reject);
-    });
+async function updateConnection(dispatch, connection, changes) {
+    const updatedConn = mergeConnection(connection, changes);
+    dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
+    // FIXME: handle errors
+    return await networkClient().updateConnection(updatedConn);
 }
 
 /**

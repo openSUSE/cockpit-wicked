@@ -19,10 +19,24 @@
  * find current contact information at www.suse.com.
  */
 
+import { parse } from 'ipaddr.js';
+
 const IPV4 = 'ipv4';
 const IPV6 = 'ipv6';
 
+const from = (value) => {
+    const [ip] = value.split('/');
+
+    try {
+        const addr = parse(ip);
+        return addr.kind();
+    } catch {
+        return undefined;
+    }
+};
+
 export default {
     IPV4,
-    IPV6
+    IPV6,
+    from
 };

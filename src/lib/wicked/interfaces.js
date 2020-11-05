@@ -38,7 +38,7 @@ import { typeFromWicked } from './utils';
  * @return {Interface} Interface model object
  */
 const createInterface = (iface) => {
-    const { name } = iface.interface;
+    const { name, addresses: assignedAddresses } = iface.interface;
     const description = "";
 
     const ethtool = iface.ethtool || {};
@@ -49,8 +49,10 @@ const createInterface = (iface) => {
     const mac = iface?.ethernet?.address;
     const type = typeFromWicked(iface);
 
+    const addresses = (assignedAddresses || []).map(model.createAddressConfig);
+
     return model.createInterface({
-        name, description, type, driver, mac, virtual: false, link
+        name, description, type, driver, mac, virtual: false, link, addresses
     });
 };
 

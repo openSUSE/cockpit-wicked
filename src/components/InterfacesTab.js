@@ -36,6 +36,10 @@ const InterfacesTab = () => {
 
     // TODO: Only 1 call should be needed to get all this information
     useEffect(() => {
+        client.onInterfaceChange((signal, iface) => {
+            dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: iface });
+        });
+
         client.getInterfaces()
                 .then(result => dispatch({ type: actionTypes.SET_INTERFACES, payload: result }))
                 .catch(console.error);

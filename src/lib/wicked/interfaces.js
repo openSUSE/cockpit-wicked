@@ -40,11 +40,18 @@ import { typeFromWicked } from './utils';
 const createInterface = (iface) => {
     const { name } = iface.interface;
     const description = "";
-    const driver = iface.ethtool?.driver_info?.driver;
+
+    const ethtool = iface.ethtool || {};
+    const { driver_info, link_detected } = ethtool;
+    const link = link_detected === "true";
+    const driver = driver_info?.driver;
+
     const mac = iface?.ethernet?.address;
     const type = typeFromWicked(iface);
 
-    return model.createInterface({ name, description, type, driver, mac, virtual: false });
+    return model.createInterface({
+        name, description, type, driver, mac, virtual: false, link
+    });
 };
 
 export {

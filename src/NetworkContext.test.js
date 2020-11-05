@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import { addConnection, updateConnection, actionTypes } from './NetworkContext';
+import { addConnection, updateConnection, actionTypes, resetClient } from './NetworkContext';
 import model from './lib/model';
 import interfaceType from './lib/model/interfaceType';
 import NetworkClient from './lib/NetworkClient';
@@ -48,6 +48,7 @@ describe('#addConnection', () => {
 
 describe('#updateConnection', () => {
     beforeAll(() => {
+        resetClient();
         NetworkClient.mockImplementation(() => {
             return {
                 updateConnection: (conn) => Promise.resolve(conn)

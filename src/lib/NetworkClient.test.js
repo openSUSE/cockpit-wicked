@@ -40,7 +40,7 @@ describe("NetworkClient", () => {
         it("returns the list of interfaces", () => {
             expect.assertions(2);
             return client.getInterfaces().then(data => {
-                expect(data).toHaveLength(4);
+                expect(data).toHaveLength(6);
 
                 const eth0 = data.find(i => i.name == 'eth0');
                 expect(eth0).toEqual(
@@ -51,9 +51,22 @@ describe("NetworkClient", () => {
                         driver: 'virtio_net',
                         mac: '52:54:00:ab:66:d3',
                         type: 'eth',
-                        virtual: false
+                        virtual: false,
+                        link: true
                     }
                 );
+            });
+        });
+
+        it("includes virtual but disconnected interfaces", () => {
+            expect.assertions(1);
+            return client.getInterfaces().then(data => {
+                const bond0 = data.find(i => i.name == 'br0');
+                expect(bond0).toEqual(expect.objectContaining({
+                    name: 'br0',
+                    virtual: true,
+                    link: false
+                }));
             });
         });
     });

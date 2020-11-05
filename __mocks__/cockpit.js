@@ -42,7 +42,8 @@ const cockpit = {
             });
         });
     },
-    file: () => ({})
+    file: () => ({}),
+    dbus: () => ({ subscribe: () => ({}) })
 };
 
 export default cockpit;

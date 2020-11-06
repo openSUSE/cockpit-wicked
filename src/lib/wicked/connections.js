@@ -154,10 +154,10 @@ const wirelessModeFor = (mode) => {
 };
 
 const wirelessAuthModeFor = (network) => {
-    if (network["wpa-psk"]) return wirelessAuthMode.WPA_PSK;
-    if (network["wpa-eap"]) return wirelessAuthMode.WPA_EAP;
+    if (network.wpa_psk) return wirelessAuthMode.WPA_PSK;
+    if (network.wpa_eap) return wirelessAuthMode.WPA_EAP;
     if (network.wep) {
-        if (network.wep.["auth-algo"] === "open") return wirelessAuthMode.WEP_OPEN;
+        if (network.wep.auth_algo === "open") return wirelessAuthMode.WEP_OPEN;
         return wirelessAuthMode.WEP_SHARED;
     }
 
@@ -173,8 +173,9 @@ const propsByAuthMode = (mode, config) => {
 
 const propsByWirelessAuthMode = {
     // FIXME: Add pending auth modes
-    [wirelessAuthMode.WPA_PSK]: ({ network }) => {
-      return { passphrase: network["wpa-psk"] };
+    [wirelessAuthMode.WPA_PSK]: ({ wpa_psk }) => {
+      const { passphrase } = wpa_psk;
+      return { password: passphrase };
     }
 };
 
@@ -197,7 +198,14 @@ const propsByConnectionType = {
         const { essid, mode } = network;
         const authMode = wirelessAuthModeFor(network);
 
-        return { wireless: { ap_scan, essid, mode: wirelessModeFor(mode), authMode, [authMode]: propsByAuthMode(authMode, network) } };
+
+        return {
+            wireless: {
+                ap_scan, essid, mode: wirelessModeFor(mode), authMode,
+                // FIXME: we should use and object instead of destructuring the props
+                ...propsByAuthMode(authMode, network)
+            }
+        };
     }
 };
 

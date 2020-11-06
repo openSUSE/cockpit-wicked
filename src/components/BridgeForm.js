@@ -62,6 +62,7 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
                 dispatch, { name, type: interfaceType.BRIDGE, bridge: { ports: selectedPorts, } }
             );
         }
+        onClose();
     };
 
     const handleSelectedPorts = (name) => (value) => {

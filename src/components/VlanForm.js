@@ -62,6 +62,7 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
         } else {
             addConnection(dispatch, { name, type: interfaceType.VLAN, vlan: { vlanId, parentDevice } });
         }
+        onClose();
     };
 
     const isIncomplete = () => {

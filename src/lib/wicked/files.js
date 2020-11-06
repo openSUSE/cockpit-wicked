@@ -166,8 +166,6 @@ class IfrouteParser {
     }
 
     parse(content) {
-        if (!content) return [];
-
         // Replace multiple spaces and tabs with a single space before split the content
         const lines = content.replace(/[ |\t]+/g, ' ').split(/\n/);
 

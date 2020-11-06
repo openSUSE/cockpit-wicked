@@ -92,15 +92,13 @@ class WickedAdapter {
     }
 
     async routes() {
-        let result = [];
+        let result = await new IfrouteFile().read();
 
         const ifaces = await this.interfaces();
-        const files = ["routes"].concat(ifaces.map(iface => `ifroute-${iface.name}`));
 
-        for (const file of files) {
-          const routesFile = new IfrouteFile(`/etc/sysconfig/network/${file}`);
-          const routes = await routesFile.read();
-          result = result.concat(routes)
+        for (const iface of ifaces) {
+            const ifaceRoutes = await new IfrouteFile(iface.name).read();
+            result = result.concat(ifaceRoutes);
         }
 
         return result;

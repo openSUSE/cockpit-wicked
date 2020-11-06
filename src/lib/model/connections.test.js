@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import { createConnection, mergeConnection } from './index';
+import { createConnection, mergeConnection } from './connections';
 import bondingMode from './bondingMode';
 import interfaceType from './interfaceType';
 

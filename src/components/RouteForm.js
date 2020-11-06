@@ -22,7 +22,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, actionTypes } from '../context/network';
+import { useNetworkDispatch, useNetworkState, actionTypes, addRoute, updateRoute } from '../context/network';
 
 const _ = cockpit.gettext;
 
@@ -33,7 +33,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const [destination, setDestination] = useState(route?.destination || "");
     const [device, setDevice] = useState(route?.device || "");
     const [options, setOptions] = useState(route?.options || "");
-    const { interfaces } = useNetworkState();
+    const { interfaces, routes } = useNetworkState();
     const [candidateInterfaces, setCandidateInterfaces] = useState([]);
     const dispatch = useNetworkDispatch();
 
@@ -41,27 +41,14 @@ const RouteForm = ({ isOpen, onClose, route }) => {
         setCandidateInterfaces([{ name: "" }, ...Object.values(interfaces)]);
     }, [interfaces]);
 
-    const updateRoute = () => {
-        dispatch({
-            type: actionTypes.UPDATE_ROUTE,
-            payload: { id: route.id, changes: buildRouteData() }
-        });
-    };
-
     const addOrUpdateRoute = () => {
         if (isEditing) {
-            updateRoute();
+            updateRoute(dispatch, routes, route.id, buildRouteData());
         } else {
-            addRoute();
+            addRoute(dispatch, routes, buildRouteData());
         }
-        onClose();
-    };
 
-    const addRoute = () => {
-        dispatch({
-            type: actionTypes.ADD_ROUTE,
-            payload: buildRouteData()
-        });
+        onClose();
     };
 
     const buildRouteData = () => {

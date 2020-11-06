@@ -145,10 +145,10 @@ class WickedAdapter {
 
         // Include all knows interface to ensure successful deletions
         const ifaces = await this.interfaces();
-        let routesByDevice = ifaces.reduce((result, iface) => {
-          result[iface.name] = [];
-          return result;
-        }, {})
+        const routesByDevice = ifaces.reduce((result, iface) => {
+            result[iface.name] = [];
+            return result;
+        }, {});
 
         // Collect routes by device
         Object.values(routes).forEach((route) => {

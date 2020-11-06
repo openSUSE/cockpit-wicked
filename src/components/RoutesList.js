@@ -23,7 +23,7 @@ import cockpit from "cockpit";
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant } from '@patternfly/react-table';
-import { useNetworkDispatch, updateRoutes } from '../context/network';
+import { useNetworkDispatch, deleteRoute } from '../context/network';
 import RouteForm from './RouteForm';
 
 const _ = cockpit.gettext;
@@ -51,8 +51,10 @@ const RoutesList = ({ routes }) => {
         setFormOpen(true);
     };
 
-    const deleteRoute = (event, rowId) => {
-        updateRoutes(dispatch, routes.filter((value, index) => index !== rowId));
+    // FIXME
+    const removeRoute = (event, rowId) => {
+        const route = routes.find((_route, index) => index === rowId);
+        deleteRoute(dispatch, routes, route.id);
     };
 
     const actions = [
@@ -62,7 +64,7 @@ const RoutesList = ({ routes }) => {
         },
         {
             title: _("Delete"),
-            onClick: deleteRoute
+            onClick: removeRoute
         }
     ];
 

@@ -33,20 +33,18 @@ const NetworkDispatchContext = React.createContext();
 const SET_INTERFACES = 'set_interfaces';
 const SET_CONNECTIONS = 'set_connections';
 const SET_ROUTES = 'set_routes';
+const UPDATE_ROUTES = 'update_routes';
 const ADD_CONNECTION = 'add_connection';
 const UPDATE_CONNECTION = 'update_connection';
-const ADD_ROUTE = 'add_route';
-const UPDATE_ROUTE = 'update_route';
 const UPDATE_INTERFACE = 'update_interface';
 
 const actionTypes = {
     SET_INTERFACES,
     SET_CONNECTIONS,
     SET_ROUTES,
+    UPDATE_ROUTES,
     ADD_CONNECTION,
     UPDATE_CONNECTION,
-    ADD_ROUTE,
-    UPDATE_ROUTE,
     UPDATE_INTERFACE
 };
 
@@ -77,6 +75,10 @@ function networkReducer(state, action) {
         return { ...state, routes };
     }
 
+    case UPDATE_ROUTES: {
+        return { ...state, routes: action.payload };
+    }
+
     case ADD_CONNECTION: {
         const { interfaces, connections } = state;
         const conn = action.payload;
@@ -88,23 +90,10 @@ function networkReducer(state, action) {
         };
     }
 
-    case ADD_ROUTE: {
-        const { routes } = state;
-        const route = createRoute(action.payload);
-        return { ...state, routes: { ...routes, [route.id]: { ...route, modified: true } } };
-    }
-
     case UPDATE_CONNECTION: {
         const { id } = action.payload;
         const { connections } = state;
         return { ...state, connections: { ...connections, [id]: action.payload } };
-    }
-
-    case UPDATE_ROUTE: {
-        const { id, changes } = action.payload;
-        const { routes } = state;
-        const route = routes[id];
-        return { ...state, routes: { ...routes, [id]: { ...route, ...changes, modified: true } } };
     }
 
     case UPDATE_INTERFACE: {
@@ -205,24 +194,28 @@ async function updateConnection(dispatch, connection, changes) {
     return await networkClient().updateConnection(updatedConn);
 }
 
-
-/**
- * Updates routes using the NetworkClient
- *
- * It dispatches the SET_ROUTES action.
- *
- * @todo Notify when something went wrong.
- *
- * @param {function} dispatch - Dispatch function
- * @param {Array<module:model/routes~Route>} routes - Routes to update
- * @return {Promise}
- */
-async function updateRoutes(dispatch, routes) {
-    await networkClient().updateRoutes(routes);
-    const nextRoutes = await networkClient().getRoutes();
-    dispatch({ type: SET_ROUTES, payload: nextRoutes });
+// FIXME
+function deleteRoute(dispatch, routes, routeId) {
+    const nextRoutes = routes.filter((r) => r.id !== routeId);
+    networkClient().updateRoutes(nextRoutes);
+    dispatch({ type: UPDATE_ROUTES, payload: nextRoutes });
 }
 
+// FIXME
+function updateRoute(dispatch, routes, routeId, changes) {
+    const route = routes[routeId];
+    const nextRoutes = { ...routes, [routeId]: { ...route, ...changes } };
+    networkClient().updateRoutes(nextRoutes);
+    dispatch({ type: UPDATE_ROUTES, payload: nextRoutes });
+}
+
+// FIXME
+function addRoute(dispatch, routes, attrs) {
+    const route = createRoute(attrs);
+    const nextRoutes = { ...routes, [route.id]: route };
+    networkClient().updateRoutes(nextRoutes);
+    dispatch({ type: UPDATE_ROUTES, payload: nextRoutes });
+}
 /**
  * Fetches the interfaces using the NetworkClient
  *
@@ -289,7 +282,9 @@ export {
     fetchInterfaces,
     fetchConnections,
     fetchRoutes,
-    updateRoutes,
+    addRoute,
+    updateRoute,
+    deleteRoute,
     listenToInterfacesChanges,
     resetClient
 };

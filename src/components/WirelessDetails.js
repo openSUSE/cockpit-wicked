@@ -19,28 +19,21 @@
  * find current contact information at www.suse.com.
  */
 
-import interfaceType from '../model/interfaceType';
+import React, { useState } from 'react';
+import WirelessForm from './WirelessForm';
+import cockpit from 'cockpit';
 
-const PROPERTY_TO_TYPE = {
-    bond: interfaceType.BONDING,
-    bridge: interfaceType.BRIDGE,
-    vlan: interfaceType.VLAN,
-    wireless: interfaceType.WIRELESS
+const _ = cockpit.gettext;
+
+const WirelessDetails = ({ iface, connection }) => {
+    const [isFormOpen, setFormOpen] = useState(false);
+
+    return (
+        <>
+            <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
+            { isFormOpen && <WirelessForm isOpen={isFormOpen} iface={iface} connection={connection} onClose={() => setFormOpen(false)} /> }
+        </>
+    );
 };
 
-/**
- * Try to infer the interface type from an object (interface or configuration) coming Wicked
- *
- * @param {object} wickedJson - Information from Wicked (an interface or a configuration object)
- * @returns {string} Interface type
- */
-const typeFromWicked = (wickedJson) => {
-    const property = Object.keys(PROPERTY_TO_TYPE).find(k => {
-        return Object.prototype.hasOwnProperty.call(wickedJson, k);
-    });
-    return property ? PROPERTY_TO_TYPE[property] : interfaceType.ETHERNET;
-};
-
-export {
-    typeFromWicked
-};
+export default WirelessDetails;

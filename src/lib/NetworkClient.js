@@ -94,15 +94,17 @@ class NetworkClient {
         return await this.adapter.updateRoutes(routes);
     }
 
+    /**
+     *
+     * @param {Interface} Interface - Obtains the list of networks available for the given interface
+     * @returns {Promise<String|Error>}
+     */
     getEssidList(iface) {
-        return new Promise((resolve, reject) => {
-            const link_up = `ip link set ${iface} ip`;
-            const scan = `iwlist ${iface} scan`;
-            const grep_and_cut_essid = "/usr/bin/grep ESSID | /usr/bin/cut -d':' -f2 | /usr/bin/cut -d'\"' -f2";
-            const sort = "/usr/bin/sort -u";
-
-            cockpit.spawn(["bash", "-c", `${link_up} && ${scan} | ${grep_and_cut_essid} | ${sort}`], { superuser: true });
-        });
+        const link_up = `ip link set ${iface} up`;
+        const scan = `iwlist ${iface} scan`;
+        const grep_and_cut_essid = "/usr/bin/grep ESSID | /usr/bin/cut -d':' -f2 | /usr/bin/cut -d'\"' -f2";
+        const sort = "/usr/bin/sort -u";
+        return cockpit.spawn(["bash", "-c", `${link_up} && ${scan} | ${grep_and_cut_essid} | ${sort}`], { superuser: true });
     }
 
     /**

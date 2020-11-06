@@ -25,6 +25,7 @@ import StartMode from './StartMode';
 import BridgeDetails from './BridgeDetails';
 import BondDetails from './BondDetails';
 import VlanDetails from './VlanDetails';
+import WirelessDetails from './WirelessDetails';
 import IPSettingsLink from './IPSettingsLink';
 import interfaceTypeEnum from '../lib/model/interfaceType';
 
@@ -75,6 +76,15 @@ const vlanDetails = (connection) => {
     );
 };
 
+const wirelessDetails = (iface, connection) => {
+    return (
+        <>
+            <dt>{_("WiFi")}</dt>
+            <dd><WirelessDetails iface={iface} connection={connection} /></dd>
+        </>
+    );
+};
+
 const ipV4Details = (connection) => {
     return (
         <>
@@ -102,6 +112,7 @@ const InterfaceDetails = ({ iface, connection }) => (
         { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
         { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
         { iface.type === interfaceTypeEnum.VLAN && vlanDetails(connection) }
+        { iface.type === interfaceTypeEnum.WIRELESS && wirelessDetails(iface, connection) }
         { connection && ipV4Details(connection) }
         { connection && ipV6Details(connection) }
     </dl>

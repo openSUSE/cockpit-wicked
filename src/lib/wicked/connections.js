@@ -32,6 +32,8 @@ import addressType from '../model/addressType';
 import bootProtocol from '../model/bootProtocol';
 import interfaceType from '../model/interfaceType';
 import bondingMode from '../model/bondingMode';
+import wirelessMode from '../model/wirelessMode';
+import wirelessAuthMode from '../model/wirelessAuthMode';
 import { typeFromWicked } from './utils';
 
 const START_MODE = {
@@ -144,6 +146,38 @@ const propsByType = (type, config) => {
     return (fn && fn(config)) || {};
 };
 
+const wirelessModeFor = (mode) => {
+    if (mode === 'ad-hoc') return wirelessMode.AD_HOC;
+    if (mode === 'ap') return wirelessMode.MASTER;
+
+    return wirelessMode.MANAGED;
+};
+
+const wirelessAuthModeFor = (network) => {
+    if (network["wpa-psk"]) return wirelessAuthMode.WPA_PSK;
+    if (network["wpa-eap"]) return wirelessAuthMode.WPA_EAP;
+    if (network.wep) {
+        if (network.wep.["auth-algo"] === "open") return wirelessAuthMode.WEP_OPEN;
+        return wirelessAuthMode.WEP_SHARED;
+    }
+
+    return wirelessAuthMode.NONE;
+};
+
+
+const propsByAuthMode = (mode, config) => {
+    const fn = propsByWirelessAuthMode[mode];
+
+    return (fn && fn(config)) || {};
+};
+
+const propsByWirelessAuthMode = {
+    // FIXME: Add pending auth modes
+    [wirelessAuthMode.WPA_PSK]: ({ network }) => {
+      return { passphrase: network["wpa-psk"] };
+    }
+};
+
 const propsByConnectionType = {
     [interfaceType.BONDING]: ({ bond }) => {
         // FIXME: wicked returns a 'miimon' element
@@ -157,6 +191,13 @@ const propsByConnectionType = {
     [interfaceType.VLAN]: ({ vlan }) => {
         const { tag, device } = vlan;
         return { vlan: { parentDevice: device, vlanId: tag } };
+    },
+    [interfaceType.WIRELESS]: ({ wireless }) => {
+        const { ap_scan, network } = wireless;
+        const { essid, mode } = network;
+        const authMode = wirelessAuthModeFor(network);
+
+        return { wireless: { ap_scan, essid, mode: wirelessModeFor(mode), authMode, [authMode]: propsByAuthMode(authMode, network) } };
     }
 };
 

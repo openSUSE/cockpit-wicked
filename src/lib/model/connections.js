@@ -118,6 +118,9 @@ const propsByConnectionType = {
         return {
             vlan: { vlanId, parentDevice }
         };
+    },
+    [interfaceType.WIRELESS]: ({ wireless = {} } = {})  => {
+        return { wireless }
     }
 };
 

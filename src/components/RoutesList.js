@@ -23,7 +23,7 @@ import cockpit from "cockpit";
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant } from '@patternfly/react-table';
-import { useNetworkDispatch } from '../NetworkContext';
+import { useNetworkDispatch } from '../context/network';
 import RouteForm from './RouteForm';
 
 const _ = cockpit.gettext;

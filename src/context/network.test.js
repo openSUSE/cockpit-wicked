@@ -19,12 +19,12 @@
  * find current contact information at www.suse.com.
  */
 
-import { addConnection, updateConnection, actionTypes, resetClient } from './NetworkContext';
-import model from './lib/model';
-import interfaceType from './lib/model/interfaceType';
-import NetworkClient from './lib/NetworkClient';
+import { addConnection, updateConnection, actionTypes, resetClient } from './network';
+import model from '../lib/model';
+import interfaceType from '../lib/model/interfaceType';
+import NetworkClient from '../lib/NetworkClient';
 
-jest.mock('./lib/NetworkClient');
+jest.mock('../lib/NetworkClient');
 
 describe('#addConnection', () => {
     beforeAll(() => {

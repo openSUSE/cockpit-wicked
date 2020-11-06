@@ -26,7 +26,7 @@ import AddBridge from './AddBridge';
 import AddVlan from './AddVlan';
 import {
     useNetworkDispatch, useNetworkState, fetchInterfaces, fetchConnections, listenToInterfacesChanges
-} from '../NetworkContext';
+} from '../context/network';
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
 const InterfacesTab = () => {

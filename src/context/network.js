@@ -20,8 +20,10 @@
  */
 
 import React from 'react';
-import { createConnection, createInterface, createRoute, mergeConnection } from './lib/model';
-import NetworkClient from './lib/NetworkClient';
+import { createConnection, mergeConnection } from '../lib/model/connections';
+import { createInterface } from '../lib/model/interfaces';
+import { createRoute } from '../lib/model/routes';
+import NetworkClient from '../lib/NetworkClient';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();

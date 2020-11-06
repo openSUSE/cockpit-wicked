@@ -23,7 +23,7 @@ import React, { useState } from 'react';
 import InterfacesTab from './components/InterfacesTab';
 import RoutingTab from './components/RoutingTab';
 import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
-import { NetworkProvider } from './NetworkContext';
+import { NetworkProvider } from './context/network';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;

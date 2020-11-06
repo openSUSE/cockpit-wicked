@@ -21,7 +21,7 @@
 
 import cockpit from 'cockpit';
 import React, { useState, useEffect } from 'react';
-import { useNetworkDispatch, useNetworkState, fetchRoutes } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, fetchRoutes } from '../context/network';
 import { Card, CardBody, CardTitle, Toolbar, ToolbarContent, ToolbarItem, Switch } from '@patternfly/react-core';
 import RoutesList from './RoutesList';
 import AddRoute from './AddRoute';

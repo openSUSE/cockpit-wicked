@@ -34,7 +34,7 @@ import {
     ModalVariant
 } from '@patternfly/react-core';
 
-import { useNetworkDispatch, updateConnection } from '../NetworkContext';
+import { useNetworkDispatch, updateConnection } from '../context/network';
 import BootProtoSelector from "./BootProtoSelector";
 import AddressesDataList from "./AddressesDataList";
 
@@ -165,7 +165,7 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
      * Handles the form submit, performing a connection update when proceed
      *
      * @see {@link validate}
-     * @see {@link module/NetworkContext~updateConnection}
+     * @see {@link module/context/network~updateConnection}
      */
     const handleSubmit = () => {
         setIsApplying(true);

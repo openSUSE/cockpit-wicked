@@ -20,12 +20,12 @@
  */
 
 import { IfcfgFile, SysconfigParser } from './files';
-import { createConnection } from '../model';
+import model from '../model';
 import interfaceType from '../model/interfaceType';
 import bootProtocol from '../model/bootProtocol';
 import cockpit from 'cockpit';
 
-const conn = createConnection({
+const conn = model.createConnection({
     name: 'eth0',
     type: interfaceType.ETHERNET
 });
@@ -50,7 +50,7 @@ describe('IfcfgFile', () => {
         });
 
         describe('when it contains multiple addresses', () => {
-            const conn = createConnection({
+            const conn = model.createConnection({
                 name: 'eth0', type: interfaceType.ETHERNET, ipv4: {
                     bootProto: bootProtocol.DHCP,
                     addresses: [
@@ -79,7 +79,7 @@ describe('IfcfgFile', () => {
         });
 
         describe('when it is a bridge device', () => {
-            const conn = createConnection({
+            const conn = model.createConnection({
                 name: 'br0', type: interfaceType.BRIDGE, bridge: { ports: ['eth0', 'eth1'] }
             });
 
@@ -93,7 +93,7 @@ describe('IfcfgFile', () => {
         });
 
         describe('when it is a bonding device', () => {
-            const conn = createConnection({
+            const conn = model.createConnection({
                 name: 'br0', type: interfaceType.BONDING,
                 bond: { interfaces: ['eth0', 'eth1'], options: 'some-option' }
             });

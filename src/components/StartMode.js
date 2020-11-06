@@ -21,7 +21,7 @@
 
 import React, { useState } from 'react';
 import { Modal, ModalVariant, Button, FormSelect, FormSelectOption } from '@patternfly/react-core';
-import { useNetworkDispatch, updateConnection } from '../NetworkContext';
+import { useNetworkDispatch, updateConnection } from '../context/network';
 import startModeEnum from '../lib/model/startMode';
 import cockpit from 'cockpit';
 

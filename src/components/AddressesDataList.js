@@ -21,7 +21,7 @@
 
 import React from 'react';
 import cockpit from 'cockpit';
-import { createAddressConfig } from '../lib/model';
+import { createAddressConfig } from '../lib/model/address';
 
 import {
     Button,

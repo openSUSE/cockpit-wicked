@@ -23,7 +23,7 @@ import React, { useState, useEffect } from 'react';
 import cockpit from 'cockpit';
 import { isValidIP } from '../lib/utils';
 import bootProtocol from '../lib/model/bootProtocol';
-import { createAddressConfig } from '../lib/model';
+import { createAddressConfig } from '../lib/model/address';
 
 import {
     Alert,

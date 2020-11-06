@@ -23,7 +23,7 @@ import cockpit from "cockpit";
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant } from '@patternfly/react-table';
-import { useNetworkDispatch } from '../context/network';
+import { useNetworkDispatch, updateRoutes } from '../context/network';
 import RouteForm from './RouteForm';
 
 const _ = cockpit.gettext;
@@ -52,7 +52,7 @@ const RoutesList = ({ routes }) => {
     };
 
     const deleteRoute = (event, rowId) => {
-        dispatch({ type: 'set_routes', payload: routes.filter((value, index) => index !== rowId) });
+        updateRoutes(dispatch, routes.filter((value, index) => index !== rowId));
     };
 
     const actions = [

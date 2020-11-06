@@ -43,7 +43,7 @@ describe('IfcfgFile', () => {
         it('updates file content', () => {
             ifcfg.update(conn);
             expect(replaceFn).toHaveBeenCalledWith({
-                BOOTPROTO: 'none',
+                BOOTPROTO: 'dhcp',
                 NAME: 'eth0',
                 STARTMODE: 'auto'
             });

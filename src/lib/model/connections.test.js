@@ -21,12 +21,20 @@
 
 import { createConnection, mergeConnection } from './connections';
 import bondingMode from './bondingMode';
+import bootProtocol from './bootProtocol';
 import interfaceType from './interfaceType';
 
 describe('#createConnection', () => {
     it('creates an ethernet type connection', () => {
         const conn = createConnection({ name: 'eth0' });
         expect(conn).toEqual(expect.objectContaining({ name: 'eth0', type: 'eth' }));
+    });
+
+    it('sets IPv4 and IPv6 to DHCP', () => {
+        const conn = createConnection({ name: 'eth0' });
+        expect(conn.ipv4).toEqual({ addresses: [], bootProto: bootProtocol.DHCP });
+        expect(conn.ipv6).toEqual({ addresses: [], bootProto: bootProtocol.DHCP });
+
     });
 
     describe('when it is a bridge device', () => {

@@ -76,9 +76,6 @@ const BondForm = ({ isOpen, onClose, connection }) => {
         } else {
             addConnection(dispatch, { ...bondingAttrs, type: interfaceType.BONDING });
         }
-    };
-
-    const closeForm = () => {
         onClose();
     };
 
@@ -99,12 +96,12 @@ const BondForm = ({ isOpen, onClose, connection }) => {
             variant={ModalVariant.small}
             title={isEditing ? _("Edit Bond") : _("Add Bond")}
             isOpen={isOpen}
-            onClose={closeForm}
+            onClose={onClose}
             actions={[
                 <Button key="confirm" variant="primary" onClick={addOrUpdateConnection} isDisabled={isIncomplete()}>
                     {isEditing ? _("Change") : _("Add")}
                 </Button>,
-                <Button key="cancel" variant="link" onClick={closeForm}>
+                <Button key="cancel" variant="link" onClick={onClose}>
                     {_("Cancel")}
                 </Button>
             ]}

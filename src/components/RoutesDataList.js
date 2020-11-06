@@ -40,7 +40,7 @@ import {
 import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-icon';
 import MinusIcon from '@patternfly/react-icons/dist/js/icons/minus-icon';
 import IPInput from './IPInput';
-import { createRoute } from '../lib/model';
+import { createRoute } from '../lib/model/routes';
 
 const _ = cockpit.gettext;
 

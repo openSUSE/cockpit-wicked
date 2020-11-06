@@ -84,6 +84,15 @@ const ipV4Details = (connection) => {
     );
 };
 
+const ipV6Details = (connection) => {
+    return (
+        <>
+            <dt>{_("IPv6 settings")}</dt>
+            <dd><IPSettingsLink connection={connection} ipVersion='ipv6' /></dd>
+        </>
+    );
+};
+
 const InterfaceDetails = ({ iface, connection }) => (
     <dl className="details-list">
         <dt>{_("Type")}</dt>
@@ -94,6 +103,7 @@ const InterfaceDetails = ({ iface, connection }) => (
         { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
         { iface.type === interfaceTypeEnum.VLAN && vlanDetails(connection) }
         { connection && ipV4Details(connection) }
+        { connection && ipV6Details(connection) }
     </dl>
 );
 

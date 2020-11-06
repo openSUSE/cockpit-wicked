@@ -185,6 +185,16 @@ class IfrouteParser {
             return routes;
         }, []);
     }
+
+    stringify(data) {
+        return data.map(({ destination, gateway, netmask, options }) => {
+            // The interface/device (4th column) is actually not needed because at this point routes are
+            // being writing in its ifroute-<interface> file.
+            return [destination, gateway, netmask, undefined, options]
+                    .map(v => v || "-")
+                    .join("\t");
+        }).join("\n");
+    }
 }
 
 /**
@@ -206,19 +216,24 @@ class IfrouteFile {
 
         this.path = [BASE_PATH, device ? `ifroute-${device}` : "routes"].join("/");
         this.device = device;
-        this.parser = new IfrouteParser;
+        this.parser = new IfrouteParser();
+        this.file = cockpit.file(this.path, { syntax: this.parser, superuser: "required" });
     }
 
     async read() {
-        const content = await cockpit.file(this.path, { syntax: this.parser }).read();
+        const content = await this.file.read();
         const result = content || [];
 
         if (!this.device) return result;
 
         return result.map((route) => {
-          route.device ||= this.device;
-          return route
+            route.device ||= this.device;
+            return route;
         });
+    }
+
+    async update(routes) {
+        return this.file.replace(routes);
     }
 }
 

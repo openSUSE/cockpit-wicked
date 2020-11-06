@@ -138,8 +138,8 @@ class WickedAdapter {
      * Update route files
      *
      *
-     * @param {Array<module:model/routes~Route>} routes - routes to update
-     * @return {Promise<Connection,Error>}
+     * @param {Array} routes - routes to update
+     * @return {Promise<Connection,Error>} Promise that resolve to the added connection
      */
     async updateRoutes(routes) {
         const NO_DEVICE_KEY = "none";

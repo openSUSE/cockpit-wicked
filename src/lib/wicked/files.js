@@ -161,10 +161,6 @@ class IfcfgFile {
  * @todo Add support for writing the content.
  */
 class IfrouteParser {
-    constructor(device) {
-        this.device = device;
-    }
-
     parse(content) {
         // Replace multiple spaces and tabs with a single space before split the content
         const lines = content.replace(/[ |\t]+/g, ' ').split(/\n/);
@@ -182,7 +178,7 @@ class IfrouteParser {
                 destination: columns[0],
                 gateway:     columns[1],
                 netmask:     columns[2],
-                device:      columns[3] || this.device,
+                device:      columns[3],
                 options:     columns[4],
             });
 
@@ -210,12 +206,19 @@ class IfrouteFile {
 
         this.path = [BASE_PATH, device ? `ifroute-${device}` : "routes"].join("/");
         this.device = device;
-        this.parser = new IfrouteParser(device);
+        this.parser = new IfrouteParser;
     }
 
     async read() {
         const content = await cockpit.file(this.path, { syntax: this.parser }).read();
-        return content || [];
+        const result = content || [];
+
+        if (!this.device) return result;
+
+        return result.map((route) => {
+          route.device ||= this.device;
+          return route
+        });
     }
 }
 

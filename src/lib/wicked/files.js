@@ -128,6 +128,33 @@ class SysconfigParser {
     }
 }
 
+class IfrouteParser {
+  parse(content) {
+      // Replace multiple spaces and tabs with a single space before split the content
+      const lines = content.replace(/[ |\t]+/g, ' ').split(/\n/);
+
+      return lines.reduce((routes, line) => {
+          line = line.trim();
+
+          // Skip comments and empty lines
+          if (line.startsWith("#") || line === "") return routes;
+
+          // Replace dashes by empty string
+          const columns = line.split(/\s/).map(column => column !== "-" ? column : "");
+
+          routes.push({
+            destination: columns[0],
+            gateway:     columns[1],
+            netmask:     columns[2],
+            device:      columns[3],
+            options:     columns[4],
+          });
+
+          return routes;
+      }, []);
+  }
+}
+
 /**
  * Class to handle an `ifcfg-[name]` configuration file
  */
@@ -152,7 +179,29 @@ class IfcfgFile {
     }
 }
 
+/**
+ * Class to handle an `ifroute-<interface>` configuration file
+ *
+ * @see ifroute(5) man page
+ */
+class IfrouteFile {
+    /**
+     * @param {string} Files's path
+     */
+    constructor(path) {
+        this.path = path;
+        this.parser = new IfrouteParser;
+    }
+
+
+    async read() {
+      const content =  await cockpit.file(this.path, { syntax: this.parser }).read();
+      return content || [];
+    }
+}
+
 export {
     IfcfgFile,
+    IfrouteFile,
     SysconfigParser
 };

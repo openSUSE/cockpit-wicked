@@ -57,8 +57,8 @@ class NetworkClient {
      *
      * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
      */
-    getRoutes() {
-        return new Promise((resolve, reject) => resolve([]));
+    async getRoutes() {
+        return await this.adapter.routes();
     }
 
     addConnection(connection) {

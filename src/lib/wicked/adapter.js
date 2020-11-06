@@ -23,7 +23,7 @@ import Client from './client';
 import { createConnection } from './connections';
 import { createInterface } from './interfaces';
 import model from '../model';
-import { IfcfgFile } from './files';
+import { IfcfgFile, IfrouteFile } from './files';
 
 /**
  * This class is responsible for retrieving and updating Wicked's configuration.
@@ -89,6 +89,21 @@ class WickedAdapter {
             const data = (signal === 'deviceDelete') ? { ...iface, link: false } : iface;
             fn(signal, createInterface(data));
         });
+    }
+
+    async routes() {
+        let result = [];
+
+        const ifaces = await this.interfaces();
+        const files = ["routes"].concat(ifaces.map(iface => `ifroute-${iface.name}`));
+
+        for (const file of files) {
+          const routesFile = new IfrouteFile(`/etc/sysconfig/network/${file}`);
+          const routes = await routesFile.read();
+          result = result.concat(routes)
+        }
+
+        return result;
     }
 
     /**

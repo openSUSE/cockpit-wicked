@@ -135,6 +135,35 @@ class WickedAdapter {
     }
 
     /**
+     * Update route files
+     *
+     *
+     * @param {Array<module:model/routes~Route>} routes - routes to update
+     * @return {Promise<Connection,Error>}
+     */
+    async updateRoutes(routes) {
+        const NO_DEVICE_KEY = "none";
+
+        const routesByDevice = routes.reduce((routes, route) => {
+            const key = route.device || NO_DEVICE_KEY;
+            routes[key] ||= [];
+            routes[key].push(route);
+            return routes;
+        }, {});
+
+        const promises = [];
+
+        Object.keys(routesByDevice)
+                .forEach(k => {
+                    const device = k !== NO_DEVICE_KEY ? k : undefined;
+                    const promise = new IfrouteFile(device).update(routesByDevice[k]);
+                    promises.push(promise);
+                });
+
+        return Promise.all(promises);
+    }
+
+    /**
      * Update the configuration file of a connection
      *
      * @param {Connection} connection - Connection to update

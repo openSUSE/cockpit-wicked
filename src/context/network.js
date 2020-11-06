@@ -205,6 +205,24 @@ async function updateConnection(dispatch, connection, changes) {
     return await networkClient().updateConnection(updatedConn);
 }
 
+
+/**
+ * Updates routes using the NetworkClient
+ *
+ * It dispatches the SET_ROUTES action.
+ *
+ * @todo Notify when something went wrong.
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Array<module:model/routes~Route>} routes - Routes to update
+ * @return {Promise}
+ */
+async function updateRoutes(dispatch, routes) {
+    await networkClient().updateRoutes(routes);
+    const nextRoutes = await networkClient().getRoutes();
+    dispatch({ type: SET_ROUTES, payload: nextRoutes });
+}
+
 /**
  * Fetches the interfaces using the NetworkClient
  *
@@ -271,6 +289,7 @@ export {
     fetchInterfaces,
     fetchConnections,
     fetchRoutes,
+    updateRoutes,
     listenToInterfacesChanges,
     resetClient
 };

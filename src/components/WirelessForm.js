@@ -52,11 +52,11 @@ const authModeOptions = wirelessAuthModes.values.map(mode => {
 const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
     const { wireless } = connection || {};
     const isEditing = !!connection;
-    const [essid, setEssid] = useState(connection?.essid);
-    const [mode, setMode] = useState(connection?.mode || wirelessModes.MANAGED);
-    const [authMode, setAuthMode] = useState(connection?.authMode || wirelessAuthModes.WEP_OPEN);
-    const [password, setPassword] = useState(connection?.password || "");
-    const [essidList, setEssidList] = useState(essid ? [essid] : []);
+    const [essid, setEssid] = useState(wireless?.essid);
+    const [mode, setMode] = useState(wireless?.mode || wirelessModes.MANAGED);
+    const [authMode, setAuthMode] = useState(wireless?.authMode || wirelessAuthModes.WEP_OPEN);
+    const [password, setPassword] = useState(wireless?.password || "");
+    const [essidList, setEssidList] = useState([]);
     const [scanning, setScanning] = useState(true);
     const dispatch = useNetworkDispatch();
 
@@ -67,7 +67,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
     const refreshList = (name) => {
         client.getEssidList(name)
                 .then((result) => {
-                    setEssidList([...new Set(result.split("\n"))]);
+                    setEssidList([...new Set([...result.split("\n"), essid])]);
                     setScanning(false);
                 })
                 .catch(console.error);
@@ -129,7 +129,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                         </FormSelect> }
                 </FormGroup>
                 <FormGroup
-                    label={_("AUTH Mode")}
+                    label={_("Auth Mode")}
                     isRequired
                     fieldId="wireless-auth-mode"
                 >

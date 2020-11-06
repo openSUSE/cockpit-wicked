@@ -25,7 +25,7 @@ import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const WirelessDetails = ({ iface, connection }) => {
+const WirelessDetails = ({ iface, connection = {} }) => {
     const [isFormOpen, setFormOpen] = useState(false);
     const { wireless } = connection;
 
@@ -36,10 +36,10 @@ const WirelessDetails = ({ iface, connection }) => {
             <a href="#" onClick={() => setFormOpen(true)}>{_("ESSID: ")}{wireless.essid}</a>
           </li>
           <li>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("MODE: ")}{wireless.mode}</a>
+            <a href="#" onClick={() => setFormOpen(true)}>{_("Mode: ")}{wireless.mode}</a>
           </li>
           <li>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("AUTH MODE: ")}{wireless.authMode}</a>
+            <a href="#" onClick={() => setFormOpen(true)}>{_("Auth Mode: ")}{wireless.authMode}</a>
           </li>
 
         </ul>
@@ -48,7 +48,10 @@ const WirelessDetails = ({ iface, connection }) => {
 
     return (
         <>
-            { wireless && renderLinkDetails() }
+            { wireless
+              ? renderLinkDetails()
+              : <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
+            }
             { isFormOpen && <WirelessForm isOpen={isFormOpen} iface={iface} connection={connection} onClose={() => setFormOpen(false)} /> }
         </>
     );

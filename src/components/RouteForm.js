@@ -73,6 +73,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
             variant={ModalVariant.small}
             title={isEditing ? _("Edit Route") : _("Add Route")}
             isOpen={isOpen}
+            onClose={onClose}
             actions={[
                 <Button key="confirm" variant="primary" onClick={addOrUpdateRoute} isDisabled={isInComplete()}>
                     {isEditing ? _("Change") : _("Add")}

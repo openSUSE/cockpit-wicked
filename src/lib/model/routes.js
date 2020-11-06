@@ -19,6 +19,12 @@
  * find current contact information at www.suse.com.
  */
 
+/**
+ * This module offers a set of factory functions for working with routes.
+ *
+ * @module model/routes
+ */
+
 let routeIndex = 0;
 
 /**

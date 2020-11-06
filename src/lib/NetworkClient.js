@@ -57,8 +57,8 @@ class NetworkClient {
      *
      * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success
      */
-    getRoutes() {
-        return new Promise((resolve, reject) => resolve([]));
+    async getRoutes() {
+        return await this.adapter.routes();
     }
 
     addConnection(connection) {
@@ -90,8 +90,8 @@ class NetworkClient {
      * @param {Array<Object>} connections - List of routes to update
      * @returns {Promise<Array|Error>} Resolves to an array of connection objects in case of success
      */
-    updateRoutes(routes) {
-        return new Promise((resolve, reject) => resolve([]));
+    async updateRoutes(routes) {
+        return await this.adapter.updateRoutes(routes);
     }
 
     getEssidList(iface) {

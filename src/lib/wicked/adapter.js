@@ -23,7 +23,7 @@ import Client from './client';
 import { createConnection } from './connections';
 import { createInterface } from './interfaces';
 import model from '../model';
-import { IfcfgFile } from './files';
+import { IfcfgFile, IfrouteFile } from './files';
 
 /**
  * This class is responsible for retrieving and updating Wicked's configuration.
@@ -91,6 +91,19 @@ class WickedAdapter {
         });
     }
 
+    async routes() {
+        let result = await new IfrouteFile().read();
+
+        const ifaces = await this.interfaces();
+
+        for (const iface of ifaces) {
+            const ifaceRoutes = await new IfrouteFile(iface.name).read();
+            result = result.concat(ifaceRoutes);
+        }
+
+        return result;
+    }
+
     /**
      * Add a new connection to Wicked
      *
@@ -119,6 +132,41 @@ class WickedAdapter {
                     .then(() => resolve(connection))
                     .catch(reject);
         });
+    }
+
+    /**
+     * Update route files
+     *
+     * @param {Array} routes - routes to update
+     * @return {Promise<Connection,Error>} Promise that resolve to the added connection
+     */
+    async updateRoutes(routes) {
+        const NO_DEVICE_KEY = "none";
+
+        // Include all knows interface to ensure successful deletions
+        const ifaces = await this.interfaces();
+        const routesByDevice = ifaces.reduce((result, iface) => {
+            result[iface.name] = [];
+            return result;
+        }, {});
+
+        // Collect routes by device
+        Object.values(routes).forEach((route) => {
+            const key = route.device || NO_DEVICE_KEY;
+            routesByDevice[key] ||= [];
+            routesByDevice[key].push(route);
+        });
+
+        // Write route files
+        const promises = [];
+        Object.keys(routesByDevice)
+                .forEach(k => {
+                    const device = k !== NO_DEVICE_KEY ? k : undefined;
+                    const promise = new IfrouteFile(device).update(routesByDevice[k]);
+                    promises.push(promise);
+                });
+
+        return Promise.all(promises);
     }
 
     /**

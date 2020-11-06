@@ -27,10 +27,28 @@ const _ = cockpit.gettext;
 
 const WirelessDetails = ({ iface, connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
+    const { wireless } = connection;
+
+    const renderLinkDetails = () => {
+      return (
+        <ul>
+          <li>
+            <a href="#" onClick={() => setFormOpen(true)}>{_("ESSID: ")}{wireless.essid}</a>
+          </li>
+          <li>
+            <a href="#" onClick={() => setFormOpen(true)}>{_("MODE: ")}{wireless.mode}</a>
+          </li>
+          <li>
+            <a href="#" onClick={() => setFormOpen(true)}>{_("AUTH MODE: ")}{wireless.authMode}</a>
+          </li>
+
+        </ul>
+      )
+    }
 
     return (
         <>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
+            { wireless && renderLinkDetails() }
             { isFormOpen && <WirelessForm isOpen={isFormOpen} iface={iface} connection={connection} onClose={() => setFormOpen(false)} /> }
         </>
     );

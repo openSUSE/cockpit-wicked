@@ -114,6 +114,7 @@ const wirelessToSysconfig = (wireless) => {
     return {
         WIRELESS_AP_SCANMODE: '1',
         WIRELESS_AUTH_MODE: wireless.authMode,
+        WIRELESS_ESSID: wireless.essid,
         WIRELESS_MODE: wireless.mode,
         ...authAttributes
     };

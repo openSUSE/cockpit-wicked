@@ -55,14 +55,14 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
     const [essid, setEssid] = useState(connection?.essid);
     const [mode, setMode] = useState(connection?.mode || wirelessModes.MANAGED);
     const [authMode, setAuthMode] = useState(connection?.authMode || wirelessAuthModes.WEP_OPEN);
-    const [password, setPassword] = useState(connection?.password);
+    const [password, setPassword] = useState(connection?.password || "");
     const [essidList, setEssidList] = useState(essid ? [essid] : []);
     const [scanning, setScanning] = useState(true);
     const dispatch = useNetworkDispatch();
 
     useEffect(() => {
         refreshList(iface.name);
-    }, [iface]);
+    }, [iface.name]);
 
     const refreshList = (name) => {
         client.getEssidList(name)
@@ -149,7 +149,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                             isRequired
                             id="password"
                             value={password}
-                            onBlur={setPassword}
+                            onChange={setPassword}
                             type='password'
                         />
                     </FormGroup>}

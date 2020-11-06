@@ -57,8 +57,8 @@ export const createConnection = ({
     type = interfaceType.ETHERNET,
     interfaceName,
     startMode = startModeEnum.AUTO,
-    ipv4 = { addresses: [], bootProto: bootProtocol.NONE },
-    ipv6 = { addresses: [], bootProto: bootProtocol.NONE },
+    ipv4 = { addresses: [], bootProto: bootProtocol.DHCP },
+    ipv6 = { addresses: [], bootProto: bootProtocol.DHCP },
     ...rest
 }) => {
     return {

@@ -31,7 +31,7 @@ import {
     TextInput,
 } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../NetworkContext';
+import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
 import interfaceType from '../lib/model/interfaceType';
 
 const _ = cockpit.gettext;

@@ -25,9 +25,9 @@ import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const WirelessDetails = ({ iface, connection = {} }) => {
+const WirelessDetails = ({ iface, connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
-    const { wireless } = connection;
+    const wireless = connection ? connection.wireless : undefined;
 
     const renderLinkDetails = () => {
       return (

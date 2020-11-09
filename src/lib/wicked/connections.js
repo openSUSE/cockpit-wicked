@@ -164,7 +164,6 @@ const wirelessAuthModeFor = (network) => {
     return wirelessAuthMode.NONE;
 };
 
-
 const propsByAuthMode = (mode, config) => {
     const fn = propsByWirelessAuthMode[mode];
 
@@ -174,8 +173,8 @@ const propsByAuthMode = (mode, config) => {
 const propsByWirelessAuthMode = {
     // FIXME: Add pending auth modes
     [wirelessAuthMode.WPA_PSK]: ({ wpa_psk }) => {
-      const { passphrase } = wpa_psk;
-      return { password: passphrase };
+        const { passphrase } = wpa_psk;
+        return { password: passphrase };
     }
 };
 
@@ -197,7 +196,6 @@ const propsByConnectionType = {
         const { ap_scan, network } = wireless;
         const { essid, mode } = network;
         const authMode = wirelessAuthModeFor(network);
-
 
         return {
             wireless: {

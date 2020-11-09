@@ -1,12 +1,15 @@
 {
     "version": "0.1",
+    "name": "network",
+    "priority": 10,
     "requires": {
         "cockpit": "137"
     },
 
-    "tools": {
+    "menu": {
         "index": {
-            "label": "Wicked"
+            "order": 40,
+            "label": "Networking"
         }
     }
 }

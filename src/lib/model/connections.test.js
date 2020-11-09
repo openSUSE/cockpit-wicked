@@ -34,7 +34,6 @@ describe('#createConnection', () => {
         const conn = createConnection({ name: 'eth0' });
         expect(conn.ipv4).toEqual({ addresses: [], bootProto: bootProtocol.DHCP });
         expect(conn.ipv6).toEqual({ addresses: [], bootProto: bootProtocol.DHCP });
-
     });
 
     describe('when it is a bridge device', () => {

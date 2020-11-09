@@ -22,7 +22,7 @@
 import React, { useState } from 'react';
 import InterfacesTab from './components/InterfacesTab';
 import RoutingTab from './components/RoutingTab';
-import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
+import { Page, Tabs, Tab, TabTitleText } from '@patternfly/react-core';
 import { NetworkProvider } from './context/network';
 import cockpit from 'cockpit';
 
@@ -37,14 +37,16 @@ export const Application = () => {
 
     return (
         <NetworkProvider>
-            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-                <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
-                    <InterfacesTab />
-                </Tab>
-                <Tab eventKey={1} title={<TabTitleText>{_("Routing")}</TabTitleText>}>
-                    <RoutingTab />
-                </Tab>
-            </Tabs>
+            <Page id="network-configuration">
+                <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                    <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
+                        <InterfacesTab />
+                    </Tab>
+                    <Tab eventKey={1} title={<TabTitleText>{_("Routing")}</TabTitleText>}>
+                        <RoutingTab />
+                    </Tab>
+                </Tabs>
+            </Page>
         </NetworkProvider>
     );
 };

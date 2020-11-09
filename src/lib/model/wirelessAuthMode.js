@@ -19,28 +19,41 @@
  * find current contact information at www.suse.com.
  */
 
-import interfaceType from '../model/interfaceType';
+import cockpit from 'cockpit';
 
-const PROPERTY_TO_TYPE = {
-    bond: interfaceType.BONDING,
-    bridge: interfaceType.BRIDGE,
-    vlan: interfaceType.VLAN,
-    wireless: interfaceType.WIRELESS
+const _ = cockpit.gettext;
+const NC_ = cockpit.noop;
+
+const NONE = 'no-encryption';
+const WEP_OPEN = 'open';
+const WEP_SHARED = 'sharedkey';
+const WPA_PSK = 'psk';
+const WPA_EAP = 'eap';
+
+const values = [
+    NONE,
+    WEP_OPEN,
+    WEP_SHARED,
+    WPA_PSK,
+    WPA_EAP
+];
+
+const labels = {
+    [NONE]: NC_("No Encryption"),
+    [WEP_OPEN]: NC_("WEP - Open"),
+    [WEP_SHARED]: NC_("WEP - Shared Key"),
+    [WPA_PSK]:  NC_("WPA-PSK (\"home\")"),
+    [WPA_EAP]:  NC_("WPA-EAP (\"Enterprise\")")
 };
 
-/**
- * Try to infer the interface type from an object (interface or configuration) coming Wicked
- *
- * @param {object} wickedJson - Information from Wicked (an interface or a configuration object)
- * @returns {string} Interface type
- */
-const typeFromWicked = (wickedJson) => {
-    const property = Object.keys(PROPERTY_TO_TYPE).find(k => {
-        return Object.prototype.hasOwnProperty.call(wickedJson, k);
-    });
-    return property ? PROPERTY_TO_TYPE[property] : interfaceType.ETHERNET;
-};
+const label = (mode) => _(labels[mode]);
 
-export {
-    typeFromWicked
+export default {
+    NONE,
+    WEP_OPEN,
+    WEP_SHARED,
+    WPA_PSK,
+    WPA_EAP,
+    label,
+    values
 };

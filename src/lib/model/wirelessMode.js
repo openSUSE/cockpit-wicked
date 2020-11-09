@@ -19,28 +19,33 @@
  * find current contact information at www.suse.com.
  */
 
-import interfaceType from '../model/interfaceType';
+import cockpit from 'cockpit';
 
-const PROPERTY_TO_TYPE = {
-    bond: interfaceType.BONDING,
-    bridge: interfaceType.BRIDGE,
-    vlan: interfaceType.VLAN,
-    wireless: interfaceType.WIRELESS
+const _ = cockpit.gettext;
+const NC_ = cockpit.noop;
+
+const AD_HOC = 'ad-hoc';
+const MANAGED = 'managed';
+const MASTER = 'master';
+
+const values = [
+    AD_HOC,
+    MANAGED,
+    MASTER
+];
+
+const labels = {
+    [AD_HOC]: NC_("Ad-hoc"),
+    [MANAGED]: NC_("Managed"),
+    [MASTER]: NC_("Master"),
 };
 
-/**
- * Try to infer the interface type from an object (interface or configuration) coming Wicked
- *
- * @param {object} wickedJson - Information from Wicked (an interface or a configuration object)
- * @returns {string} Interface type
- */
-const typeFromWicked = (wickedJson) => {
-    const property = Object.keys(PROPERTY_TO_TYPE).find(k => {
-        return Object.prototype.hasOwnProperty.call(wickedJson, k);
-    });
-    return property ? PROPERTY_TO_TYPE[property] : interfaceType.ETHERNET;
-};
+const label = (mode) => _(labels[mode]);
 
-export {
-    typeFromWicked
+export default {
+    AD_HOC,
+    MANAGED,
+    MASTER,
+    label,
+    values
 };

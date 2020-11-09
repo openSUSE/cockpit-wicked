@@ -27,6 +27,7 @@
 
 import cockpit from 'cockpit';
 import bootProtocol from '../model/bootProtocol';
+import wirelessAuthMode from '../model/wirelessAuthMode';
 
 /**
  * @ignore
@@ -39,7 +40,8 @@ const connectionToSysconfig = (connection) => {
         ...addressesToSysconfig(connection),
         ...bridgeToSysconfig(connection.bridge),
         ...bondToSysconfig(connection.bond),
-        ...vlanToSysconfig(connection.vlan)
+        ...vlanToSysconfig(connection.vlan),
+        ...wirelessToSysconfig(connection.wireless)
     };
 };
 
@@ -86,6 +88,35 @@ const bondToSysconfig = (bond) => {
         BONDING_MASTER: 'yes',
         BONDING_MODULE_OPTS: `mode=${bond.mode} ${bond.options}`,
         ...interfaces
+    };
+};
+
+const wirelessAuthToSysconfig = (wireless) => {
+    const attrsAuthMode = {
+        [wirelessAuthMode.WPA_PSK]: {
+            WIRELESS_WPA_PSK: wireless.password
+        },
+        [wirelessAuthMode.WPA_EAP]: {
+            WIRELESS_EAP_MODE: wireless.eapMode,
+            WIRELESS_EAP_AUTH: wireless.eapAuth,
+            WIRELESS_WPA_PASSWORD: wireless.password
+        }
+    };
+
+    return attrsAuthMode[wireless.authMode];
+};
+
+const wirelessToSysconfig = (wireless) => {
+    if (wireless === undefined) return {};
+
+    const authAttributes = wirelessAuthToSysconfig(wireless);
+
+    return {
+        WIRELESS_AP_SCANMODE: '1',
+        WIRELESS_AUTH_MODE: wireless.authMode,
+        WIRELESS_ESSID: wireless.essid,
+        WIRELESS_MODE: wireless.mode,
+        ...authAttributes
     };
 };
 

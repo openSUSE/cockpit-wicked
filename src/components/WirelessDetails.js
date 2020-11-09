@@ -30,28 +30,27 @@ const WirelessDetails = ({ iface, connection }) => {
     const wireless = connection ? connection.wireless : undefined;
 
     const renderLinkDetails = () => {
-      return (
-        <ul>
-          <li>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("ESSID: ")}{wireless.essid}</a>
-          </li>
-          <li>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("Mode: ")}{wireless.mode}</a>
-          </li>
-          <li>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("Auth Mode: ")}{wireless.authMode}</a>
-          </li>
+        return (
+            <ul>
+                <li>
+                    <a href="#" onClick={() => setFormOpen(true)}>{_("ESSID: ")}{wireless.essid}</a>
+                </li>
+                <li>
+                    <a href="#" onClick={() => setFormOpen(true)}>{_("Mode: ")}{wireless.mode}</a>
+                </li>
+                <li>
+                    <a href="#" onClick={() => setFormOpen(true)}>{_("Auth Mode: ")}{wireless.authMode}</a>
+                </li>
 
-        </ul>
-      )
-    }
+            </ul>
+        );
+    };
 
     return (
         <>
             { wireless
-              ? renderLinkDetails()
-              : <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
-            }
+                ? renderLinkDetails()
+                : <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>}
             { isFormOpen && <WirelessForm isOpen={isFormOpen} iface={iface} connection={connection} onClose={() => setFormOpen(false)} /> }
         </>
     );

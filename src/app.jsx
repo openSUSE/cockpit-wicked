@@ -38,7 +38,7 @@ export const Application = () => {
     return (
         <NetworkProvider>
             <Page id="network-configuration">
-                <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                <Tabs mountOnEnter activeKey={activeTabKey} onSelect={handleTabClick}>
                     <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
                         <InterfacesTab />
                     </Tab>

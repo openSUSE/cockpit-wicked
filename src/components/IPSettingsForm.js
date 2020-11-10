@@ -138,22 +138,29 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
 
         if (bootProto === bootProtocol.STATIC && sanitizedAddresses.length === 0) {
             result = false;
-            errors.push(
-                format(
+            errors.push({
+                key: 'static-address-required',
+                message: format(
                     _('At least one address must be provided when using the "$bootProto" boot protocol'),
                     { bootProto: bootProtocol.label(bootProtocol.STATIC) }
                 )
-            );
+            });
         }
 
         if (findInvalidIP(sanitizedAddresses)) {
             result = false;
-            errors.push(_("There are invalid IPs"));
+            errors.push({
+                key: 'invalid-ips',
+                message: _("There are invalid IPs")
+            });
         }
 
         if (findRepeatedLabel(sanitizedAddresses)) {
             result = false;
-            errors.push(_("There are repeated labels"));
+            errors.push({
+                key: 'repeated-lables',
+                message: _("There are repeated labels")
+            });
         }
 
         setErrorMessages(errors);
@@ -213,7 +220,7 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
               aria-live="polite"
               title={_("Data is not valid, please check it")}
             >
-                {errorMessages.map(error => <p>{error}</p>)}
+                {errorMessages.map(({ key, message }) => <p key={key}>{message}</p>)}
             </Alert>
         );
     };

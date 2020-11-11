@@ -165,8 +165,8 @@ class SysconfigParser {
      */
     stringify(lines) {
         const textLines = lines.reduce((all, line) => {
-            if (line.comment) {
-                return [ ...all, line.comment ];
+            if (line.comment !== undefined) {
+                return [...all, line.comment];
             } else {
                 const { key, value, commented } = line;
                 const newLine = `${key}="${value}"`;
@@ -210,17 +210,82 @@ class SysconfigParser {
     }
 }
 
-/**
- * Class to handle an `ifcfg-[name]` configuration file
- */
-class IfcfgFile {
+class SysconfigFile {
     /**
-     * @param {string} Interface's name
+     * @param {string} path - File path
      */
     constructor(path) {
         this.path = path;
+        this.data = [];
     }
 
+    read() {
+        const parser = new SysconfigParser();
+        const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
+        return new Promise((resolve, reject) => {
+            file.read()
+                .then(content => {
+                    this.data = content;
+                    resolve(this);
+                }).catch(reject);
+        });
+    }
+
+    /**
+     * Get the value for a given variable
+     *
+     * @param {string} key - Variable name
+     * @return {string|undefined} - Variable value or undefined if not found
+     */
+    get(key) {
+        const line = this.data.find(l => l.key === key);
+        return (line && !line.commented) ? line.value : undefined;
+    }
+
+    /**
+     * Set the value for a given variable
+     *
+     * @param {string} key - Variable name
+     * @param {string} value - Value to assign to the variable
+     */
+    set(key, value) {
+        const line = this.data.find(l => l.key === key);
+
+        if (!line && value) {
+            this.data.push({ key, value, commented: false });
+        } else if (line && value) {
+            line.value = value;
+            line.commented = false;
+        } else if (line && !value) {
+            line.commented = true;
+        }
+    }
+
+    /**
+     * Set values for multiple variables
+     *
+     * @param {Object<String,String>} values - Set of variables names and values.
+     *   Values are indexed by its variable name.
+     */
+    update(values) {
+        Object.entries(values).forEach(([k, v]) => this.set(k, v));
+    }
+
+    /**
+     * Writes current values to the file
+     *
+     * @return {Promise}
+     */
+    write() {
+        const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
+        return file.replace(this.data);
+    }
+}
+
+/**
+ * Class to handle an `ifcfg-[name]` configuration file
+ */
+class IfcfgFile extends SysconfigFile {
     /**
      * Update file content using the data from the given connection
      *
@@ -228,9 +293,7 @@ class IfcfgFile {
      * @return {Promise<string,object>} Promise from the cockpit.file `replace()` function
      */
     update(connection) {
-        const sysconfigData = connectionToSysconfig(connection);
-        const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
-        return file.replace(sysconfigData);
+        super.update(connectionToSysconfig(connection));
     }
 }
 
@@ -322,5 +385,6 @@ class IfrouteFile {
 export {
     IfcfgFile,
     IfrouteFile,
-    SysconfigParser
+    SysconfigParser,
+    SysconfigFile
 };

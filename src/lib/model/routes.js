@@ -53,7 +53,7 @@ let routeIndex = 0;
 export const createRoute = ({ isDefault, destination, gateway, device, options } = {}) => {
     return {
         id: routeIndex++,
-        isDefault,
+        isDefault: isDefault || destination === "default",
         destination,
         gateway,
         device,

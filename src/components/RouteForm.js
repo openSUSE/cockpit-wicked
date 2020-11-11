@@ -28,7 +28,7 @@ const _ = cockpit.gettext;
 
 const RouteForm = ({ isOpen, onClose, route }) => {
     const isEditing = !!route;
-    const [isDefault, setIsDefault] = useState(route?.isDefault);
+    const [isDefault, setIsDefault] = useState(route?.isDefault || false);
     const [gateway, setGateway] = useState(route?.gateway || "");
     const [destination, setDestination] = useState(route?.destination || "");
     const [device, setDevice] = useState(route?.device || "");
@@ -54,7 +54,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const buildRouteData = () => {
         return {
             isDefault,
-            destination: isDefault ? "" : destination,
+            destination: isDefault ? "default" : destination,
             gateway,
             device,
             options

@@ -144,18 +144,69 @@ const vlanToSysconfig = (vlan) => {
 };
 
 /**
+ * @typedef {Object} SysconfigFileLine
+ * @property {string} comment - Comment content. The whole line is considered a comment.
+ * @property {string} key - Variable name
+ * @property {object} value - Variable value
+ * @property {boolean} commented - Whether the line is commented (used only when key/value are present)
+ */
+
+/**
  * Parser to read/write the configuration data
  *
  * @todo Add support for reading the content.
  */
 class SysconfigParser {
-    stringify(data) {
-        return Object
-                .entries(data)
-                .filter(([k, v]) => v !== undefined)
-                .map(([k, v]) => `${k}="${v}"`)
-                .join("\n")
-                .concat("\n");
+    /**
+     * Returns the text representation of the file content
+     *
+     * @param {Array<SysconfigFileLine>} lines - List of objects representing each line
+     * @see parse
+     */
+    stringify(lines) {
+        const textLines = lines.reduce((all, line) => {
+            if (line.comment) {
+                return [ ...all, line.comment ];
+            } else {
+                const { key, value, commented } = line;
+                const newLine = `${key}="${value}"`;
+                return [ ...all, commented ? `# ${newLine}` : newLine ];
+            }
+        }, []);
+        return textLines.join("\n").concat("\n");
+    }
+
+
+    /**
+     * Returns the content of the file as an array of objects
+     *
+     * The object is different depending on the content. If it is a comment,
+     * it only has a 'comment' key with the content as value:
+     *
+     *   { comment: "## Type: integer" }
+     *
+     * If it is a key/value pair, the object contains a pair of 'key'
+     * and 'value' keys.
+     *
+     *   { key: "AUTO6_WAIT_AT_BOOT", value: "" }
+     *
+     * @param {string} text - File content
+     * @return {Array<SysconfigFileLine>} An array of objects describing each line
+     */
+    parse(text) {
+        const keyValueLine = new RegExp(/^\ *(#)?\ *([A-Za-z_0-9]+)\ *=\ *"?([^"]+)"?/);
+
+        const lines = text.split(/\r?\n/);
+        return lines.reduce((content, line) => {
+            const matches = line.match(keyValueLine);
+            if (matches === null) {
+                return [ ...content, { comment: line } ];
+            } else {
+                return [ ...content, {
+                    key: matches[2], value: matches[3], commented: (matches[1] === '#')
+                } ];
+            }
+        }, []);
     }
 }
 

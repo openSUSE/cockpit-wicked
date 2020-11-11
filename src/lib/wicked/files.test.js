@@ -113,27 +113,31 @@ describe('IfcfgFile', () => {
 
 describe('SysconfigParser', () => {
     const parser = new SysconfigParser();
-    const data = {
-        BOOTPROTO: 'dhcp',
-        NAME: 'eth0'
-    };
+    const lines = [
+        { key: 'BOOTPROTO', value: 'dhcp' },
+        { comment: '# Infer the name from the file name' },
+        { key: 'NAME', value: 'eth0', commented: true },
+    ]
 
     describe('#stringify', () => {
         it('returns a string in sysconfig place', () => {
-            expect(parser.stringify(data)).toEqual(
-                "BOOTPROTO=\"dhcp\"\nNAME=\"eth0\"\n"
+            expect(parser.stringify(lines)).toEqual(
+                "BOOTPROTO=\"dhcp\"\n# Infer the name from the file name\n# NAME=\"eth0\"\n"
             );
         });
-
-        describe('when some value is undefined', () => {
-            const data = {
-                BOOTPROTO: undefined,
-                NAME: 'eth0'
-            };
-
-            it('does not include in the file', () => {
-                expect(parser.stringify(data)).toEqual("NAME=\"eth0\"\n");
-            });
-        });
     });
+
+    describe('#parse', () => {
+        let content = '## Type: boolean\n## Default: "no"\n\n WICKED_DEBUG="yes"\n#WICKED_LOG_LEVEL=info';
+
+        it('returns an array containing one object for each line', () => {
+            expect(parser.parse(content)).toEqual([
+                { comment: '## Type: boolean' },
+                { comment: '## Default: "no"' },
+                { comment: '' },
+                { key: 'WICKED_DEBUG', value: 'yes', commented: false },
+                { key: 'WICKED_LOG_LEVEL', value: 'info', commented: true }
+            ]);
+        });
+    })
 });

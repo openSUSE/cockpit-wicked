@@ -65,6 +65,10 @@ class NetworkClient {
         return this.adapter.addConnection(connection);
     }
 
+    removeConnection(connection) {
+        return this.adapter.removeConnection(connection);
+    }
+
     /**
      * Update the given connection
      *

@@ -120,6 +120,20 @@ class WickedAdapter {
     }
 
     /**
+     * Remove a given connection from Wicked
+     *
+     * @param {Connection} connection - Connection to be removed
+     * @return {Promise} Result of the operation
+     */
+    removeConnection(connection) {
+        return new Promise((resolve, reject) => {
+            this.deleteConnectionConfig(connection)
+                    .then(() => this.reloadConnection(connection.name))
+                    .catch(reject);
+        });
+    }
+
+    /**
      * Update the configuration of a connection
      *
      * @param {Connection} connection - Connection to update
@@ -180,6 +194,18 @@ class WickedAdapter {
         const file = new IfcfgFile(filePath);
         file.update(connection);
         return file.write();
+    }
+
+    /**
+     * Delete the configuration file of a connection
+     *
+     * @param {Connection} connection - Connection to update
+     * @return {Promise} Result of the operation
+     */
+    deleteConnectionConfig(connection) {
+        const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
+        const file = new IfcfgFile(filePath);
+        return file.remove();
     }
 
     /**

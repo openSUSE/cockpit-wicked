@@ -35,6 +35,7 @@ const SET_CONNECTIONS = 'set_connections';
 const SET_ROUTES = 'set_routes';
 const UPDATE_ROUTES = 'update_routes';
 const ADD_CONNECTION = 'add_connection';
+const DELETE_CONNECTION = 'delete_connection';
 const UPDATE_CONNECTION = 'update_connection';
 const UPDATE_INTERFACE = 'update_interface';
 
@@ -44,6 +45,7 @@ const actionTypes = {
     SET_ROUTES,
     UPDATE_ROUTES,
     ADD_CONNECTION,
+    DELETE_CONNECTION,
     UPDATE_CONNECTION,
     UPDATE_INTERFACE
 };
@@ -88,6 +90,14 @@ function networkReducer(state, action) {
             interfaces: { ...interfaces, [iface.id]: iface },
             connections: { ...connections, [conn.id]: conn }
         };
+    }
+
+    case DELETE_CONNECTION: {
+        const { connections } = state;
+        const conn = action.payload;
+        const { [conn.id]: _value, ...nextConnections } = connections;
+
+        return { ...state, connections: nextConnections };
     }
 
     case UPDATE_CONNECTION: {
@@ -194,6 +204,12 @@ async function updateConnection(dispatch, connection, changes) {
     return await networkClient().updateConnection(updatedConn);
 }
 
+async function deleteConnection(dispatch, connection) {
+    dispatch({ type: DELETE_CONNECTION, payload: connection });
+
+    return await networkClient().removeConnection(connection);
+}
+
 // FIXME
 function deleteRoute(dispatch, routes, routeId) {
     const nextRoutes = routes.filter((r) => r.id !== routeId);
@@ -278,6 +294,7 @@ export {
     useNetworkDispatch,
     actionTypes,
     addConnection,
+    deleteConnection,
     updateConnection,
     fetchInterfaces,
     fetchConnections,

@@ -20,7 +20,6 @@
  */
 
 import React, { useState } from 'react';
-import { Button } from '@patternfly/react-core';
 import IPSettingsForm from './IPSettingsForm';
 import bootProtocol from '../lib/model/bootProtocol';
 import cockpit from 'cockpit';

@@ -170,12 +170,11 @@ class SysconfigParser {
             } else {
                 const { key, value, commented } = line;
                 const newLine = `${key}="${value}"`;
-                return [ ...all, commented ? `# ${newLine}` : newLine ];
+                return [...all, commented ? `# ${newLine}` : newLine];
             }
         }, []);
         return textLines.join("\n").concat("\n");
     }
-
 
     /**
      * Returns the content of the file as an array of objects
@@ -194,17 +193,17 @@ class SysconfigParser {
      * @return {Array<SysconfigFileLine>} An array of objects describing each line
      */
     parse(text) {
-        const keyValueLine = new RegExp(/^\ *(#)?\ *([A-Za-z_0-9]+)\ *=\ *"?([^"]+)"?/);
+        const keyValueLine = new RegExp(/^ *(#)? *([A-Za-z_0-9]+) *= *"?([^"]+)"?/);
 
         const lines = text.split(/\r?\n/);
         return lines.reduce((content, line) => {
             const matches = line.match(keyValueLine);
             if (matches === null) {
-                return [ ...content, { comment: line } ];
+                return [...content, { comment: line }];
             } else {
-                return [ ...content, {
+                return [...content, {
                     key: matches[2], value: matches[3], commented: (matches[1] === '#')
-                } ];
+                }];
             }
         }, []);
     }
@@ -226,14 +225,14 @@ class SysconfigFile {
     }
 
     read() {
-        const parser = new SysconfigParser();
         const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
         return new Promise((resolve, reject) => {
             file.read()
-                .then(content => {
-                    this.data = content;
-                    resolve(this);
-                }).catch(reject);
+                    .then(content => {
+                        this.data = content;
+                        resolve(this);
+                    })
+                    .catch(reject);
         });
     }
 

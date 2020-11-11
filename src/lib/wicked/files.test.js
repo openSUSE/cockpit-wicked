@@ -109,7 +109,7 @@ describe('SysconfigParser', () => {
         { key: 'BOOTPROTO', value: 'dhcp' },
         { comment: '# Infer the name from the file name' },
         { key: 'NAME', value: 'eth0', commented: true },
-    ]
+    ];
 
     describe('#stringify', () => {
         it('returns a string in sysconfig place', () => {
@@ -120,7 +120,7 @@ describe('SysconfigParser', () => {
     });
 
     describe('#parse', () => {
-        let content = '## Type: boolean\n## Default: "no"\n\n WICKED_DEBUG="yes"\n#WICKED_LOG_LEVEL=info';
+        const content = '## Type: boolean\n## Default: "no"\n\n WICKED_DEBUG="yes"\n#WICKED_LOG_LEVEL=info';
 
         it('returns an array containing one object for each line', () => {
             expect(parser.parse(content)).toEqual([
@@ -131,7 +131,7 @@ describe('SysconfigParser', () => {
                 { key: 'WICKED_LOG_LEVEL', value: 'info', commented: true }
             ]);
         });
-    })
+    });
 });
 
 describe('SysconfigFile', () => {
@@ -143,7 +143,7 @@ describe('SysconfigFile', () => {
     const readFn = () => {
         return new Promise((resolve, reject) => {
             process.nextTick(() => {
-                resolve(fileContent)
+                resolve(fileContent);
             });
         });
     };
@@ -198,7 +198,7 @@ describe('SysconfigFile', () => {
             expect(file.get('NAME')).toEqual('eth0');
             expect(file.get('BOOTPROTO')).toBeUndefined();
             expect(file.get('STARTMODE')).toEqual('ifplugd');
-        })
+        });
     });
 
     describe('write', () => {
@@ -217,5 +217,5 @@ describe('SysconfigFile', () => {
                 { key: 'STARTMODE', value: 'ifplugd', commented: false }
             ]);
         });
-    })
+    });
 });

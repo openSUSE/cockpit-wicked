@@ -150,7 +150,7 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
         if (findRepeatedLabel(sanitizedAddresses)) {
             result = false;
             errors.push({
-                key: 'repeated-lables',
+                key: 'repeated-labels',
                 message: _("There are repeated labels")
             });
         }

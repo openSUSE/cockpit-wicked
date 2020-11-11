@@ -96,7 +96,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
         };
     };
 
-    const isInComplete = () => {
+    const isIncomplete = () => {
         if (!isDefault && destination.length == 0) return true;
         if (gateway.length == 0) return true;
 
@@ -151,8 +151,8 @@ const RouteForm = ({ isOpen, onClose, route }) => {
             onCancel={onClose}
             onSubmit={addOrUpdateRoute}
             onSubmitLabel={isEditing ? _("Change") : _("Add")}
+            onSubmitDisable={isIncomplete()}
         >
-            onSubmitDisable={isInComplete()}
             {renderErrors()}
 
             <FormGroup

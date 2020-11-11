@@ -22,7 +22,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, actionTypes, addRoute, updateRoute } from '../context/network';
+import { useNetworkDispatch, useNetworkState, addRoute, updateRoute } from '../context/network';
 
 const _ = cockpit.gettext;
 

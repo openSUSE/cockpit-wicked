@@ -20,9 +20,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
+import { Alert, Button, Checkbox, Form, FormGroup, Modal, ModalVariant, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
 import { useNetworkDispatch, useNetworkState, addRoute, updateRoute } from '../context/network';
+import { isValidIP } from '../lib/utils';
 
 const _ = cockpit.gettext;
 
@@ -33,6 +34,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const [destination, setDestination] = useState(route?.destination || "");
     const [device, setDevice] = useState(route?.device || "");
     const [options, setOptions] = useState(route?.options || "");
+    const [errors, setErrors] = useState([]);
     const { interfaces, routes } = useNetworkState();
     const [candidateInterfaces, setCandidateInterfaces] = useState([]);
     const dispatch = useNetworkDispatch();
@@ -41,7 +43,39 @@ const RouteForm = ({ isOpen, onClose, route }) => {
         setCandidateInterfaces([{ name: "" }, ...Object.values(interfaces)]);
     }, [interfaces]);
 
+    /**
+     * Performs the form validations
+     *
+     * To be considered a valid form both, destination and gateway must be valid IPs values. There
+     * is only an exception for destination, which can be "default" too.
+     *
+     * @return {boolean} true when route is valid; false otherwise
+     */
+    const validate = () => {
+        const errors = [];
+
+        if (!isDefault && !isValidIP(destination)) {
+            errors.push({
+                key: 'invalid-destination',
+                message: _("Destination is not valid.")
+            });
+        }
+
+        if (!isValidIP(gateway)) {
+            errors.push({
+                key: 'invalid-gateway',
+                message: _("Gateway is not valid.")
+            });
+        }
+
+        setErrors(errors);
+
+        return errors.length === 0;
+    };
+
     const addOrUpdateRoute = () => {
+        if (!validate()) return;
+
         if (isEditing) {
             updateRoute(dispatch, routes, route.id, buildRouteData());
         } else {
@@ -68,6 +102,24 @@ const RouteForm = ({ isOpen, onClose, route }) => {
         return false;
     };
 
+    /**
+     * Renders error messages in an Patternfly/Alert component, if any
+     */
+    const renderErrors = () => {
+        if (errors.length === 0) return null;
+
+        return (
+            <Alert
+              isInline
+              variant="danger"
+              aria-live="polite"
+              title={_("Route is not valid, please check it.")}
+            >
+                {errors.map(({ key, message }) => <p key={key}>{message}</p>)}
+            </Alert>
+        );
+    };
+
     return (
         <Modal
             variant={ModalVariant.small}
@@ -84,6 +136,8 @@ const RouteForm = ({ isOpen, onClose, route }) => {
             ]}
         >
             <Form>
+                {renderErrors()}
+
                 <FormGroup
                     label={_("Default route")}
                     fieldId="isDefault"

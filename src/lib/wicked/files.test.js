@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import { IfcfgFile, SysconfigParser } from './files';
+import { IfcfgFile, SysconfigParser, SysconfigFile } from './files';
 import model from '../model';
 import interfaceType from '../model/interfaceType';
 import bootProtocol from '../model/bootProtocol';
@@ -42,11 +42,9 @@ describe('IfcfgFile', () => {
 
         it('updates file content', () => {
             ifcfg.update(conn);
-            expect(replaceFn).toHaveBeenCalledWith({
-                BOOTPROTO: 'dhcp',
-                NAME: 'eth0',
-                STARTMODE: 'auto'
-            });
+            expect(ifcfg.get('BOOTPROTO')).toEqual('dhcp');
+            expect(ifcfg.get('NAME')).toEqual('eth0');
+            expect(ifcfg.get('STARTMODE')).toEqual('auto');
         });
 
         describe('when it contains multiple addresses', () => {
@@ -67,14 +65,12 @@ describe('IfcfgFile', () => {
 
             it('includes all the addresses and their labels', () => {
                 ifcfg.update(conn);
-                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
-                    BOOTPROTO: 'dhcp',
-                    IPADDR: '192.168.1.100/24',
-                    IPADDR_1: '10.0.0.1/10',
-                    LABEL_1: 'private',
-                    IPADDR_2: '10.0.0.2/10',
-                    IPADDR_3: '2001:0db4:95b3:0000:0000:8a2e:0370:9335'
-                }));
+                expect(ifcfg.get('BOOTPROTO')).toEqual('dhcp');
+                expect(ifcfg.get('IPADDR')).toEqual('192.168.1.100/24');
+                expect(ifcfg.get('IPADDR_1')).toEqual('10.0.0.1/10');
+                expect(ifcfg.get('LABEL_1')).toEqual('private');
+                expect(ifcfg.get('IPADDR_2')).toEqual('10.0.0.2/10');
+                expect(ifcfg.get('IPADDR_3')).toEqual('2001:0db4:95b3:0000:0000:8a2e:0370:9335');
             });
         });
 
@@ -85,10 +81,8 @@ describe('IfcfgFile', () => {
 
             it('includes bridge settings', () => {
                 ifcfg.update(conn);
-                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
-                    BRIDGE: 'yes',
-                    BRIDGE_PORTS: 'eth0 eth1'
-                }));
+                expect(ifcfg.get('BRIDGE')).toEqual('yes');
+                expect(ifcfg.get('BRIDGE_PORTS')).toEqual('eth0 eth1');
             });
         });
 
@@ -100,12 +94,10 @@ describe('IfcfgFile', () => {
 
             it('includes bonding settings', () => {
                 ifcfg.update(conn);
-                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
-                    BONDING_MASTER: 'yes',
-                    BONDING_SLAVE_0: 'eth0',
-                    BONDING_SLAVE_1: 'eth1',
-                    BONDING_MODULE_OPTS: 'mode=active-backup some-option'
-                }));
+                expect(ifcfg.get('BONDING_MASTER')).toEqual('yes');
+                expect(ifcfg.get('BONDING_SLAVE_0')).toEqual('eth0');
+                expect(ifcfg.get('BONDING_SLAVE_1')).toEqual('eth1');
+                expect(ifcfg.get('BONDING_MODULE_OPTS')).toEqual('mode=active-backup some-option');
             });
         });
     });
@@ -113,27 +105,117 @@ describe('IfcfgFile', () => {
 
 describe('SysconfigParser', () => {
     const parser = new SysconfigParser();
-    const data = {
-        BOOTPROTO: 'dhcp',
-        NAME: 'eth0'
-    };
+    const lines = [
+        { key: 'BOOTPROTO', value: 'dhcp' },
+        { comment: '# Infer the name from the file name' },
+        { key: 'NAME', value: 'eth0', commented: true },
+    ];
 
     describe('#stringify', () => {
         it('returns a string in sysconfig place', () => {
-            expect(parser.stringify(data)).toEqual(
-                "BOOTPROTO=\"dhcp\"\nNAME=\"eth0\"\n"
+            expect(parser.stringify(lines)).toEqual(
+                "BOOTPROTO=\"dhcp\"\n# Infer the name from the file name\n# NAME=\"eth0\"\n"
             );
         });
+    });
 
-        describe('when some value is undefined', () => {
-            const data = {
-                BOOTPROTO: undefined,
-                NAME: 'eth0'
-            };
+    describe('#parse', () => {
+        const content = '## Type: boolean\n## Default: "no"\n\n WICKED_DEBUG="yes"\n#WICKED_LOG_LEVEL=info';
 
-            it('does not include in the file', () => {
-                expect(parser.stringify(data)).toEqual("NAME=\"eth0\"\n");
+        it('returns an array containing one object for each line', () => {
+            expect(parser.parse(content)).toEqual([
+                { comment: '## Type: boolean' },
+                { comment: '## Default: "no"' },
+                { comment: '' },
+                { key: 'WICKED_DEBUG', value: 'yes', commented: false },
+                { key: 'WICKED_LOG_LEVEL', value: 'info', commented: true }
+            ]);
+        });
+    });
+});
+
+describe('SysconfigFile', () => {
+    const fileContent = [
+        { key: 'NAME', value: 'eth0', commented: true },
+        { key: 'BOOTPROTO', value: 'dhcp', commented: false }
+    ];
+
+    const readFn = () => {
+        return new Promise((resolve, reject) => {
+            process.nextTick(() => {
+                resolve(fileContent);
             });
+        });
+    };
+
+    const replaceFn = jest.fn();
+
+    const file = new SysconfigFile('/foo/bar');
+
+    describe('get', () => {
+        beforeAll(() => {
+            cockpit.file = jest.fn(() => {
+                return { read: readFn, replace: replaceFn };
+            });
+        });
+
+        it('returns the value for the given key', async () => {
+            await file.read();
+            expect(file.get('NAME')).toBeUndefined();
+            expect(file.get('BOOTPROTO')).toEqual('dhcp');
+            expect(file.get('STARTMODE')).toBeUndefined();
+        });
+    });
+
+    describe('set', () => {
+        beforeAll(() => {
+            cockpit.file = jest.fn(() => {
+                return { read: readFn, replace: replaceFn };
+            });
+        });
+
+        it('sets the value for a given key', async () => {
+            await file.read();
+            file.set('NAME', 'eth0');
+            file.set('BOOTPROTO', undefined);
+            file.set('STARTMODE', 'ifplugd');
+
+            expect(file.get('NAME')).toEqual('eth0');
+            expect(file.get('BOOTPROTO')).toBeUndefined();
+            expect(file.get('STARTMODE')).toEqual('ifplugd');
+        });
+    });
+
+    describe('update', () => {
+        it('updates multiple values', async () => {
+            await file.read();
+            file.update({
+                NAME: 'eth0',
+                BOOTPROTO: undefined,
+                STARTMODE: 'ifplugd'
+            });
+
+            expect(file.get('NAME')).toEqual('eth0');
+            expect(file.get('BOOTPROTO')).toBeUndefined();
+            expect(file.get('STARTMODE')).toEqual('ifplugd');
+        });
+    });
+
+    describe('write', () => {
+        it('writes the values to the file', async () => {
+            await file.read();
+            file.update({
+                NAME: 'eth0',
+                BOOTPROTO: undefined,
+                STARTMODE: 'ifplugd'
+            });
+            file.write();
+
+            expect(replaceFn).toHaveBeenCalledWith([
+                { key: 'NAME', value: 'eth0', commented: false },
+                { key: 'BOOTPROTO', value: 'dhcp', commented: true },
+                { key: 'STARTMODE', value: 'ifplugd', commented: false }
+            ]);
         });
     });
 });

@@ -144,32 +144,153 @@ const vlanToSysconfig = (vlan) => {
 };
 
 /**
+ * @typedef {Object} SysconfigFileLine
+ * @property {string} comment - Comment content. The whole line is considered a comment.
+ * @property {string} key - Variable name
+ * @property {object} value - Variable value
+ * @property {boolean} commented - Whether the line is commented (used only when key/value are present)
+ */
+
+/**
  * Parser to read/write the configuration data
  *
  * @todo Add support for reading the content.
  */
 class SysconfigParser {
-    stringify(data) {
-        return Object
-                .entries(data)
-                .filter(([k, v]) => v !== undefined)
-                .map(([k, v]) => `${k}="${v}"`)
-                .join("\n")
-                .concat("\n");
+    /**
+     * Returns the text representation of the file content
+     *
+     * @param {Array<SysconfigFileLine>} lines - List of objects representing each line
+     * @see parse
+     */
+    stringify(lines) {
+        const textLines = lines.reduce((all, line) => {
+            if (line.comment !== undefined) {
+                return [...all, line.comment];
+            } else {
+                const { key, value, commented } = line;
+                const newLine = `${key}="${value}"`;
+                return [...all, commented ? `# ${newLine}` : newLine];
+            }
+        }, []);
+        return textLines.join("\n").concat("\n");
+    }
+
+    /**
+     * Returns the content of the file as an array of objects
+     *
+     * The object is different depending on the content. If it is a comment,
+     * it only has a 'comment' key with the content as value:
+     *
+     *   { comment: "## Type: integer" }
+     *
+     * If it is a key/value pair, the object contains a pair of 'key'
+     * and 'value' keys.
+     *
+     *   { key: "AUTO6_WAIT_AT_BOOT", value: "" }
+     *
+     * @param {string} text - File content
+     * @return {Array<SysconfigFileLine>} An array of objects describing each line
+     */
+    parse(text) {
+        const keyValueLine = new RegExp(/^ *(#)? *([A-Za-z_0-9]+) *= *"?([^"]+)"?/);
+
+        const lines = text.split(/\r?\n/);
+        return lines.reduce((content, line) => {
+            const matches = line.match(keyValueLine);
+            if (matches === null) {
+                return [...content, { comment: line }];
+            } else {
+                return [...content, {
+                    key: matches[2], value: matches[3], commented: (matches[1] === '#')
+                }];
+            }
+        }, []);
+    }
+}
+
+/**
+ * Class that represents a sysconfig configuration file
+ *
+ * This is a quite limited class that does not do any conversion type and does not know
+ * about arrays (like IPADDR_1, IPADDR_2, etc.).
+ */
+class SysconfigFile {
+    /**
+     * @param {string} path - File path
+     */
+    constructor(path) {
+        this.path = path;
+        this.data = [];
+    }
+
+    read() {
+        const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
+        return new Promise((resolve, reject) => {
+            file.read()
+                    .then(content => {
+                        this.data = content;
+                        resolve(this);
+                    })
+                    .catch(reject);
+        });
+    }
+
+    /**
+     * Get the value for a given variable
+     *
+     * @param {string} key - Variable name
+     * @return {string|undefined} - Variable value or undefined if not found
+     */
+    get(key) {
+        const line = this.data.find(l => l.key === key);
+        return (line && !line.commented) ? line.value : undefined;
+    }
+
+    /**
+     * Set the value for a given variable
+     *
+     * @param {string} key - Variable name
+     * @param {string} value - Value to assign to the variable
+     */
+    set(key, value) {
+        const line = this.data.find(l => l.key === key);
+
+        if (!line && value) {
+            this.data.push({ key, value, commented: false });
+        } else if (line && value) {
+            line.value = value;
+            line.commented = false;
+        } else if (line && !value) {
+            line.commented = true;
+        }
+    }
+
+    /**
+     * Set values for multiple variables
+     *
+     * @param {Object<String,String>} values - Set of variables names and values.
+     *   Values are indexed by its variable name.
+     */
+    update(values) {
+        Object.entries(values).forEach(([k, v]) => this.set(k, v));
+    }
+
+    /**
+     * Writes current values to the file
+     *
+     * @return {Promise}
+     */
+    write() {
+        const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
+        return file.replace(this.data);
     }
 }
 
 /**
  * Class to handle an `ifcfg-[name]` configuration file
  */
-class IfcfgFile {
-    /**
-     * @param {string} Interface's name
-     */
-    constructor(path) {
-        this.path = path;
-    }
-
+class IfcfgFile extends SysconfigFile {
     /**
      * Update file content using the data from the given connection
      *
@@ -177,9 +298,7 @@ class IfcfgFile {
      * @return {Promise<string,object>} Promise from the cockpit.file `replace()` function
      */
     update(connection) {
-        const sysconfigData = connectionToSysconfig(connection);
-        const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
-        return file.replace(sysconfigData);
+        super.update(connectionToSysconfig(connection));
     }
 }
 
@@ -271,5 +390,6 @@ class IfrouteFile {
 export {
     IfcfgFile,
     IfrouteFile,
-    SysconfigParser
+    SysconfigParser,
+    SysconfigFile
 };

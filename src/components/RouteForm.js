@@ -97,8 +97,8 @@ const RouteForm = ({ isOpen, onClose, route }) => {
 
                 { !isDefault &&
                     <FormGroup
+                        isRequired
                         label={_("Destination")}
-                        isRequired={!isDefault}
                         fieldId="destination"
                         helperText={_("Destination")}
                     >
@@ -111,8 +111,8 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                     </FormGroup>}
 
                 <FormGroup
-                    label={_("Gateway")}
                     isRequired
+                    label={_("Gateway")}
                     fieldId="gateway"
                 >
                     <TextInput
@@ -125,7 +125,6 @@ const RouteForm = ({ isOpen, onClose, route }) => {
 
                 <FormGroup
                     label={_("Device")}
-                    isRequired
                     fieldId="device"
                 >
                     <FormSelect value={device} onChange={setDevice} id="device">
@@ -134,13 +133,12 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                         ))}
                     </FormSelect>
                 </FormGroup>
+
                 <FormGroup
                     label={_("Options")}
-                    isRequired
                     fieldId="options"
                 >
                     <TextInput
-                        isRequired
                         id="options"
                         value={options}
                         onChange={setOptions}

@@ -20,21 +20,18 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import cockpit from 'cockpit';
 import {
-    Button,
     Checkbox,
-    Form,
     FormGroup,
     FormSelect,
     FormSelectOption,
-    Modal,
-    ModalVariant,
     TextInput
 } from '@patternfly/react-core';
-import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
 import interfaceType from '../lib/model/interfaceType';
 import bondingModes from '../lib/model/bondingMode';
+import ModalForm from './ModalForm';
 
 const _ = cockpit.gettext;
 
@@ -92,75 +89,68 @@ const BondForm = ({ isOpen, onClose, connection }) => {
     };
 
     return (
-        <Modal
-            variant={ModalVariant.small}
+        <ModalForm
+            caption={connection?.name}
             title={isEditing ? _("Edit Bond") : _("Add Bond")}
             isOpen={isOpen}
-            onClose={onClose}
-            actions={[
-                <Button key="confirm" variant="primary" onClick={addOrUpdateConnection} isDisabled={isIncomplete()}>
-                    {isEditing ? _("Change") : _("Add")}
-                </Button>,
-                <Button key="cancel" variant="link" onClick={onClose}>
-                    {_("Cancel")}
-                </Button>
-            ]}
+            onCancel={onClose}
+            onSubmit={addOrUpdateConnection}
+            onSubmitDisable={isIncomplete()}
+            onSubmitLabel={isEditing ? _("Change") : _("Add")}
         >
-            <Form>
-                <FormGroup
-                    label={_("Name")}
+            <FormGroup
+                label={_("Name")}
+                isRequired
+                fieldId="interface-name"
+                helperText={_("Please, provide the interface name (e.g., bond0)")}
+            >
+                <TextInput
                     isRequired
-                    fieldId="interface-name"
-                    helperText={_("Please, provide the interface name (e.g., bond0)")}
-                >
-                    <TextInput
-                        isRequired
-                        id="interface-name"
-                        value={name}
-                        onChange={setName}
-                    />
-                </FormGroup>
+                    id="interface-name"
+                    value={name}
+                    onChange={setName}
+                />
+            </FormGroup>
 
-                <FormGroup
-                    label={_("Interfaces")}
-                    isRequired
-                >
-                    {candidateInterfaces.map(({ name }) => (
-                        <Checkbox
-                            label={name}
-                            key={name}
-                            isChecked={selectedInterfaces.includes(name)}
-                            onChange={handleSelectedInterfaces(name)}
-                        />
+            <FormGroup
+                label={_("Interfaces")}
+                isRequired
+            >
+                {candidateInterfaces.map(({ name }) => (
+                    <Checkbox
+                        label={name}
+                        key={name}
+                        isChecked={selectedInterfaces.includes(name)}
+                        onChange={handleSelectedInterfaces(name)}
+                    />
+                ))}
+            </FormGroup>
+
+            <FormGroup
+                label={_("Mode")}
+                isRequired
+                fieldId="bonding-mode"
+            >
+                <FormSelect value={mode} onChange={setMode} id="bonding-mode">
+                    {modeOptions.map((option, index) => (
+                        <FormSelectOption key={index} {...option} />
                     ))}
-                </FormGroup>
+                </FormSelect>
+            </FormGroup>
 
-                <FormGroup
-                    label={_("Mode")}
+            <FormGroup
+                label={_("Options")}
+                fieldId="bond-options"
+                helperText={_("Use this field to provide more options using the key=value format")}
+            >
+                <TextInput
                     isRequired
-                    fieldId="bonding-mode"
-                >
-                    <FormSelect value={mode} onChange={setMode} id="bonding-mode">
-                        {modeOptions.map((option, index) => (
-                            <FormSelectOption key={index} {...option} />
-                        ))}
-                    </FormSelect>
-                </FormGroup>
-
-                <FormGroup
-                    label={_("Options")}
-                    fieldId="bond-options"
-                    helperText={_("Use this field to provide more options using the key=value format")}
-                >
-                    <TextInput
-                        isRequired
-                        id="bond-options"
-                        value={options}
-                        onChange={setOptions}
-                    />
-                </FormGroup>
-            </Form>
-        </Modal>
+                    id="bond-options"
+                    value={options}
+                    onChange={setOptions}
+                />
+            </FormGroup>
+        </ModalForm>
     );
 };
 

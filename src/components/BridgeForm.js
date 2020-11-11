@@ -20,18 +20,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import {
-    Button,
-    Checkbox,
-    Form,
-    FormGroup,
-    Modal,
-    ModalVariant,
-    TextInput
-} from '@patternfly/react-core';
+import { Checkbox, FormGroup, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
 import interfaceType from '../lib/model/interfaceType';
+import ModalForm from './ModalForm';
 
 const _ = cockpit.gettext;
 
@@ -78,50 +71,43 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
     };
 
     return (
-        <Modal
-            variant={ModalVariant.small}
+        <ModalForm
+            caption={connection?.name}
             title={isEditing ? _("Edit Bridge") : _("Add Bridge")}
             isOpen={isOpen}
-            onClose={onClose}
-            actions={[
-                <Button key="confirm" variant="primary" onClick={addOrUpdateConnection} isDisabled={isIncomplete()}>
-                    {isEditing ? _("Change") : _("Add")}
-                </Button>,
-                <Button key="cancel" variant="link" onClick={onClose}>
-                    {_("Cancel")}
-                </Button>
-            ]}
+            onCancel={onClose}
+            onSubmit={addOrUpdateConnection}
+            onSubmitLabel={isEditing ? _("Change") : _("Add")}
+            onSubmitDisable={isIncomplete()}
         >
-            <Form>
-                <FormGroup
-                    label={_("Name")}
+            <FormGroup
+                label={_("Name")}
+                isRequired
+                fieldId="interface-name"
+                helperText={_("Please, provide the interface name (e.g., br0)")}
+            >
+                <TextInput
                     isRequired
-                    fieldId="interface-name"
-                    helperText={_("Please, provide the interface name (e.g., br0)")}
-                >
-                    <TextInput
-                        isRequired
-                        id="interface-name"
-                        value={name}
-                        onChange={setName}
-                    />
-                </FormGroup>
+                    id="interface-name"
+                    value={name}
+                    onChange={setName}
+                />
+            </FormGroup>
 
-                <FormGroup
-                    label={_("Ports")}
-                    isRequired
-                >
-                    {candidatePorts.map(({ name }) => (
-                        <Checkbox
-                            label={name}
-                            key={name}
-                            isChecked={selectedPorts.includes(name)}
-                            onChange={handleSelectedPorts(name)}
-                        />
-                    ))}
-                </FormGroup>
-            </Form>
-        </Modal>
+            <FormGroup
+                label={_("Ports")}
+                isRequired
+            >
+                {candidatePorts.map(({ name }) => (
+                    <Checkbox
+                        label={name}
+                        key={name}
+                        isChecked={selectedPorts.includes(name)}
+                        onChange={handleSelectedPorts(name)}
+                    />
+                ))}
+            </FormGroup>
+        </ModalForm>
     );
 };
 

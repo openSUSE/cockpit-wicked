@@ -20,19 +20,16 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import cockpit from 'cockpit';
 import {
-    Button,
-    Form,
     FormGroup,
     FormSelect,
     FormSelectOption,
-    Modal,
-    ModalVariant,
     TextInput,
 } from '@patternfly/react-core';
-import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
 import interfaceType from '../lib/model/interfaceType';
+import ModalForm from './ModalForm';
 
 const _ = cockpit.gettext;
 
@@ -86,63 +83,57 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
     if (!parentDevice) return null;
 
     return (
-        <Modal
-            variant={ModalVariant.small}
+        <ModalForm
+            caption={connection?.name}
             title={isEditing ? _("Edit VLAN") : _("Add VLAN")}
             isOpen={isOpen}
-            onClose={onClose}
-            actions={[
-                <Button key="confirm" variant="primary" onClick={addOrUpdateConnection} isDisabled={isIncomplete()}>
-                    {isEditing ? _("Change") : _("Add")}
-                </Button>,
-                <Button key="cancel" variant="link" onClick={onClose}>
-                    {_("Cancel")}
-                </Button>
-            ]}
+            onCancel={onClose}
+            onSubmit={addOrUpdateConnection}
+            onSubmitLabel={isEditing ? _("Change") : _("Add")}
+            onSubmitDisable={isIncomplete()}
         >
-            <Form>
-                <FormGroup
-                    label={_("Parent")}
-                    isRequired
-                    fieldId="parentDevice"
-                >
+            <FormGroup
+                label={_("Parent")}
+                isRequired
+                fieldId="parentDevice"
+            >
 
-                    <FormSelect value={parentDevice} onChange={setParentDevice} id="parentDevice">
-                        {candidateInterfaces.map(({ name }) => (
-                            <FormSelectOption key={name} value={name} label={name} />
-                        ))}
-                    </FormSelect>
-                </FormGroup>
-                <FormGroup
-                    label={_("VLAN ID")}
-                    isRequired
-                    fieldId="vlan_id"
-                    helperText={_("Please, provide the VLAN ID (e.g., 10)")}
-                >
-                    <TextInput
-                        isRequired
-                        id="vlan_id"
-                        value={vlanId}
-                        onChange={setVlanId}
-                        type="number"
-                    />
-                </FormGroup>
+                <FormSelect value={parentDevice} onChange={setParentDevice} id="parentDevice">
+                    {candidateInterfaces.map(({ name }) => (
+                        <FormSelectOption key={name} value={name} label={name} />
+                    ))}
+                </FormSelect>
+            </FormGroup>
 
-                <FormGroup
-                    label={_("Name")}
+            <FormGroup
+                label={_("VLAN ID")}
+                isRequired
+                fieldId="vlan_id"
+                helperText={_("Please, provide the VLAN ID (e.g., 10)")}
+            >
+                <TextInput
                     isRequired
-                    fieldId="interface-name"
-                    helperText={_("Please, provide the interface name (e.g., vlan10)")}
-                >
-                    <TextInput
-                        isRequired
-                        id="interface-name"
-                        value={name}
-                        onChange={updateName}
-                    />
-                </FormGroup>
-            </Form>
-        </Modal>
+                    id="vlan_id"
+                    value={vlanId}
+                    onChange={setVlanId}
+                    type="number"
+                />
+            </FormGroup>
+
+            <FormGroup
+                label={_("Name")}
+                isRequired
+                fieldId="interface-name"
+                helperText={_("Please, provide the interface name (e.g., vlan10)")}
+            >
+                <TextInput
+                    isRequired
+                    id="interface-name"
+                    value={name}
+                    onChange={updateName}
+                />
+            </FormGroup>
+        </ModalForm>
     );
 };
 

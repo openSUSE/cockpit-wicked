@@ -21,22 +21,14 @@
 
 import React, { useState, useEffect } from 'react';
 import cockpit from 'cockpit';
+import { Alert, FormGroup, ModalVariant } from '@patternfly/react-core';
+import { useNetworkDispatch, updateConnection } from '../context/network';
+import { createAddressConfig } from '../lib/model/address';
 import { isValidIP } from '../lib/utils';
 import bootProtocol from '../lib/model/bootProtocol';
-import { createAddressConfig } from '../lib/model/address';
-
-import {
-    Alert,
-    Button,
-    Form,
-    FormGroup,
-    Modal,
-    ModalVariant
-} from '@patternfly/react-core';
-
-import { useNetworkDispatch, updateConnection } from '../context/network';
-import BootProtoSelector from "./BootProtoSelector";
-import AddressesDataList from "./AddressesDataList";
+import ModalForm from './ModalForm';
+import BootProtoSelector from './BootProtoSelector';
+import AddressesDataList from './AddressesDataList';
 
 const { gettext: _, format } = cockpit;
 
@@ -226,42 +218,28 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
     };
 
     return (
-        <Modal
-            variant={ModalVariant.medium}
+        <ModalForm
+            caption={connection.name}
             title={_(`${ipVersion.toUpperCase()} Settings`)}
             isOpen={isOpen}
-            onClose={onClose}
-            actions={[
-                <Button
-                  spinnerAriaValueText={isApplying ? _("Applying changes") : undefined}
-                  isLoading={isApplying}
-                  isDisabled={isApplying}
-                  key="confirm" variant="primary"
-                  onClick={handleSubmit}
-                >
-                    {isApplying ? _("Applying changes") : _("Apply")}
-                </Button>,
-                <Button key="cancel" variant="link" onClick={onClose}>
-                    {_("Cancel")}
-                </Button>
-            ]}
+            onSubmit={handleSubmit}
+            onCancel={onClose}
+            variant={ModalVariant.medium}
         >
-            <Form>
-                {renderErrors()}
+            {renderErrors()}
 
-                <FormGroup label={_("Boot Protocol")} isRequired>
-                    <BootProtoSelector value={bootProto} onChange={setBootProto} />
-                </FormGroup>
+            <FormGroup label={_("Boot Protocol")} isRequired>
+                <BootProtoSelector value={bootProto} onChange={setBootProto} />
+            </FormGroup>
 
-                <FormGroup label={_("Addresses")}>
-                    <AddressesDataList
-                      addresses={addresses}
-                      updateAddresses={setAddresses}
-                      allowEmpty={!addressRequired}
-                    />
-                </FormGroup>
-            </Form>
-        </Modal>
+            <FormGroup label={_("Addresses")}>
+                <AddressesDataList
+                    addresses={addresses}
+                    updateAddresses={setAddresses}
+                    allowEmpty={!addressRequired}
+                />
+            </FormGroup>
+        </ModalForm>
     );
 };
 

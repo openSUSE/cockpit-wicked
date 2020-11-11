@@ -20,10 +20,11 @@
  */
 
 import React, { useState } from 'react';
-import { Modal, ModalVariant, Button, FormSelect, FormSelectOption } from '@patternfly/react-core';
+import cockpit from 'cockpit';
+import { FormSelect, FormSelectOption, ModalVariant } from '@patternfly/react-core';
 import { useNetworkDispatch, updateConnection } from '../context/network';
 import startModeEnum from '../lib/model/startMode';
-import cockpit from 'cockpit';
+import ModalForm from './ModalForm';
 
 const _ = cockpit.gettext;
 
@@ -32,11 +33,12 @@ const startModeOptions = startModeEnum.values.map(mode => {
 });
 
 const StartMode = ({ connection }) => {
-    const [modal, setModal] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const [startMode, setStartMode] = useState(connection.startMode);
     const dispatch = useNetworkDispatch();
 
-    const closeForm = () => setModal(false);
+    const closeForm = () => setIsOpen(false);
+    const openForm = () => setIsOpen(true);
 
     const handleSubmit = () => {
         // TODO: notify that something went wrong.
@@ -44,35 +46,29 @@ const StartMode = ({ connection }) => {
         closeForm();
     };
 
-    const renderModal = () => {
+    const renderModalForm = () => {
         return (
-            <Modal
-              variant={ModalVariant.small}
+            <ModalForm
+              caption={connection.name}
               title={_("Start Mode")}
-              isOpen={modal}
-              onClose={closeForm}
-              actions={[
-                  <Button key="confirm" variant="primary" onClick={handleSubmit}>
-                      {_("Change")}
-                  </Button>,
-                  <Button key="cancel" variant="link" onClick={closeForm}>
-                      {_("Cancel")}
-                  </Button>
-              ]}
+              variant={ModalVariant.small}
+              isOpen={isOpen}
+              onSubmit={handleSubmit}
+              onCancel={closeForm}
             >
                 <FormSelect value={startMode} onChange={setStartMode} id="startMode">
                     {startModeOptions.map((option, index) => (
                         <FormSelectOption key={index} value={option.value} label={option.label} />
                     ))}
                 </FormSelect>
-            </Modal>
+            </ModalForm>
         );
     };
 
     return (
         <>
-            <a href="#" onClick={() => setModal(true)}>{startModeEnum.label(connection.startMode)}</a>
-            { modal && renderModal() }
+            <a href="#" onClick={openForm}>{startModeEnum.label(connection.startMode)}</a>
+            { isOpen && renderModalForm() }
         </>
     );
 };

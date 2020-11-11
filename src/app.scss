@@ -6,6 +6,10 @@ p {
   padding: var(--pf-global--gutter);
 }
 
+.modal-form-caption {
+  margin-bottom: var(--pf-global--spacer--sm);
+}
+
 /**
  *  Place details definition list into a grid, with PF4-like style
  *

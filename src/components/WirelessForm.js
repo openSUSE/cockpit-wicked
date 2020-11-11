@@ -63,7 +63,9 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
     const refreshList = (name) => {
         client.getEssidList(name)
                 .then((result) => {
-                    setEssidList([...new Set([...result.split("\n"), essid])]);
+                    essid
+                        ? setEssidList([...new Set([...result.split("\n"), essid])])
+                        : setEssidList([...new Set([...result.split("\n")])]);
                     setScanning(false);
                 })
                 .catch(console.error);

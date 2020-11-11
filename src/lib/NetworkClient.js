@@ -69,6 +69,14 @@ class NetworkClient {
         return this.adapter.removeConnection(connection);
     }
 
+    setUpConnection(connection) {
+        return this.adapter.setUpConnection(connection);
+    }
+
+    setDownConnection(connection) {
+        return this.adapter.setDownConnection(connection);
+    }
+
     /**
      * Update the given connection
      *

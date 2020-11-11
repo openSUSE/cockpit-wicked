@@ -210,6 +210,14 @@ async function deleteConnection(dispatch, connection) {
     return await networkClient().removeConnection(connection);
 }
 
+async function changeConnectionState(dispatch, connection, setUp) {
+    if (setUp) {
+        return await networkClient().setUpConnection(connection);
+    } else {
+        return await networkClient().setDownConnection(connection);
+    }
+}
+
 // FIXME
 function deleteRoute(dispatch, routes, routeId) {
     const nextRoutes = routes.filter((r) => r.id !== routeId);
@@ -296,6 +304,7 @@ export {
     addConnection,
     deleteConnection,
     updateConnection,
+    changeConnectionState,
     fetchInterfaces,
     fetchConnections,
     fetchRoutes,

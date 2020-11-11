@@ -196,6 +196,28 @@ class WickedClient {
     }
 
     /**
+     * Set Up a connection
+     *
+     * TODO: better error handling
+     *
+     * @return {Promise} Result of the operation
+     */
+    setUpConnection(name) {
+        return cockpit.spawn(['/usr/sbin/wicked', 'ifup', name], { superuser: "require" });
+    }
+
+    /**
+     * Set Up a connection
+     *
+     * TODO: better error handling
+     *
+     * @return {Promise} Result of the operation
+     */
+    setDownConnection(name) {
+        return cockpit.spawn(['/usr/sbin/wicked', 'ifdown', name], { superuser: "require" });
+    }
+
+    /**
      * Sets up the DBus handling
      *
      * @ignore

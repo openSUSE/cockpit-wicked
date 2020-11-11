@@ -127,8 +127,9 @@ class WickedAdapter {
      */
     removeConnection(connection) {
         return new Promise((resolve, reject) => {
+            const name = connection.name;
             this.deleteConnectionConfig(connection)
-                    .then(() => this.reloadConnection(connection.name))
+                    .then(() => this.reloadConnection(name))
                     .catch(reject);
         });
     }
@@ -146,6 +147,24 @@ class WickedAdapter {
                     .then(() => resolve(connection))
                     .catch(reject);
         });
+    }
+
+    /**
+     * Set Up a connection
+     *
+     * @return {Promise} Result of the operation
+     */
+    setUpConnection(connection) {
+        return this.client.setUpConnection(connection.name);
+    }
+
+    /**
+     * Set Up a connection
+     *
+     * @return {Promise} Result of the operation
+     */
+    setDownConnection(connection) {
+        return this.client.setDownConnection(connection.name);
     }
 
     /**

@@ -104,7 +104,7 @@ const ipV6Details = (connection) => {
     );
 };
 
-const InterfaceDetails = ({ iface, connection, removeConnection }) => (
+const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConnection }) => (
     <Split hasGutter>
         <SplitItem isFilled>
             <dl className="details-list">
@@ -126,9 +126,10 @@ const InterfaceDetails = ({ iface, connection, removeConnection }) => (
                     {_("DELETE")}
                 </Button>
             </SplitItem>}
-        <SplitItem>
-            <Switch id={`status_${iface.name}}`} />
-        </SplitItem>
+        { iface && connection &&
+            <SplitItem>
+                <Switch id={`status_${iface.name}}`} isChecked={iface.link} onChange={() => changeConnectionState(connection, !iface.link)} />
+            </SplitItem>}
     </Split>
 );
 

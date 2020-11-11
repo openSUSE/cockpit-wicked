@@ -42,11 +42,9 @@ describe('IfcfgFile', () => {
 
         it('updates file content', () => {
             ifcfg.update(conn);
-            expect(replaceFn).toHaveBeenCalledWith({
-                BOOTPROTO: 'dhcp',
-                NAME: 'eth0',
-                STARTMODE: 'auto'
-            });
+            expect(ifcfg.get('BOOTPROTO')).toEqual('dhcp');
+            expect(ifcfg.get('NAME')).toEqual('eth0');
+            expect(ifcfg.get('STARTMODE')).toEqual('auto');
         });
 
         describe('when it contains multiple addresses', () => {
@@ -67,14 +65,12 @@ describe('IfcfgFile', () => {
 
             it('includes all the addresses and their labels', () => {
                 ifcfg.update(conn);
-                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
-                    BOOTPROTO: 'dhcp',
-                    IPADDR: '192.168.1.100/24',
-                    IPADDR_1: '10.0.0.1/10',
-                    LABEL_1: 'private',
-                    IPADDR_2: '10.0.0.2/10',
-                    IPADDR_3: '2001:0db4:95b3:0000:0000:8a2e:0370:9335'
-                }));
+                expect(ifcfg.get('BOOTPROTO')).toEqual('dhcp');
+                expect(ifcfg.get('IPADDR')).toEqual('192.168.1.100/24');
+                expect(ifcfg.get('IPADDR_1')).toEqual('10.0.0.1/10');
+                expect(ifcfg.get('LABEL_1')).toEqual('private');
+                expect(ifcfg.get('IPADDR_2')).toEqual('10.0.0.2/10');
+                expect(ifcfg.get('IPADDR_3')).toEqual('2001:0db4:95b3:0000:0000:8a2e:0370:9335');
             });
         });
 
@@ -85,10 +81,8 @@ describe('IfcfgFile', () => {
 
             it('includes bridge settings', () => {
                 ifcfg.update(conn);
-                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
-                    BRIDGE: 'yes',
-                    BRIDGE_PORTS: 'eth0 eth1'
-                }));
+                expect(ifcfg.get('BRIDGE')).toEqual('yes');
+                expect(ifcfg.get('BRIDGE_PORTS')).toEqual('eth0 eth1');
             });
         });
 
@@ -100,12 +94,10 @@ describe('IfcfgFile', () => {
 
             it('includes bonding settings', () => {
                 ifcfg.update(conn);
-                expect(replaceFn).toHaveBeenCalledWith(expect.objectContaining({
-                    BONDING_MASTER: 'yes',
-                    BONDING_SLAVE_0: 'eth0',
-                    BONDING_SLAVE_1: 'eth1',
-                    BONDING_MODULE_OPTS: 'mode=active-backup some-option'
-                }));
+                expect(ifcfg.get('BONDING_MASTER')).toEqual('yes');
+                expect(ifcfg.get('BONDING_SLAVE_0')).toEqual('eth0');
+                expect(ifcfg.get('BONDING_SLAVE_1')).toEqual('eth1');
+                expect(ifcfg.get('BONDING_MODULE_OPTS')).toEqual('mode=active-backup some-option');
             });
         });
     });

@@ -178,7 +178,8 @@ class WickedAdapter {
     updateConnectionConfig(connection) {
         const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
         const file = new IfcfgFile(filePath);
-        return file.update(connection);
+        file.update(connection);
+        return file.write();
     }
 
     /**

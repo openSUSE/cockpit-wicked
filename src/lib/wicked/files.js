@@ -210,6 +210,12 @@ class SysconfigParser {
     }
 }
 
+/**
+ * Class that represents a sysconfig configuration file
+ *
+ * This is a quite limited class that does not do any conversion type and does not know
+ * about arrays (like IPADDR_1, IPADDR_2, etc.).
+ */
 class SysconfigFile {
     /**
      * @param {string} path - File path

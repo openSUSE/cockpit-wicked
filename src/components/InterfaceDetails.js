@@ -27,8 +27,9 @@ import BondDetails from './BondDetails';
 import VlanDetails from './VlanDetails';
 import WirelessDetails from './WirelessDetails';
 import IPSettingsLink from './IPSettingsLink';
+import DeleteConnection from './DeleteConnection';
 import interfaceTypeEnum from '../lib/model/interfaceType';
-import { Button, Split, SplitItem, Switch } from '@patternfly/react-core';
+import { Split, SplitItem, Switch } from '@patternfly/react-core';
 
 const _ = cockpit.gettext;
 
@@ -122,9 +123,7 @@ const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConn
         </SplitItem>
         { connection &&
             <SplitItem>
-                <Button variant="danger" onClick={() => removeConnection(connection)}>
-                    {_("DELETE")}
-                </Button>
+                <DeleteConnection connection={connection} deleteConnection={removeConnection} />
             </SplitItem>}
         { iface && connection &&
             <SplitItem>

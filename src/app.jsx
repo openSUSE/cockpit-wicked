@@ -26,9 +26,9 @@ import {
     EmptyStateVariant,
     Page,
     Spinner,
-    Tabs,
     Tab,
     TabTitleText,
+    Tabs,
     Title
 } from '@patternfly/react-core';
 import { NetworkProvider, serviceIsActive } from './context/network';
@@ -46,8 +46,6 @@ export const Application = () => {
     const handleTabClick = (event, tabIndex) => {
         setActiveTabKey(tabIndex);
     };
-
-    const renderInactiveServicePage = () => <InactiveServicePage />;
 
     const renderTabs = () => {
         return (
@@ -82,7 +80,7 @@ export const Application = () => {
     return (
         <NetworkProvider>
             <Page id="network-configuration">
-                {serviceActive ? renderTabs() : renderInactiveServicePage()}
+                {serviceActive ? renderTabs() : <InactiveServicePage />}
             </Page>
         </NetworkProvider>
     );

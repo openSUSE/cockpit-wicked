@@ -34,6 +34,15 @@ class NetworkClient {
     }
 
     /**
+     * Whether the network service is active or not
+     *
+     * @return {Promise.<boolean>} Promise that resolves to true if service is active or false if not
+     */
+    async isActive() {
+        return await this.adapter.isActive();
+    }
+
+    /**
      * Returns the list of available connection configurations
      *
      * @returns {Promise<Array|Error>} Resolves to an array of objects in case of success

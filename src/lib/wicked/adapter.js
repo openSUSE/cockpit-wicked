@@ -39,6 +39,15 @@ class WickedAdapter {
     }
 
     /**
+     * Returns if wicked service is active or not
+     *
+     * @return {Promise.<boolean>} Promise that resolves to true if service is active or false if not
+     */
+    async isActive() {
+        return await this.client.isActive();
+    }
+
+    /**
      * Return a promise that resolves to an array of model Connection objects.
      *
      * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces

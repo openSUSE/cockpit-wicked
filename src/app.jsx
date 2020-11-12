@@ -19,33 +19,70 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import cockpit from 'cockpit';
+import {
+    EmptyState,
+    EmptyStateVariant,
+    Page,
+    Spinner,
+    Tabs,
+    Tab,
+    TabTitleText,
+    Title
+} from '@patternfly/react-core';
+import { NetworkProvider, serviceIsActive } from './context/network';
+import InactiveServicePage from './components/InactiveServicePage';
 import InterfacesTab from './components/InterfacesTab';
 import RoutingTab from './components/RoutingTab';
-import { Page, Tabs, Tab, TabTitleText } from '@patternfly/react-core';
-import { NetworkProvider } from './context/network';
-import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
 export const Application = () => {
     const [activeTabKey, setActiveTabKey] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [serviceActive, setServiceActive] = useState(true);
 
     const handleTabClick = (event, tabIndex) => {
         setActiveTabKey(tabIndex);
     };
 
+    const renderInactiveServicePage = () => <InactiveServicePage />;
+
+    const renderTabs = () => {
+        return (
+            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
+                    <InterfacesTab />
+                </Tab>
+                <Tab eventKey={1} title={<TabTitleText>{_("Routing")}</TabTitleText>}>
+                    <RoutingTab />
+                </Tab>
+            </Tabs>
+        );
+    };
+
+    useEffect(() => {
+        const isActive = async () => {
+            const result = await serviceIsActive();
+            setLoading(false);
+            setServiceActive(result);
+        };
+
+        isActive();
+    }, []);
+
+    if (loading) return (
+        <EmptyState variant={EmptyStateVariant.full}>
+            <Spinner />
+            <Title headingLevel="h1" size="lg">{_("Loading...")}</Title>
+        </EmptyState>
+    );
+
     return (
         <NetworkProvider>
             <Page id="network-configuration">
-                <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-                    <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
-                        <InterfacesTab />
-                    </Tab>
-                    <Tab eventKey={1} title={<TabTitleText>{_("Routing")}</TabTitleText>}>
-                        <RoutingTab />
-                    </Tab>
-                </Tabs>
+                {serviceActive ? renderTabs() : renderInactiveServicePage()}
             </Page>
         </NetworkProvider>
     );

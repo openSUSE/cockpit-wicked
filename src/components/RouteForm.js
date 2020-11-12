@@ -20,19 +20,22 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button, Checkbox, Form, FormGroup, Modal, ModalVariant, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, actionTypes, addRoute, updateRoute } from '../context/network';
+import { Alert, Checkbox, FormGroup, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
+import { useNetworkDispatch, useNetworkState, addRoute, updateRoute } from '../context/network';
+import { isValidIP } from '../lib/utils';
+import ModalForm from './ModalForm';
 
 const _ = cockpit.gettext;
 
 const RouteForm = ({ isOpen, onClose, route }) => {
     const isEditing = !!route;
-    const [isDefault, setIsDefault] = useState(route?.isDefault);
+    const [isDefault, setIsDefault] = useState(route?.isDefault || false);
     const [gateway, setGateway] = useState(route?.gateway || "");
     const [destination, setDestination] = useState(route?.destination || "");
     const [device, setDevice] = useState(route?.device || "");
     const [options, setOptions] = useState(route?.options || "");
+    const [errors, setErrors] = useState([]);
     const { interfaces, routes } = useNetworkState();
     const [candidateInterfaces, setCandidateInterfaces] = useState([]);
     const dispatch = useNetworkDispatch();
@@ -41,7 +44,39 @@ const RouteForm = ({ isOpen, onClose, route }) => {
         setCandidateInterfaces([{ name: "" }, ...Object.values(interfaces)]);
     }, [interfaces]);
 
+    /**
+     * Performs the form validations
+     *
+     * To be considered a valid form both, destination and gateway must be valid IPs values. There
+     * is only an exception for destination, which can be "default" too.
+     *
+     * @return {boolean} true when route is valid; false otherwise
+     */
+    const validate = () => {
+        const errors = [];
+
+        if (!isDefault && !isValidIP(destination)) {
+            errors.push({
+                key: 'invalid-destination',
+                message: _("Destination is not valid.")
+            });
+        }
+
+        if (!isValidIP(gateway)) {
+            errors.push({
+                key: 'invalid-gateway',
+                message: _("Gateway is not valid.")
+            });
+        }
+
+        setErrors(errors);
+
+        return errors.length === 0;
+    };
+
     const addOrUpdateRoute = () => {
+        if (!validate()) return;
+
         if (isEditing) {
             updateRoute(dispatch, routes, route.id, buildRouteData());
         } else {
@@ -54,100 +89,120 @@ const RouteForm = ({ isOpen, onClose, route }) => {
     const buildRouteData = () => {
         return {
             isDefault,
-            destination: isDefault ? "" : destination,
+            destination: isDefault ? "default" : destination,
             gateway,
             device,
             options
         };
     };
 
-    const isInComplete = () => {
+    const isIncomplete = () => {
         if (!isDefault && destination.length == 0) return true;
         if (gateway.length == 0) return true;
 
         return false;
     };
 
+    /**
+     * Renders error messages in an Patternfly/Alert component, if any
+     */
+    const renderErrors = () => {
+        if (errors.length === 0) return null;
+
+        return (
+            <Alert
+              isInline
+              variant="danger"
+              aria-live="polite"
+              title={_("Route is not valid, please check it.")}
+            >
+                {errors.map(({ key, message }) => <p key={key}>{message}</p>)}
+            </Alert>
+        );
+    };
+
+    /**
+     * Renders the destination input only when needed (i.e., route is not marked as a default)
+     */
+    const renderDestination = () => {
+        if (isDefault) return null;
+
+        return (
+            <FormGroup
+                isRequired
+                label={_("Destination")}
+                fieldId="destination"
+                helperText={_("Destination")}
+            >
+                <TextInput
+                    isRequired
+                    id="destination"
+                    value={destination}
+                    onChange={setDestination}
+                />
+            </FormGroup>
+        );
+    };
+
     return (
-        <Modal
-            variant={ModalVariant.small}
+        <ModalForm
             title={isEditing ? _("Edit Route") : _("Add Route")}
             isOpen={isOpen}
-            onClose={onClose}
-            actions={[
-                <Button key="confirm" variant="primary" onClick={addOrUpdateRoute} isDisabled={isInComplete()}>
-                    {isEditing ? _("Change") : _("Add")}
-                </Button>,
-                <Button key="cancel" variant="link" onClick={onClose}>
-                    {_("Cancel")}
-                </Button>
-            ]}
+            onCancel={onClose}
+            onSubmit={addOrUpdateRoute}
+            onSubmitLabel={isEditing ? _("Change") : _("Add")}
+            onSubmitDisable={isIncomplete()}
         >
-            <Form>
-                <FormGroup
-                    label={_("Default route")}
-                    fieldId="isDefault"
-                >
-                    <Checkbox
-                        id="isDefault"
-                        isChecked={isDefault}
-                        onChange={setIsDefault}
-                    />
-                </FormGroup>
+            {renderErrors()}
 
-                { !isDefault &&
-                    <FormGroup
-                        label={_("Destination")}
-                        isRequired={!isDefault}
-                        fieldId="destination"
-                        helperText={_("Destination")}
-                    >
-                        <TextInput
-                            isRequired
-                            id="destination"
-                            value={destination}
-                            onChange={setDestination}
-                        />
-                    </FormGroup>}
+            <FormGroup
+                label={_("Default route")}
+                fieldId="isDefault"
+            >
+                <Checkbox
+                    id="isDefault"
+                    isChecked={isDefault}
+                    onChange={setIsDefault}
+                />
+            </FormGroup>
 
-                <FormGroup
-                    label={_("Gateway")}
-                    isRequired
-                    fieldId="gateway"
-                >
-                    <TextInput
-                        isRequired
-                        id="gateway"
-                        value={gateway}
-                        onChange={setGateway}
-                    />
-                </FormGroup>
+            {renderDestination()}
 
-                <FormGroup
-                    label={_("Device")}
+            <FormGroup
+                isRequired
+                label={_("Gateway")}
+                fieldId="gateway"
+            >
+                <TextInput
                     isRequired
-                    fieldId="device"
-                >
-                    <FormSelect value={device} onChange={setDevice} id="device">
-                        {candidateInterfaces.map(({ name }, index) => (
-                            <FormSelectOption key={index} value={name} label={name} />
-                        ))}
-                    </FormSelect>
-                </FormGroup>
-                <FormGroup
-                    label={_("Options")}
-                    isRequired
-                    fieldId="options"
-                >
-                    <TextInput
-                        isRequired
-                        id="options"
-                        value={options}
-                        onChange={setOptions}
-                    />
-                </FormGroup>
-            </Form>
-        </Modal>
+                    id="gateway"
+                    value={gateway}
+                    onChange={setGateway}
+                />
+            </FormGroup>
+
+            <FormGroup
+                label={_("Device")}
+                fieldId="device"
+            >
+                <FormSelect value={device} onChange={setDevice} id="device">
+                    {candidateInterfaces.map(({ name }, index) => (
+                        <FormSelectOption key={index} value={name} label={name} />
+                    ))}
+                </FormSelect>
+            </FormGroup>
+
+            <FormGroup
+                label={_("Options")}
+                fieldId="options"
+            >
+                <TextInput
+                    id="options"
+                    value={options}
+                    onChange={setOptions}
+                />
+            </FormGroup>
+        </ModalForm>
     );
 };
 

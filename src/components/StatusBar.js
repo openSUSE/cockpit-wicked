@@ -27,7 +27,7 @@ import { PageSection, Spinner, Split, SplitItem } from '@patternfly/react-core';
  *
  * @example
  *
- *  <StatusBar loading>
+ *  <StatusBar showSpinner>
  *      {_("Doing some checks, please be patient...")}
  *  </StatusBar>
  *

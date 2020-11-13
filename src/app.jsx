@@ -39,9 +39,9 @@ import RoutingTab from './components/RoutingTab';
 const _ = cockpit.gettext;
 
 export const Application = () => {
-    const [activeTabKey, setActiveTabKey] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [serviceActive, setServiceActive] = useState(true);
+    const [serviceReady, setServiceReady] = useState(false);
+    const [activeTabKey, setActiveTabKey] = useState(0);
 
     const handleTabClick = (event, tabIndex) => {
         setActiveTabKey(tabIndex);
@@ -61,13 +61,11 @@ export const Application = () => {
     };
 
     useEffect(() => {
-        const isActive = async () => {
-            const result = await serviceIsActive();
-            setLoading(false);
-            setServiceActive(result);
-        };
-
-        isActive();
+        serviceIsActive()
+                .then(result => {
+                    setLoading(false);
+                    setServiceReady(result);
+                });
     }, []);
 
     if (loading) return (
@@ -80,7 +78,7 @@ export const Application = () => {
     return (
         <NetworkProvider>
             <Page id="network-configuration">
-                {serviceActive ? renderTabs() : <InactiveServicePage />}
+                {serviceReady ? renderTabs() : <InactiveServicePage />}
             </Page>
         </NetworkProvider>
     );

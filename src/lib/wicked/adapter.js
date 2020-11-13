@@ -35,7 +35,6 @@ import { IfcfgFile, IfrouteFile } from './files';
  */
 class WickedAdapter {
     constructor(client) {
-        this.serviceName = 'wicked';
         this.client = client || new Client();
     }
 
@@ -45,7 +44,7 @@ class WickedAdapter {
      * @return {string} wicked's service name
      */
     serviceName() {
-        return this.serviceName;
+        return 'wicked';
     }
 
     /**

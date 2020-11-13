@@ -22,16 +22,16 @@
 import React, { useState, useEffect } from 'react';
 import cockpit from 'cockpit';
 import {
-    EmptyState,
-    EmptyStateVariant,
     Page,
-    Spinner,
+    PageSection,
+    PageSectionVariants,
     Tab,
     TabTitleText,
     Tabs,
     Title
 } from '@patternfly/react-core';
 import { NetworkProvider, serviceIsActive } from './context/network';
+import StatusBar from './components/StatusBar';
 import InactiveServicePage from './components/InactiveServicePage';
 import InterfacesTab from './components/InterfacesTab';
 import RoutingTab from './components/RoutingTab';
@@ -39,7 +39,7 @@ import RoutingTab from './components/RoutingTab';
 const _ = cockpit.gettext;
 
 export const Application = () => {
-    const [loading, setLoading] = useState(true);
+    const [checkingService, setCheckingService] = useState(true);
     const [serviceReady, setServiceReady] = useState(false);
     const [activeTabKey, setActiveTabKey] = useState(0);
 
@@ -60,25 +60,28 @@ export const Application = () => {
         );
     };
 
+    const renderContent = () => {
+        if (checkingService) return null;
+        if (serviceReady) return renderTabs();
+        return <InactiveServicePage />;
+    };
+
     useEffect(() => {
         serviceIsActive()
                 .then(result => {
-                    setLoading(false);
+                    setCheckingService(false);
                     setServiceReady(result);
                 });
     }, []);
 
-    if (loading) return (
-        <EmptyState variant={EmptyStateVariant.full}>
-            <Spinner />
-            <Title headingLevel="h1" size="lg">{_("Loading...")}</Title>
-        </EmptyState>
-    );
-
     return (
         <NetworkProvider>
-            <Page id="network-configuration">
-                {serviceReady ? renderTabs() : <InactiveServicePage />}
+            <Page>
+                { checkingService && <StatusBar showSpinner>{_("Checking if service is active...")}</StatusBar> }
+
+                <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light}>
+                    { renderContent() }
+                </PageSection>
             </Page>
         </NetworkProvider>
     );

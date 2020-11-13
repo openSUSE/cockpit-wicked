@@ -27,13 +27,20 @@ import bondingModeEnum from '../model/bondingMode';
 let connectionIndex = 0;
 
 /**
+ * @typedef {Object} IPConf
+ * @property {Array<Object>} addresses - Address configurations
+ * @property {string} bootProto - Boot protocol (@see model/bootProtocol)
+ */
+
+/**
  * @typedef {Object} Connection
  * @property {string} name - Connection name
  * @property {string} description - Connection description
  * @property {string} type - Connection type (@see model/interfaceType)
- * @property {string} bootProto - Boot protocol (@see model/bootProtocol)
  * @property {string} interfaceName - Associated interface name
- * @property {Array<Object>} addresses - Address configurations
+ * @property {string} startMode - the connection start mode (@see model/startMode)
+ * @property {IPconf} ipv4 - IPv4 configuration
+ * @property {IPconf} ipv6 - IPv6 configuration
  * @property {boolean} exists - Whether the connection was loaded from the system or not
  * @property {boolean} virtual - Whether it corresponds to a virtual interface or not
  */
@@ -43,13 +50,14 @@ let connectionIndex = 0;
  *
  * Returns an object representing a connection
  *
- * @param {object} args - Connection properties
- * @param {string} args.name - Name
- * @param {string} args.description - Description
- * @param {string} args.type - Connection type ('eth', 'br', etc.)
- * @param {string} args.bootProto - Boot protocol ('dhcp', 'static', etc.)
- * @param {string} args.interfaceName - Name of the interface associated to this connection
- * @param {string} args.addresses - Address configurations
+ * @param {object}  args - Connection properties
+ * @param {string}  args.name - Name
+ * @param {string}  args.description - Description
+ * @param {string}  args.type - Connection type (@see model/interfaceType)
+ * @param {string}  args.interfaceName - Name of the interface associated to this connection
+ * @param {string}  args.startMode - the connection start mode (@see model/startMode)
+ * @param {IPConf}  args.ipv4 - Configuration for IPv4
+ * @param {IPConf}  args.ipv6 - Configuration for IPv6
  * @param {boolean} [args.exists=true] - Whether the connection was loaded from the system or not
  *
  * @return {Connection} Connection object

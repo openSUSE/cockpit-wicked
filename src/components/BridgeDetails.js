@@ -34,7 +34,7 @@ const BridgeDetails = ({ connection }) => {
             <a href="#" onClick={() => setFormOpen(true)}>
                 <ul>
                     <li>
-                        {_("PORTS:")} {bridge.ports.join(", ")}
+                        {_("Ports:")} {bridge.ports.join(", ")}
                     </li>
                 </ul>
             </a>

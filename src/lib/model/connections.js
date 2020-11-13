@@ -34,6 +34,7 @@ let connectionIndex = 0;
  * @property {string} bootProto - Boot protocol (@see model/bootProtocol)
  * @property {string} interfaceName - Associated interface name
  * @property {Array<Object>} addresses - Address configurations
+ * @property {boolean} exists - Whether the connection was loaded from the system or not
  * @property {boolean} virtual - Whether it corresponds to a virtual interface or not
  */
 
@@ -49,6 +50,8 @@ let connectionIndex = 0;
  * @param {string} args.bootProto - Boot protocol ('dhcp', 'static', etc.)
  * @param {string} args.interfaceName - Name of the interface associated to this connection
  * @param {string} args.addresses - Address configurations
+ * @param {boolean} [args.exists=true] - Whether the connection was loaded from the system or not
+ *
  * @return {Connection} Connection object
  */
 export const createConnection = ({
@@ -59,6 +62,7 @@ export const createConnection = ({
     startMode = startModeEnum.AUTO,
     ipv4 = { addresses: [], bootProto: bootProtocol.DHCP },
     ipv6 = { addresses: [], bootProto: bootProtocol.DHCP },
+    exists = true,
     ...rest
 }) => {
     return {
@@ -70,6 +74,7 @@ export const createConnection = ({
         startMode,
         ipv4,
         ipv6,
+        exists,
         virtual: interfaceType.isVirtual(type),
         ...propsByType(type, rest)
     };

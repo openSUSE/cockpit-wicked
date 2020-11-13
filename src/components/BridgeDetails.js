@@ -34,10 +34,7 @@ const BridgeDetails = ({ connection }) => {
             <a href="#" onClick={() => setFormOpen(true)}>
                 <ul>
                     <li>
-                        {_("PORTS: ")}{bridge.ports.join(", ")}
-                    </li>
-                    <li>
-                        {_("STP Enabled: ")}{bridge.stp ? _("Yes") : _("No")}
+                        {_("PORTS:")} {bridge.ports.join(", ")}
                     </li>
                 </ul>
             </a>

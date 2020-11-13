@@ -38,7 +38,7 @@ const DeleteConnection = ({ connection, deleteConnection }) => {
 
     return (
         <>
-            <Button variant="danger" onClick={() => setConfirmationOpen(true)}>{_("Delete")}</Button>
+            <Button variant="danger" className="pf-m-danger" onClick={() => setConfirmationOpen(true)}>{_("Reset")}</Button>
             { isConfirmationOpen &&
                 <ModalConfirm
                     title={cockpit.format(_("Delete '$0' configuration"), connection?.name)}

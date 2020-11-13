@@ -33,7 +33,7 @@ import {
     Spinner
 } from '@patternfly/react-core';
 import cockpit from 'cockpit';
-import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
+import { useNetworkDispatch, addConnection, updateConnection } from '../context/network';
 import interfaceType from '../lib/model/interfaceType';
 import wirelessModes from '../lib/model/wirelessMode';
 import wirelessAuthModes from '../lib/model/wirelessAuthMode';
@@ -60,18 +60,20 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
     const [scanning, setScanning] = useState(true);
     const dispatch = useNetworkDispatch();
 
-    useEffect(() => {
-        refreshList(iface.name);
-    }, [iface.name]);
-
     const refreshList = (name) => {
         client.getEssidList(name)
                 .then((result) => {
-                    setEssidList([...new Set([...result.split("\n"), essid])]);
+                    essid
+                        ? setEssidList([...new Set([...result.split("\n"), essid])])
+                        : setEssidList([...new Set([...result.split("\n")])]);
                     setScanning(false);
                 })
                 .catch(console.error);
     };
+
+    useEffect(() => {
+        refreshList(iface.name);
+    }, [iface.name]);
 
     const addOrUpdateConnection = () => {
         if (isEditing) {
@@ -126,7 +128,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                             {essidList.map((option, index) => (
                                 <FormSelectOption key={option} value={option} label={option} />
                             ))}
-                        </FormSelect> }
+                        </FormSelect>}
                 </FormGroup>
                 <FormGroup
                     label={_("Auth Mode")}

@@ -300,6 +300,11 @@ class IfcfgFile extends SysconfigFile {
     update(connection) {
         super.update(connectionToSysconfig(connection));
     }
+
+    remove() {
+        const file = cockpit.file(this.path, { superuser: "require" });
+        return file.replace(null);
+    }
 }
 
 /**

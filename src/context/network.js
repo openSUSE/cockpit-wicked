@@ -35,6 +35,7 @@ const SET_CONNECTIONS = 'set_connections';
 const SET_ROUTES = 'set_routes';
 const UPDATE_ROUTES = 'update_routes';
 const ADD_CONNECTION = 'add_connection';
+const DELETE_CONNECTION = 'delete_connection';
 const UPDATE_CONNECTION = 'update_connection';
 const UPDATE_INTERFACE = 'update_interface';
 
@@ -44,6 +45,7 @@ const actionTypes = {
     SET_ROUTES,
     UPDATE_ROUTES,
     ADD_CONNECTION,
+    DELETE_CONNECTION,
     UPDATE_CONNECTION,
     UPDATE_INTERFACE
 };
@@ -88,6 +90,19 @@ function networkReducer(state, action) {
             interfaces: { ...interfaces, [iface.id]: iface },
             connections: { ...connections, [conn.id]: conn }
         };
+    }
+
+    case DELETE_CONNECTION: {
+        const { interfaces, connections } = state;
+        const conn = action.payload;
+        const { [conn.id]: _value, ...nextConnections } = connections;
+
+        if (!conn.virtual) return { ...state, connections: nextConnections };
+
+        const iface = Object.values(interfaces).find(i => i.name === conn.name);
+        const { [iface.id]: _ivalue, ...nextInterfaces } = interfaces;
+
+        return { ...state, interfaces: nextInterfaces, connections: nextConnections };
     }
 
     case UPDATE_CONNECTION: {
@@ -194,6 +209,20 @@ async function updateConnection(dispatch, connection, changes) {
     return await networkClient().updateConnection(updatedConn);
 }
 
+async function deleteConnection(dispatch, connection) {
+    dispatch({ type: DELETE_CONNECTION, payload: connection });
+
+    return await networkClient().removeConnection(connection);
+}
+
+async function changeConnectionState(dispatch, connection, setUp) {
+    if (setUp) {
+        return await networkClient().setUpConnection(connection);
+    } else {
+        return await networkClient().setDownConnection(connection);
+    }
+}
+
 // FIXME
 function deleteRoute(dispatch, routes, routeId) {
     const nextRoutes = routes.filter((r) => r.id !== routeId);
@@ -278,7 +307,9 @@ export {
     useNetworkDispatch,
     actionTypes,
     addConnection,
+    deleteConnection,
     updateConnection,
+    changeConnectionState,
     fetchInterfaces,
     fetchConnections,
     fetchRoutes,

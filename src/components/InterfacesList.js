@@ -26,6 +26,7 @@ import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patter
 import InterfaceDetails from "./InterfaceDetails";
 import TypesFilter from "./TypesFilter";
 import interfaceType from '../lib/model/interfaceType';
+import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 
 const _ = cockpit.gettext;
 
@@ -34,6 +35,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const [types, setTypes] = useState([]);
     const [filterByType, setFilterByType] = useState([]);
     const [openRows, setOpenRows] = useState([]);
+    const dispatch = useNetworkDispatch();
 
     const columns = [
         { title: _("Name"), cellFormatters: [expandable] },
@@ -41,6 +43,14 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         { title: _("Status") },
         { title: _("IP") }
     ];
+
+    const removeConnection = (connection) => {
+        deleteConnection(dispatch, connection);
+    };
+
+    const changeState = (connection, state) => {
+        changeConnectionState(dispatch, connection, state);
+    };
 
     const interfaceAddresses = (iface) => {
         if (iface.addresses.length === 0) return;
@@ -78,7 +88,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     parent: parentId,
                     cells: [
                         {
-                            title: <InterfaceDetails iface={i} connection={conn} />
+                            title: <InterfaceDetails iface={i} connection={conn} removeConnection={removeConnection} changeConnectionState={changeState} />
                         }
                     ]
                 }

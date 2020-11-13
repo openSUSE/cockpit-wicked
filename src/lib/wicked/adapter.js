@@ -26,7 +26,7 @@ import model from '../model';
 import { IfcfgFile, IfrouteFile } from './files';
 
 /**
- * This class is responsible for retrieving and updating Wicked's configuration.
+ * This class is responsible for retrieving and updating wicked's configuration.
  *
  * It relies on WickedClient to get the needed information from Wicked. However,
  * it uses the `sysconfig` files as the mechanism to modify the configuration.
@@ -35,16 +35,17 @@ import { IfcfgFile, IfrouteFile } from './files';
  */
 class WickedAdapter {
     constructor(client) {
+        this.serviceName = 'wicked';
         this.client = client || new Client();
     }
 
     /**
-     * Returns if wicked service is active or not
+     * Return the wicked's service name
      *
-     * @return {Promise.<boolean>} Promise that resolves to true if service is active or false if not
+     * @return {string} wicked's service name
      */
-    async isActive() {
-        return await this.client.isActive();
+    serviceName() {
+        return this.serviceName;
     }
 
     /**

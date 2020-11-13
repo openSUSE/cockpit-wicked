@@ -132,21 +132,6 @@ class WickedClient {
     }
 
     /**
-     * Whether the wicked service is active or not
-     *
-     * @return {Promise.<boolean>} Promise that resolves to true if service is active or false if not
-     */
-    async isActive() {
-        // FIXME: not using "--value" option here for backward compatibility with systemd < 230
-        // https://lists.freedesktop.org/archives/systemd-devel/2016-May/036583.html
-        const command = 'systemctl show wicked -p ActiveState';
-        const output = await cockpit.spawn(command.split(' '), { superuser: true });
-        const [_key, value] = output.trim().split('=');
-
-        return value === 'active';
-    }
-
-    /**
      * Returns a promise that resolves to an array of objects representing interfaces
      *
      * @param {object} options - Query options

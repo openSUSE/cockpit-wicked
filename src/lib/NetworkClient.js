@@ -34,12 +34,15 @@ class NetworkClient {
     }
 
     /**
-     * Whether the network service is active or not
+     * Whether the service for interacting with network is active or not
      *
      * @return {Promise.<boolean>} Promise that resolves to true if service is active or false if not
      */
     async isActive() {
-        return await this.adapter.isActive();
+        const command = `systemctl --system is-active ${this.adapter.serviceName}`;
+        const output = await cockpit.spawn(command.split(' '), { superuser: true });
+
+        return output.trim() === "active";
     }
 
     /**

@@ -27,10 +27,28 @@ const _ = cockpit.gettext;
 
 const BridgeDetails = ({ connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
+    const bridge = connection ? connection.bridge : undefined;
+
+    const renderLinkDetails = () => {
+        return (
+            <a href="#" onClick={() => setFormOpen(true)}>
+                <ul>
+                    <li>
+                        {_("PORTS: ")}{bridge.ports.join(", ")}
+                    </li>
+                    <li>
+                        {_("STP Enabled: ")}{bridge.stp ? _("Yes") : _("No")}
+                    </li>
+                </ul>
+            </a>
+        );
+    };
 
     return (
         <>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
+            { bridge
+                ? renderLinkDetails()
+                : <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>}
             { isFormOpen && <BridgeForm isOpen={isFormOpen} connection={connection} onClose={() => setFormOpen(false)} /> }
         </>
     );

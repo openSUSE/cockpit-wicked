@@ -31,6 +31,7 @@ const NetworkDispatchContext = React.createContext();
 // TODO: document and test this context.
 
 const SET_INTERFACES = 'set_interfaces';
+const DELETE_INTERFACE = 'delete_interface';
 const SET_CONNECTIONS = 'set_connections';
 const SET_ROUTES = 'set_routes';
 const UPDATE_ROUTES = 'update_routes';
@@ -58,6 +59,15 @@ function networkReducer(state, action) {
             return { ...all, [iface.id]: iface };
         }, {});
         return { ...state, interfaces };
+    }
+
+    case DELETE_INTERFACE: {
+        const { interfaces } = state;
+        const name = action.payload;
+        const iface = Object.values(interfaces).find(i => i.name === name);
+        const { [iface.id]: _value, ...nextInterfaces } = interfaces;
+
+        return { ...state, interfaces: nextInterfaces };
     }
 
     case SET_CONNECTIONS: {
@@ -206,6 +216,9 @@ async function updateConnection(dispatch, connection, changes) {
 
 async function deleteConnection(dispatch, connection) {
     dispatch({ type: DELETE_CONNECTION, payload: connection });
+    if (connection.virtual) {
+        dispatch({ type: DELETE_INTERFACE, payload: connection.name });
+    }
 
     return await networkClient().removeConnection(connection);
 }

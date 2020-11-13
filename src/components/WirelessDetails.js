@@ -31,18 +31,19 @@ const WirelessDetails = ({ iface, connection }) => {
 
     const renderLinkDetails = () => {
         return (
-            <ul>
-                <li>
-                    <a href="#" onClick={() => setFormOpen(true)}>{_("ESSID: ")}{wireless.essid}</a>
-                </li>
-                <li>
-                    <a href="#" onClick={() => setFormOpen(true)}>{_("Mode: ")}{wireless.mode}</a>
-                </li>
-                <li>
-                    <a href="#" onClick={() => setFormOpen(true)}>{_("Auth Mode: ")}{wireless.authMode}</a>
-                </li>
-
-            </ul>
+            <a href="#" onClick={() => setFormOpen(true)}>
+                <ul>
+                    <li>
+                        {_("ESSID: ")}{wireless.essid}
+                    </li>
+                    <li>
+                        {_("Mode: ")}{wireless.mode}
+                    </li>
+                    <li>
+                        {_("Auth Mode: ")}{wireless.authMode}
+                    </li>
+                </ul>
+            </a>
         );
     };
 

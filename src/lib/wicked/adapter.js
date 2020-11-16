@@ -53,7 +53,7 @@ class WickedAdapter {
      * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces
      */
     async connections() {
-        const conns = await this.client.getConfigurations();
+        const conns = await this.client.getConfigurations() || [];
         return conns.map(createConnection).filter(c => c.name !== 'lo');
     }
 

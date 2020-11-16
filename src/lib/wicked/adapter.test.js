@@ -24,7 +24,67 @@ import Client from './client';
 
 jest.mock('./client');
 
+const eth0_conn = { name: 'eth0' };
+const br1_conn = { name: 'br0', bridge: { ports: ['eth0'] } };
+const eth0_iface = { interface: { name: 'eth0' } };
+
+const configurations = [eth0_conn, br1_conn];
+const interfaces = [eth0_iface];
+
+const resolveTo = (result) => () => {
+    return new Promise((resolve) => {
+        process.nextTick(() => resolve(result));
+    });
+};
+
 describe('#connections', () => {
+    describe('if there are no connections', () => {
+        beforeAll(() => {
+            Client.mockImplementation(() => {
+                return {
+                    getConfigurations: resolveTo(undefined),
+                    getInterfaces: resolveTo(interfaces)
+                };
+            });
+        });
+
+        it('returns an empty collection', () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            expect.assertions(1);
+            return adapter.connections().then(conns => {
+                expect(conns).toEqual([]);
+            });
+        });
+    });
+
+    describe('when there are available connections', () => {
+        beforeAll(() => {
+            Client.mockImplementation(() => {
+                return {
+                    getConfigurations: resolveTo(configurations),
+                    getInterfaces: resolveTo(interfaces)
+                };
+            });
+        });
+
+        it('returns the list of connections', () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            expect.assertions(1);
+            return adapter.connections().then(conns => {
+                expect(conns).toEqual([
+                    expect.objectContaining({ name: 'eth0', type: 'eth' }),
+                    expect.objectContaining({ name: 'br0', type: 'br' }),
+                ]);
+            });
+        });
+    });
+});
+
+describe('#interfaces', () => {
     const eth0_conn = { name: 'eth0' };
     const br1_conn = { name: 'br0', bridge: { ports: ['eth0'] } };
     const eth0_iface = { interface: { name: 'eth0' } };
@@ -44,19 +104,6 @@ describe('#connections', () => {
                 getConfigurations: resolveTo(configurations),
                 getInterfaces: resolveTo(interfaces)
             };
-        });
-    });
-
-    it('returns the list of connections', () => {
-        const client = new Client();
-        const adapter = new Adapter(client);
-
-        expect.assertions(1);
-        return adapter.connections().then(conns => {
-            expect(conns).toEqual([
-                expect.objectContaining({ name: 'eth0', type: 'eth' }),
-                expect.objectContaining({ name: 'br0', type: 'br' }),
-            ]);
         });
     });
 

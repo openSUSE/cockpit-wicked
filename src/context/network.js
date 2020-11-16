@@ -245,6 +245,21 @@ function addRoute(dispatch, routes, attrs) {
     networkClient().updateRoutes(nextRoutes);
     dispatch({ type: UPDATE_ROUTES, payload: nextRoutes });
 }
+
+/**
+ * Returns if service for interacting with network is active or not
+ *
+ * @return {Promise.<boolean>} Promise that resolves to true if service is active or false if not
+ */
+function serviceIsActive() {
+    return networkClient().isActive()
+            .then(result => result)
+            .catch((error) => {
+                console.error(error);
+                return false;
+            });
+}
+
 /**
  * Fetches the interfaces using the NetworkClient
  *
@@ -313,6 +328,7 @@ export {
     fetchInterfaces,
     fetchConnections,
     fetchRoutes,
+    serviceIsActive,
     addRoute,
     updateRoute,
     deleteRoute,

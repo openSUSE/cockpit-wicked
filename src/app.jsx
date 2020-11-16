@@ -19,33 +19,69 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import cockpit from 'cockpit';
+import {
+    Page,
+    PageSection,
+    PageSectionVariants,
+    Tab,
+    TabTitleText,
+    Tabs,
+    Title
+} from '@patternfly/react-core';
+import { NetworkProvider, serviceIsActive } from './context/network';
+import StatusBar from './components/StatusBar';
+import InactiveServicePage from './components/InactiveServicePage';
 import InterfacesTab from './components/InterfacesTab';
 import RoutingTab from './components/RoutingTab';
-import { Page, Tabs, Tab, TabTitleText } from '@patternfly/react-core';
-import { NetworkProvider } from './context/network';
-import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
 export const Application = () => {
+    const [checkingService, setCheckingService] = useState(true);
+    const [serviceReady, setServiceReady] = useState(false);
     const [activeTabKey, setActiveTabKey] = useState(0);
 
     const handleTabClick = (event, tabIndex) => {
         setActiveTabKey(tabIndex);
     };
 
+    const renderTabs = () => {
+        return (
+            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
+                    <InterfacesTab />
+                </Tab>
+                <Tab eventKey={1} title={<TabTitleText>{_("Routing")}</TabTitleText>}>
+                    <RoutingTab />
+                </Tab>
+            </Tabs>
+        );
+    };
+
+    const renderContent = () => {
+        if (checkingService) return null;
+        if (serviceReady) return renderTabs();
+        return <InactiveServicePage />;
+    };
+
+    useEffect(() => {
+        serviceIsActive()
+                .then(result => {
+                    setCheckingService(false);
+                    setServiceReady(result);
+                });
+    }, []);
+
     return (
         <NetworkProvider>
-            <Page id="network-configuration">
-                <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-                    <Tab eventKey={0} title={<TabTitleText>{_("Interfaces")}</TabTitleText>}>
-                        <InterfacesTab />
-                    </Tab>
-                    <Tab eventKey={1} title={<TabTitleText>{_("Routing")}</TabTitleText>}>
-                        <RoutingTab />
-                    </Tab>
-                </Tabs>
+            <Page>
+                { checkingService && <StatusBar showSpinner>{_("Checking if service is active...")}</StatusBar> }
+
+                <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light}>
+                    { renderContent() }
+                </PageSection>
             </Page>
         </NetworkProvider>
     );

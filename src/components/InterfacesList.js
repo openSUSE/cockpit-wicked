@@ -26,6 +26,7 @@ import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patter
 import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
+import { createConnection } from '../lib/model/connections';
 
 const _ = cockpit.gettext;
 
@@ -53,6 +54,20 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         if (iface.addresses.length === 0) return;
 
         return iface.addresses.map(i => i.local).join(', ');
+    };
+
+    /**
+     * Returns the connection for given interface name or a fake one if it does not exist yet
+     *
+     * When a connection does not exist yet, the user should be able to create one by configuring
+     * the interface. To achieve that, a "default" connection object is needed, in order to build
+     * the needed UI.
+     *
+     * @param {string} name - the interface/connection name
+     * @return {module:model/connections~Connection}
+     */
+    const findOrCreateConnection = (name) => {
+        return connections.find(c => c.name === name) || createConnection({ name, exists: false });
     };
 
     /**

@@ -105,9 +105,25 @@ const ipV6Details = (connection) => {
     );
 };
 
+
 const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConnection }) => {
+    const renderFullDetails = () => {
+        if (connection.exists) {
+            return (
+                <>
+                    { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
+                    { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
+                    { iface.type === interfaceTypeEnum.VLAN && vlanDetails(connection) }
+                    { iface.type === interfaceTypeEnum.WIRELESS && wirelessDetails(iface, connection) }
+                    { ipV4Details(connection) }
+                    { ipV6Details(connection) }
+                </>
+            );
+        }
+    };
+
     const renderActions = () => {
-        if (!connection) return;
+        if (!connection.exists) return;
 
         return (
             <Toolbar>
@@ -138,13 +154,8 @@ const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConn
                     <dt>{_("Type")}</dt>
                     <dd>{interfaceTypeEnum.label(iface.type)}</dd>
                     { iface.mac && macAddress(iface) }
-                    { connection && startMode(connection) }
-                    { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
-                    { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
-                    { iface.type === interfaceTypeEnum.VLAN && vlanDetails(connection) }
-                    { iface.type === interfaceTypeEnum.WIRELESS && wirelessDetails(iface, connection) }
-                    { connection && ipV4Details(connection) }
-                    { connection && ipV6Details(connection) }
+                    {startMode(connection)}
+                    {renderFullDetails()}
                 </dl>
             </SplitItem>
             <SplitItem>

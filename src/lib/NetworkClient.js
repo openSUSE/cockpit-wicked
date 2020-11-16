@@ -121,14 +121,16 @@ class NetworkClient {
     /**
      *
      * @param {Interface} Interface - Obtains the list of networks available for the given interface
-     * @returns {Promise<String|Error>}
+     * @returns {Promise<Array<String>|Error>}
      */
-    getEssidList(iface) {
+    async getEssidList(iface) {
         const link_up = `ip link set ${iface} up`;
         const scan = `iwlist ${iface} scan`;
         const grep_and_cut_essid = "/usr/bin/grep ESSID | /usr/bin/cut -d':' -f2 | /usr/bin/cut -d'\"' -f2";
-        const sort = "/usr/bin/sort -u";
-        return cockpit.spawn(["bash", "-c", `${link_up} && ${scan} | ${grep_and_cut_essid} | ${sort}`], { superuser: true });
+        const output = await cockpit.spawn(
+            ["bash", "-c", `${link_up} && ${scan} | ${grep_and_cut_essid}`], { superuser: true }
+        );
+        return output.trim().split("\n");
     }
 
     /**

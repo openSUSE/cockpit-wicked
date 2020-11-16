@@ -293,6 +293,10 @@ function fetchRoutes(dispatch) {
             .catch(console.error);
 }
 
+function fetchEssidList(name) {
+    return networkClient().getEssidList(name);
+}
+
 /**
  * Starts listening for interface changes
  *
@@ -328,6 +332,7 @@ export {
     fetchInterfaces,
     fetchConnections,
     fetchRoutes,
+    fetchEssidList,
     serviceIsActive,
     addRoute,
     updateRoute,

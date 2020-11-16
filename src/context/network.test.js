@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import { addConnection, updateConnection, actionTypes, resetClient } from './network';
+import { addConnection, updateConnection, configureInterface, actionTypes, resetClient } from './network';
 import model from '../lib/model';
 import interfaceType from '../lib/model/interfaceType';
 import NetworkClient from '../lib/NetworkClient';
@@ -42,6 +42,42 @@ describe('#addConnection', () => {
         return addConnection(dispatchFn, { name: 'eth0', type: interfaceType.BRIDGE })
                 .then(result => {
                     expect(result).toEqual(expect.objectContaining({ name: 'eth0' }));
+                });
+    });
+});
+
+describe('#configureInterface', () => {
+    beforeAll(() => {
+        NetworkClient.mockImplementation(() => {
+            return {
+                addConnection: (conn) => Promise.resolve(conn)
+            };
+        });
+    });
+
+    it('asks the network client to add a connection', () => {
+        const dispatchFn = jest.fn();
+
+        expect.assertions(1);
+        return configureInterface(dispatchFn, { name: 'eth0', type: interfaceType.ETHERNET })
+                .then(result => {
+                    expect(result).toEqual(expect.objectContaining({ name: 'eth0' }));
+                });
+    });
+
+    it('dispatches a CONFIGURE_INTERFACE action with created action marked as present', () => {
+        const dispatchFn = jest.fn();
+        const conn = model.createConnection({ name: 'eth0' });
+        const expectedPayload = { name: conn.name, type: conn.type, exists: true };
+
+        return configureInterface(dispatchFn, conn)
+                .then(result => {
+                    expect(dispatchFn).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            type: actionTypes.CONFIGURE_INTERFACE,
+                            payload: expect.objectContaining(expectedPayload)
+                        })
+                    );
                 });
     });
 });

@@ -31,6 +31,7 @@ const NetworkDispatchContext = React.createContext();
 // TODO: document and test this context.
 
 const SET_INTERFACES = 'set_interfaces';
+const CONFIGURE_INTERFACE = 'configure_interface';
 const SET_CONNECTIONS = 'set_connections';
 const SET_ROUTES = 'set_routes';
 const UPDATE_ROUTES = 'update_routes';
@@ -41,6 +42,7 @@ const UPDATE_INTERFACE = 'update_interface';
 
 const actionTypes = {
     SET_INTERFACES,
+    CONFIGURE_INTERFACE,
     SET_CONNECTIONS,
     SET_ROUTES,
     UPDATE_ROUTES,
@@ -85,15 +87,25 @@ function networkReducer(state, action) {
         const { interfaces, connections } = state;
         const conn = action.payload;
 
-        // Configuring an existing iface?
-        let iface = Object.values(interfaces).find((i) => i.name === conn.name);
-
-        // or just adding a new one?
-        iface ||= createInterface({ name: conn.name, type: conn.type });
+        const iface = createInterface({ name: conn.name, type: conn.type });
 
         return {
             ...state,
             interfaces: { ...interfaces, [iface.id]: iface },
+            connections: { ...connections, [conn.id]: conn }
+        };
+    }
+
+    case CONFIGURE_INTERFACE: {
+        const { interfaces, connections } = state;
+        const conn = action.payload;
+
+        const iface = Object.values(interfaces).find((i) => i.name === conn.name);
+
+        if (!iface) return;
+
+        return {
+            ...state,
             connections: { ...connections, [conn.id]: conn }
         };
     }
@@ -182,9 +194,7 @@ const networkClient = () => {
 /**
  * Creates a connection using the NetworkClient
  *
- * It dispatches the ADD_CONNECTION action. Additionally, if it created the connection from a
- * default one (`exists: false`) the UPDATE_CONNECTION action will be dispatched too when the
- * NetworkClient finish its work.
+ * It dispatches the ADD_CONNECTION action.
  *
  * @todo Notify when something went wrong.
  *
@@ -195,12 +205,27 @@ const networkClient = () => {
 async function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
     dispatch({ type: ADD_CONNECTION, payload: addedConn });
+    return await networkClient().addConnection(addedConn);
+}
+
+/**
+ * Configures an interface by creating a connection for it using the NetworkClient
+ *
+ * It dispatches the CONFIGURE_INTERFACAE action once the NetworkClient finish its work.
+ *
+ * @todo Notify when something went wrong.
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Object} attrs - connection attributes
+ * @return {Promise}
+ */
+async function configureInterface(dispatch, attrs) {
+    const connection = createConnection({ ...attrs, creating: true });
     return await networkClient()
-            .addConnection(addedConn)
+            .addConnection(connection)
             .then((conn) => {
-                if (!attrs.exists) {
-                    dispatch({ type: UPDATE_CONNECTION, payload: { ...addedConn, exists: true } });
-                }
+                dispatch({ type: CONFIGURE_INTERFACE, payload: { ...conn, exists: true } });
+                return conn;
             });
 }
 
@@ -343,6 +368,7 @@ export {
     deleteConnection,
     updateConnection,
     changeConnectionState,
+    configureInterface,
     fetchInterfaces,
     fetchConnections,
     fetchRoutes,

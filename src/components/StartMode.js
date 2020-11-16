@@ -22,7 +22,7 @@
 import React, { useState } from 'react';
 import cockpit from 'cockpit';
 import { FormSelect, FormSelectOption, ModalVariant } from '@patternfly/react-core';
-import { useNetworkDispatch, addConnection, updateConnection } from '../context/network';
+import { useNetworkDispatch, configureInterface, updateConnection } from '../context/network';
 import startModeEnum from '../lib/model/startMode';
 import ModalForm from './ModalForm';
 
@@ -45,7 +45,7 @@ const StartMode = ({ connection }) => {
         if (connection.exists) {
             updateConnection(dispatch, connection, { startMode });
         } else {
-            addConnection(dispatch, { ...connection, startMode });
+            configureInterface(dispatch, { ...connection, startMode });
         }
 
         closeForm();

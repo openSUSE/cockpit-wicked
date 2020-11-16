@@ -105,7 +105,6 @@ const ipV6Details = (connection) => {
     );
 };
 
-
 const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConnection }) => {
     const renderFullDetails = () => {
         if (connection.exists) {

@@ -29,7 +29,7 @@ import WirelessDetails from './WirelessDetails';
 import IPSettingsLink from './IPSettingsLink';
 import DeleteConnection from './DeleteConnection';
 import interfaceTypeEnum from '../lib/model/interfaceType';
-import { Split, SplitItem, Switch } from '@patternfly/react-core';
+import { Split, SplitItem, Switch, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
 const _ = cockpit.gettext;
 
@@ -105,31 +105,53 @@ const ipV6Details = (connection) => {
     );
 };
 
-const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConnection }) => (
-    <Split hasGutter>
-        <SplitItem isFilled>
-            <dl className="details-list">
-                <dt>{_("Type")}</dt>
-                <dd>{interfaceTypeEnum.label(iface.type)}</dd>
-                { iface.mac && macAddress(iface) }
-                { connection && startMode(connection) }
-                { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
-                { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
-                { iface.type === interfaceTypeEnum.VLAN && vlanDetails(connection) }
-                { iface.type === interfaceTypeEnum.WIRELESS && wirelessDetails(iface, connection) }
-                { connection && ipV4Details(connection) }
-                { connection && ipV6Details(connection) }
-            </dl>
-        </SplitItem>
-        { connection &&
+const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConnection }) => {
+    const renderActions = () => {
+        if (!connection) return;
+
+        return (
+            <Toolbar>
+                <ToolbarContent>
+                    <ToolbarItem>
+                        <DeleteConnection connection={connection} deleteConnection={removeConnection} />
+                    </ToolbarItem>
+
+                    {
+                        iface &&
+                        <ToolbarItem>
+                            <Switch
+                              id={`status_${iface.name}}`}
+                              isChecked={iface.link}
+                              onChange={() => changeConnectionState(connection, !iface.link)}
+                            />
+                        </ToolbarItem>
+                    }
+                </ToolbarContent>
+            </Toolbar>
+        );
+    };
+
+    return (
+        <Split hasGutter>
+            <SplitItem isFilled>
+                <dl className="details-list">
+                    <dt>{_("Type")}</dt>
+                    <dd>{interfaceTypeEnum.label(iface.type)}</dd>
+                    { iface.mac && macAddress(iface) }
+                    { connection && startMode(connection) }
+                    { iface.type === interfaceTypeEnum.BONDING && bondDetails(connection) }
+                    { iface.type === interfaceTypeEnum.BRIDGE && bridgeDetails(connection) }
+                    { iface.type === interfaceTypeEnum.VLAN && vlanDetails(connection) }
+                    { iface.type === interfaceTypeEnum.WIRELESS && wirelessDetails(iface, connection) }
+                    { connection && ipV4Details(connection) }
+                    { connection && ipV6Details(connection) }
+                </dl>
+            </SplitItem>
             <SplitItem>
-                <DeleteConnection connection={connection} deleteConnection={removeConnection} />
-            </SplitItem>}
-        { iface && connection &&
-            <SplitItem>
-                <Switch id={`status_${iface.name}}`} isChecked={iface.link} onChange={() => changeConnectionState(connection, !iface.link)} />
-            </SplitItem>}
-    </Split>
-);
+                { renderActions() }
+            </SplitItem>
+        </Split>
+    );
+};
 
 export default InterfaceDetails;

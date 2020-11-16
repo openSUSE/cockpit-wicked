@@ -28,7 +28,6 @@ import {
     Tab,
     TabTitleText,
     Tabs,
-    Title
 } from '@patternfly/react-core';
 import { NetworkProvider, serviceIsActive } from './context/network';
 import StatusBar from './components/StatusBar';

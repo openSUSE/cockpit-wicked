@@ -44,6 +44,11 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
     const dispatch = useNetworkDispatch();
     const [suggestName, setSuggestName] = useState(!isEditing);
 
+    const proposeName = () => {
+        if (!suggestName) return;
+        setName(`${parentDevice}.${vlanId}`);
+    };
+
     useEffect(() => {
         setCandidateInterfaces(Object.values(interfaces).filter(i => i.type !== interfaceType.VLAN));
         if (!parentDevice) setParentDevice(Object.values(interfaces)[0]?.name);
@@ -73,11 +78,6 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
     const updateName = (value) => {
         setName(value);
         setSuggestName(false);
-    };
-
-    const proposeName = () => {
-        if (!suggestName) return;
-        setName(`${parentDevice}.${vlanId}`);
     };
 
     if (!parentDevice) return null;

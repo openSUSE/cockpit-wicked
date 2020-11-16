@@ -122,13 +122,15 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                     isRequired
                     fieldId="essid"
                 >
-                    { scanning
-                        ? <Bullseye><Spinner size="lg" /></Bullseye>
-                        : <FormSelect value={essid} onChange={setEssid} id="essid">
+                    { scanning ? (
+                        <Bullseye><Spinner size="lg" /></Bullseye>
+                    ) : (
+                        <FormSelect value={essid} onChange={setEssid} id="essid">
                             {essidList.map((option, index) => (
                                 <FormSelectOption key={option} value={option} label={option} />
                             ))}
-                        </FormSelect>}
+                        </FormSelect>
+                    ) }
                 </FormGroup>
                 <FormGroup
                     label={_("Auth Mode")}

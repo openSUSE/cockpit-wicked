@@ -89,13 +89,16 @@ const AddressesDataList = ({ addresses, updateAddresses, allowEmpty = true }) =>
             if (!field) return null;
 
             const FieldComponent = field.component;
+            const handleError = (value) => {
+                console.log("Invalid value", value, "for", fieldKey, "on address", id);
+            };
 
             return (
                 <DataListCell key={`address-${id}-${fieldKey}`}>
                     <FieldComponent
                       defaultValue={address[fieldKey]}
                       onChange={(value) => updateAddress(id, fieldKey, value)}
-                      onError={(value) => console.log("Invalid value", value, "for", fieldKey, "on address", id)}
+                      onError={handleError}
                       {...field.props}
                     />
                 </DataListCell>

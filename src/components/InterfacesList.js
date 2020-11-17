@@ -26,6 +26,7 @@ import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patter
 import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
+import { createConnection } from '../lib/model/connections';
 
 const _ = cockpit.gettext;
 
@@ -56,6 +57,20 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     };
 
     /**
+     * Returns the connection for given interface name or a fake one if it does not exist yet
+     *
+     * When a connection does not exist yet, the user should be able to create one by configuring
+     * the interface. To achieve that, a "default" connection object is needed, in order to build
+     * the needed UI.
+     *
+     * @param {string} name - the interface/connection name
+     * @return {module:model/connections~Connection}
+     */
+    const findOrCreateConnection = useCallback((name) => {
+        return connections.find(c => c.name === name) || createConnection({ name, exists: false });
+    }, [connections]);
+
+    /**
      * Builds the needed structure for rendering the interfaces and their details in an expandable
      * Patternfly/Table
      */
@@ -63,7 +78,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         let parentId = 0;
 
         return interfaces.reduce((list, i) => {
-            const conn = connections.find(c => i.name == c.name);
+            const conn = findOrCreateConnection(i.name);
 
             list.push(
                 {
@@ -91,7 +106,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
             return list;
         }, []);
-    }, [connections, interfaces, openRows, removeConnection, changeState]);
+    }, [interfaces, openRows, removeConnection, changeState, findOrCreateConnection]);
 
     /**
      * Keeps the openRows internal state up to date using the information provided by the

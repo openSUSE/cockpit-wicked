@@ -53,7 +53,7 @@ class WickedAdapter {
      * @return {Promise.<Array.<Connection>>} Promise that resolves to a list of interfaces
      */
     async connections() {
-        const conns = await this.client.getConfigurations();
+        const conns = await this.client.getConfigurations() || [];
         return conns.map(createConnection).filter(c => c.name !== 'lo');
     }
 
@@ -122,7 +122,6 @@ class WickedAdapter {
     addConnection(connection) {
         return new Promise((resolve, reject) => {
             this.updateConnectionConfig(connection)
-                    .then(() => this.reloadConnection(connection.name))
                     .then(() => resolve(connection))
                     .catch(reject);
         });
@@ -136,9 +135,7 @@ class WickedAdapter {
      */
     removeConnection(connection) {
         return new Promise((resolve, reject) => {
-            const name = connection.name;
             this.deleteConnectionConfig(connection)
-                    .then(() => this.reloadConnection(name))
                     .catch(reject);
         });
     }
@@ -152,7 +149,6 @@ class WickedAdapter {
     updateConnection(connection) {
         return new Promise((resolve, reject) => {
             this.updateConnectionConfig(connection)
-                    .then(() => this.reloadConnection(connection.name))
                     .then(() => resolve(connection))
                     .catch(reject);
         });

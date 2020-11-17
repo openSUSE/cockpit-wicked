@@ -22,7 +22,7 @@
 import React, { useState } from 'react';
 import cockpit from 'cockpit';
 import { FormSelect, FormSelectOption, ModalVariant } from '@patternfly/react-core';
-import { useNetworkDispatch, updateConnection } from '../context/network';
+import { useNetworkDispatch, addConnection, updateConnection } from '../context/network';
 import startModeEnum from '../lib/model/startMode';
 import ModalForm from './ModalForm';
 
@@ -42,11 +42,24 @@ const StartMode = ({ connection }) => {
 
     const handleSubmit = () => {
         // TODO: notify that something went wrong.
-        updateConnection(dispatch, connection, { startMode });
+        if (connection.exists) {
+            updateConnection(dispatch, connection, { startMode });
+        } else {
+            addConnection(dispatch, { ...connection, startMode });
+        }
+
         closeForm();
     };
 
+    const renderLink = () => {
+        const label = connection.exists ? startModeEnum.label(connection.startMode) : _("Not configured");
+
+        return <a href="#" onClick={openForm}>{label}</a>;
+    };
+
     const renderModalForm = () => {
+        if (!isOpen) return;
+
         return (
             <ModalForm
               caption={connection.name}
@@ -67,8 +80,8 @@ const StartMode = ({ connection }) => {
 
     return (
         <>
-            <a href="#" onClick={openForm}>{startModeEnum.label(connection.startMode)}</a>
-            { isOpen && renderModalForm() }
+            { renderLink() }
+            { renderModalForm() }
         </>
     );
 };

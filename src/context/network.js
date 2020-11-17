@@ -84,7 +84,13 @@ function networkReducer(state, action) {
     case ADD_CONNECTION: {
         const { interfaces, connections } = state;
         const conn = action.payload;
-        const iface = createInterface({ name: conn.name, type: conn.type });
+
+        // Configuring an existing iface?
+        let iface = Object.values(interfaces).find((i) => i.name === conn.name);
+
+        // or just adding a new one?
+        iface ||= createInterface({ name: conn.name, type: conn.type });
+
         return {
             ...state,
             interfaces: { ...interfaces, [iface.id]: iface },
@@ -120,7 +126,7 @@ function networkReducer(state, action) {
         // FIXME: we need to keep the old ID. Perhaps we should consider how we are handled the IDs.
         return {
             ...state, interfaces:
-            { ...interfaces, [oldIface.id]: { ...action.payload, id: oldIface.id } }
+            { ...interfaces, [oldIface.id]: { ...oldIface, ...action.payload, id: oldIface.id } }
         };
     }
 
@@ -176,7 +182,9 @@ const networkClient = () => {
 /**
  * Creates a connection using the NetworkClient
  *
- * If the create was successful, it dispatches the ADD_CONNECTION action.
+ * It dispatches the ADD_CONNECTION action. Additionally, if it created the connection from a
+ * default one (`exists: false`) the UPDATE_CONNECTION action will be dispatched too when the
+ * NetworkClient finish its work.
  *
  * @todo Notify when something went wrong.
  *
@@ -184,10 +192,17 @@ const networkClient = () => {
  * @param {Object} attrs - Attributes for the new connection
  * @return {Promise}
  */
-async function addConnection(dispatch, attrs) {
+function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
     dispatch({ type: ADD_CONNECTION, payload: addedConn });
-    return await networkClient().addConnection(addedConn);
+    return networkClient()
+            .addConnection(addedConn)
+            .then(conn => {
+                if (!attrs.exists) {
+                    dispatch({ type: UPDATE_CONNECTION, payload: { ...addedConn, exists: true } });
+                }
+                networkClient().reloadConnection(addedConn.name);
+            });
 }
 
 /**
@@ -202,11 +217,13 @@ async function addConnection(dispatch, attrs) {
  * @param {Object|Connection} changes - Changes to apply to the connection
  * @return {Promise}
  */
-async function updateConnection(dispatch, connection, changes) {
+function updateConnection(dispatch, connection, changes) {
     const updatedConn = mergeConnection(connection, changes);
     dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
     // FIXME: handle errors
-    return await networkClient().updateConnection(updatedConn);
+    return networkClient()
+            .updateConnection(updatedConn)
+            .then(() => networkClient().reloadConnection(updatedConn.name));
 }
 
 async function deleteConnection(dispatch, connection) {

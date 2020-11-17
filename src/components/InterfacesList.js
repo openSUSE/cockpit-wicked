@@ -66,9 +66,9 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
      * @param {string} name - the interface/connection name
      * @return {module:model/connections~Connection}
      */
-    const findOrCreateConnection = (name) => {
+    const findOrCreateConnection = useCallback((name) => {
         return connections.find(c => c.name === name) || createConnection({ name, exists: false });
-    };
+    }, [connections]);
 
     /**
      * Builds the needed structure for rendering the interfaces and their details in an expandable
@@ -78,7 +78,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         let parentId = 0;
 
         return interfaces.reduce((list, i) => {
-            const conn = findOrCreateConnection(i.name)
+            const conn = findOrCreateConnection(i.name);
 
             list.push(
                 {
@@ -106,7 +106,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
             return list;
         }, []);
-    }, [connections, interfaces, openRows, removeConnection, changeState]);
+    }, [interfaces, openRows, removeConnection, changeState, findOrCreateConnection]);
 
     /**
      * Keeps the openRows internal state up to date using the information provided by the

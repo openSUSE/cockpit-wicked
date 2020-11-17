@@ -20,11 +20,10 @@
  */
 
 import cockpit from "cockpit";
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardActions, CardTitle, CardBody } from '@patternfly/react-core';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, CardHeader, CardTitle, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
 import InterfaceDetails from "./InterfaceDetails";
-import TypesFilter from "./TypesFilter";
 import interfaceType from '../lib/model/interfaceType';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 
@@ -32,8 +31,6 @@ const _ = cockpit.gettext;
 
 const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const [rows, setRows] = useState([]);
-    const [types, setTypes] = useState([]);
-    const [filterByType, setFilterByType] = useState([]);
     const [openRows, setOpenRows] = useState([]);
     const dispatch = useNetworkDispatch();
 
@@ -41,16 +38,16 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
         { title: _("Status") },
-        { title: _("IP") }
+        { title: _("Addresses") }
     ];
 
-    const removeConnection = (connection) => {
+    const removeConnection = useCallback((connection) => {
         deleteConnection(dispatch, connection);
-    };
+    }, [dispatch]);
 
-    const changeState = (connection, state) => {
+    const changeState = useCallback((connection, state) => {
         changeConnectionState(dispatch, connection, state);
-    };
+    }, [dispatch]);
 
     const interfaceAddresses = (iface) => {
         if (iface.addresses.length === 0) return;
@@ -62,14 +59,10 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
      * Builds the needed structure for rendering the interfaces and their details in an expandable
      * Patternfly/Table
      */
-    const buildRows = () => {
+    const buildRows = useCallback(() => {
         let parentId = 0;
 
         return interfaces.reduce((list, i) => {
-            if (filterByType.length && !filterByType.includes(i.type)) {
-                return list;
-            }
-
             const conn = connections.find(c => i.name == c.name);
 
             list.push(
@@ -98,7 +91,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
             return list;
         }, []);
-    };
+    }, [connections, interfaces, openRows, removeConnection, changeState]);
 
     /**
      * Keeps the openRows internal state up to date using the information provided by the
@@ -113,26 +106,12 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     };
 
     useEffect(() => {
-        const uniqueTypes = [...new Set(interfaces.map((i) => i.type))];
-        setTypes(uniqueTypes);
-    }, [interfaces]);
-
-    useEffect(() => {
         setRows(buildRows());
-    }, [interfaces, connections, openRows, filterByType]);
+    }, [buildRows]);
 
     return (
         <Card>
             <CardHeader>
-                <CardActions>
-                    <TypesFilter
-                        types={types}
-                        onSelect={(selectedTypes) => {
-                            setOpenRows([]);
-                            setFilterByType(selectedTypes);
-                        }}
-                    />
-                </CardActions>
                 <CardTitle><h2>{_("Interfaces")}</h2></CardTitle>
             </CardHeader>
             <CardBody>

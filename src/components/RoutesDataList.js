@@ -78,13 +78,16 @@ const RoutesDataList = ({ routes, updateRoutes }) => {
             if (!field) return null;
 
             const FieldComponent = field.component;
+            const handleError = (value) => {
+                console.log("Invalid value", value, "for", fieldKey, "on route", id);
+            };
 
             return (
                 <DataListCell key={`route-${id}-${fieldKey}`}>
                     <FieldComponent
                       defaultValue={route[fieldKey]}
                       onChange={(value) => updateRoute(id, fieldKey, value)}
-                      onError={(value) => console.log("Invalid value", value, "for", fieldKey, "on route", id)}
+                      onError={handleError}
                       {...field.props}
                     />
                 </DataListCell>

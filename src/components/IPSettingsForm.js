@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import cockpit from 'cockpit';
 import { Alert, FormGroup, ModalVariant } from '@patternfly/react-core';
 import { useNetworkDispatch, updateConnection } from '../context/network';
@@ -88,7 +88,6 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
     const [addresses, setAddresses] = useState(settings.addresses);
     const [addressRequired, setAddressRequired] = useState(settings.bootProto === bootProtocol.STATIC);
     const [errorMessages, setErrorMessages] = useState([]);
-    const [isApplying, setIsApplying] = useState(false);
 
     /**
      * Performs an update of the internal addresses state
@@ -100,7 +99,7 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
      * @param {Array<module:model~AddressConfig>} [nextAddresses] - Addresses to be used for the
      *   update. When not given, current addresses will be used.
      */
-    const forceAddressesUpdate = (nextAddresses) => {
+    const forceAddressesUpdate = useCallback((nextAddresses) => {
         nextAddresses ||= addresses;
 
         if (bootProto === bootProtocol.STATIC && nextAddresses.length === 0) {
@@ -108,7 +107,7 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
         }
 
         setAddresses(nextAddresses);
-    };
+    }, [addresses, bootProto]);
 
     /**
      * Performs validations using given addresses
@@ -167,14 +166,11 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
      * @see {@link module/context/network~updateConnection}
      */
     const handleSubmit = () => {
-        setIsApplying(true);
-
         const sanitizedAddresses = sanitize(addresses);
 
         // Do not proceed if errors were found
         if (!validate(sanitizedAddresses)) {
             forceAddressesUpdate(sanitizedAddresses);
-            setIsApplying(false);
             return;
         }
 
@@ -197,7 +193,7 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
     useEffect(() => {
         forceAddressesUpdate();
         setAddressRequired(bootProto === bootProtocol.STATIC);
-    }, [bootProto]);
+    }, [forceAddressesUpdate, bootProto]);
 
     /**
      * Renders error messages in an Patternfly/Alert component, if any

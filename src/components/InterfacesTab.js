@@ -37,7 +37,7 @@ const InterfacesTab = () => {
         fetchConnections(dispatch);
         fetchInterfaces(dispatch);
         listenToInterfacesChanges(dispatch);
-    }, []);
+    }, [dispatch]);
 
     const interfacesList = interfaces ? Object.values(interfaces) : [];
     const connectionsList = connections ? Object.values(connections) : [];

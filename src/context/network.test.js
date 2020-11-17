@@ -28,9 +28,11 @@ jest.mock('../lib/NetworkClient');
 
 describe('#addConnection', () => {
     beforeAll(() => {
+        resetClient();
         NetworkClient.mockImplementation(() => {
             return {
-                addConnection: (conn) => Promise.resolve(conn)
+                addConnection: (conn) => Promise.resolve(conn),
+                reloadConnection: (name) => Promise.resolve()
             };
         });
     });
@@ -51,7 +53,8 @@ describe('#updateConnection', () => {
         resetClient();
         NetworkClient.mockImplementation(() => {
             return {
-                updateConnection: (conn) => Promise.resolve(conn)
+                updateConnection: (conn) => Promise.resolve(conn),
+                reloadConnection: (name) => Promise.resolve(),
             };
         });
     });

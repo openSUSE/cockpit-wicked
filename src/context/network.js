@@ -192,15 +192,16 @@ const networkClient = () => {
  * @param {Object} attrs - Attributes for the new connection
  * @return {Promise}
  */
-async function addConnection(dispatch, attrs) {
+function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
     dispatch({ type: ADD_CONNECTION, payload: addedConn });
-    return await networkClient()
+    return networkClient()
             .addConnection(addedConn)
-            .then((conn) => {
+            .then(conn => {
                 if (!attrs.exists) {
                     dispatch({ type: UPDATE_CONNECTION, payload: { ...addedConn, exists: true } });
                 }
+                networkClient().reloadConnection(addedConn.name);
             });
 }
 
@@ -216,11 +217,13 @@ async function addConnection(dispatch, attrs) {
  * @param {Object|Connection} changes - Changes to apply to the connection
  * @return {Promise}
  */
-async function updateConnection(dispatch, connection, changes) {
+function updateConnection(dispatch, connection, changes) {
     const updatedConn = mergeConnection(connection, changes);
     dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
     // FIXME: handle errors
-    return await networkClient().updateConnection(updatedConn);
+    return networkClient()
+            .updateConnection(updatedConn)
+            .then(() => networkClient().reloadConnection(updatedConn.name));
 }
 
 async function deleteConnection(dispatch, connection) {

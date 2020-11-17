@@ -122,7 +122,6 @@ class WickedAdapter {
     addConnection(connection) {
         return new Promise((resolve, reject) => {
             this.updateConnectionConfig(connection)
-                    .then(() => this.reloadConnection(connection.name))
                     .then(() => resolve(connection))
                     .catch(reject);
         });
@@ -136,9 +135,7 @@ class WickedAdapter {
      */
     removeConnection(connection) {
         return new Promise((resolve, reject) => {
-            const name = connection.name;
             this.deleteConnectionConfig(connection)
-                    .then(() => this.reloadConnection(name))
                     .catch(reject);
         });
     }
@@ -152,7 +149,6 @@ class WickedAdapter {
     updateConnection(connection) {
         return new Promise((resolve, reject) => {
             this.updateConnectionConfig(connection)
-                    .then(() => this.reloadConnection(connection.name))
                     .then(() => resolve(connection))
                     .catch(reject);
         });

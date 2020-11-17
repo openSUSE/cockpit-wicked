@@ -81,6 +81,16 @@ class NetworkClient {
         return this.adapter.removeConnection(connection);
     }
 
+    /**
+     * Reloads a connection
+     *
+     * @param {String} name - Connection's name
+     * @returns {Promise}
+     */
+    reloadConnection(name) {
+        return this.adapter.reloadConnection(name);
+    }
+
     setUpConnection(connection) {
         return this.adapter.setUpConnection(connection);
     }

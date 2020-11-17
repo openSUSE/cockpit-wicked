@@ -23,6 +23,7 @@
     "@babel/preset-react": "^7.0.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.2.2",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "chrome-remote-interface": "^0.28.0",

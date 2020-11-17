@@ -21,27 +21,66 @@
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
-
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom/extend-expect';
+import { NetworkProvider } from '../context/network';
 import InterfacesList from "./InterfacesList";
+import { createInterface } from '../lib/model/interfaces';
+import { createConnection } from '../lib/model/connections';
+import { createAddressConfig } from '../lib/model/address';
 
 const interfaces = [
-    { name: "eth0", type: "eth" }
+    createInterface(
+        {
+            name: 'eth0',
+            mac: '00:d8:23:93:14:cc',
+            addresses: [createAddressConfig({ local: '192.168.8.100/24' })]
+        }
+    )
 ];
 
 const connections = [
-    { id: 1, name: "eth0", description: "Ethernet Card #1" }
+    createConnection({ id: 1, name: 'eth0' })
 ];
 
-describe("InterfacesList", () => {
-    test.skip("shows the interfaces name", () => {
-        render(<InterfacesList interfaces={interfaces} connections={connections} />);
+const customRender = (ui, { providerProps, ...renderOptions }) => {
+    return render(
+        <NetworkProvider {...providerProps}>{ui}</NetworkProvider>,
+        renderOptions
+    );
+};
 
-        expect(screen.getByText("eth0")).toBeInTheDocument();
+describe('InterfacesList', () => {
+    test('shows the interfaces names and IPs', () => {
+        customRender(
+            <InterfacesList interfaces={interfaces} connections={connections} />,
+            { value: { connections, interfaces } }
+        );
+
+        expect(screen.getByText('eth0')).toBeInTheDocument();
+        expect(screen.getByText('192.168.8.100/24')).toBeInTheDocument();
     });
 
-    test.skip("shows the interfaces IP", () => {
-        render(<InterfacesList />);
+    test('display details', () => {
+        customRender(
+            <InterfacesList interfaces={interfaces} connections={connections} />,
+            { value: { connections, interfaces } }
+        );
 
-        screen.getByText("192.168.8.100");
+        expect(screen.getByText('00:d8:23:93:14:cc')).not.toBeVisible();
+
+        const expandButton = screen.getByRole('button', { name: 'Details' });
+        userEvent.click(expandButton);
+        expect(screen.getByText('On Boot')).toBeVisible();
+    });
+
+    test('when the connection is not configured', () => {
+        customRender(
+            <InterfacesList interfaces={interfaces} connections={[]} />,
+            { value: { connections, interfaces } }
+        );
+
+        expect(screen.getByText('eth0')).toBeInTheDocument();
+        expect(screen.getByText('Not configured')).toBeInTheDocument();
     });
 });

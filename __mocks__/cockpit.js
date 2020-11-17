@@ -43,7 +43,8 @@ const cockpit = {
         });
     },
     file: () => ({}),
-    dbus: () => ({ subscribe: () => ({}) })
+    dbus: () => ({ subscribe: () => ({}) }),
+    format: (args) => args,
 };
 
 export default cockpit;

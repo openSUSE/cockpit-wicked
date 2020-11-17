@@ -226,10 +226,12 @@ function updateConnection(dispatch, connection, changes) {
             .then(() => networkClient().reloadConnection(updatedConn.name));
 }
 
-async function deleteConnection(dispatch, connection) {
+function deleteConnection(dispatch, connection) {
     dispatch({ type: DELETE_CONNECTION, payload: connection });
 
-    return await networkClient().removeConnection(connection);
+    return networkClient()
+            .removeConnection(connection)
+            .then(() => networkClient().setDownConnection(connection));
 }
 
 async function changeConnectionState(dispatch, connection, setUp) {

@@ -136,6 +136,7 @@ class WickedAdapter {
     removeConnection(connection) {
         return new Promise((resolve, reject) => {
             this.deleteConnectionConfig(connection)
+                    .then(() => resolve(connection))
                     .catch(reject);
         });
     }

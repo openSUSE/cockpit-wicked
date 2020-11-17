@@ -78,7 +78,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         let parentId = 0;
 
         return interfaces.reduce((list, i) => {
-            const conn = connections.find(c => i.name == c.name);
+            const conn = findOrCreateConnection(i.name)
 
             list.push(
                 {

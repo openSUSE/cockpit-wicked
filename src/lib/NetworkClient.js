@@ -73,6 +73,19 @@ class NetworkClient {
         return await this.adapter.routes();
     }
 
+    /**
+     *
+     *
+     *
+     */
+    async getDnsSettings() {
+        return this.adapter.dnsSettings();
+    }
+
+    updateDnsSettings(changes) {
+        return this.adapter.updateDnsSettings(changes);
+    }
+
     addConnection(connection) {
         return this.adapter.addConnection(connection);
     }

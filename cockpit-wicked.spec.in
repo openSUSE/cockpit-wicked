@@ -2,18 +2,22 @@ Name: cockpit-wicked
 Version: %{VERSION}
 Release: 1%{?dist}
 Summary: Cockpit user interface for Wicked
-License: LGPLv2+
-
-Source: cockpit-wicked-%{version}.tar.gz
+License: LGPL-2.1-or-later
+URL: https://github.com/openSUSE/cockpit-wicked
+Source: https://github.com/openSUSE/cockpit-wicked/releases/download/%{version}/cockpit-wicked-%{version}.tar.gz
 BuildArch: noarch
-BuildRequires:  libappstream-glib
+BuildRequires:  appstream-glib
 
 Requires: cockpit-system
+Requires: wicked
+
+BuildRequires: nodejs-devel
+BuildRequires: npm
 
 %define debug_package %{nil}
 
 %description
-Cockpit Starter Kit Example Module
+Cockpit module for managing network configuration through Wicked.
 
 %prep
 %setup -n cockpit-wicked
@@ -26,7 +30,7 @@ appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/metainfo/*
 find %{buildroot}%{_datadir}/cockpit/ -name '*.map' | xargs rm --verbose
 
 %files
-%{_datadir}/cockpit/*
+%{_datadir}/cockpit
 %{_datadir}/metainfo/*
 
 %changelog

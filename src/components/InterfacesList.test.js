@@ -68,9 +68,11 @@ describe('InterfacesList', () => {
         );
 
         expect(screen.getByText('00:d8:23:93:14:cc')).not.toBeVisible();
+        expect(screen.getByText('On Boot')).not.toBeVisible();
 
         const expandButton = screen.getByRole('button', { name: 'Details' });
         userEvent.click(expandButton);
+        expect(screen.getByText('00:d8:23:93:14:cc')).toBeVisible();
         expect(screen.getByText('On Boot')).toBeVisible();
     });
 

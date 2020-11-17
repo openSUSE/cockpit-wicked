@@ -195,14 +195,14 @@ const networkClient = () => {
 function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
     dispatch({ type: ADD_CONNECTION, payload: addedConn });
-    return networkClient()
-            .addConnection(addedConn)
-            .then(conn => {
-                if (!attrs.exists) {
-                    dispatch({ type: UPDATE_CONNECTION, payload: { ...addedConn, exists: true } });
-                }
-                networkClient().reloadConnection(addedConn.name);
-            });
+    const promise = networkClient().addConnection(addedConn);
+    promise.then(conn => {
+        if (!attrs.exists) {
+            dispatch({ type: UPDATE_CONNECTION, payload: { ...addedConn, exists: true } });
+        }
+        networkClient().reloadConnection(addedConn.name);
+    });
+    return promise;
 }
 
 /**
@@ -221,9 +221,9 @@ function updateConnection(dispatch, connection, changes) {
     const updatedConn = mergeConnection(connection, changes);
     dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
     // FIXME: handle errors
-    return networkClient()
-            .updateConnection(updatedConn)
-            .then(() => networkClient().reloadConnection(updatedConn.name));
+    const promise = networkClient().updateConnection(updatedConn);
+    promise.then(() => networkClient().reloadConnection(updatedConn.name));
+    return promise;
 }
 
 function deleteConnection(dispatch, connection) {

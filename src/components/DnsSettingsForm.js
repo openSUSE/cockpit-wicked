@@ -41,17 +41,17 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
     const [searchList, setSearchList] = useState(dns?.searchList || "");
 
     const nameServers = () => {
-        return [nameserver1, nameserver2, nameserver3].filter(Boolean).join(" ");
+        return [nameserver1, nameserver2, nameserver3].filter(Boolean);
     };
 
     const configChanged = () => {
-        return ((nameServers() !== (dns?.nameServers || "")) ||
+        return ((nameServers().join(" ") !== (dns?.nameServers || "")) ||
             (policy !== (dns?.policy || "")) || (searchList !== (dns?.searchList || "")));
     };
 
     const handleSubmit = () => {
         if (configChanged())
-            updateDnsSettings(dispatch, { nameServers: nameServers(), policy, searchList });
+            updateDnsSettings(dispatch, { nameServers: nameServers().join(" "), policy, searchList });
         onClose();
     };
 
@@ -79,20 +79,23 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
                 label={_("Search List")}
                 isRequired
                 fieldId="dns_search_list"
+                helperText={_("Space separated list of DNS domain names used for host-name lookup")}
             >
                 <TextInput
                     id="dns_search_list"
+                    placeholder={_("example.com another.com")}
                     value={searchList}
                     onChange={setSearchList}
                 />
             </FormGroup>
             <FormGroup
                 label={_("Static Nameservers")}
+                helperText={_("Namserver IP address used for host-name lookup.")}
             >
                 <IPInput
                     id="dns_nameserver_one"
                     onChange={setNameserver1}
-                    placeholder={_("Nameserver 1")}
+                    placeholder={_("Nameserver IP")}
                     value={nameserver1}
                     onError={(value) => console.log("Invalid value", value, "for nameserver 1")}
                 />
@@ -101,7 +104,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
             <FormGroup>
                 <IPInput
                     id="dns_nameserver_two"
-                    placeholder={_("Nameserver 2")}
+                    placeholder={_("Nameserver IP")}
                     value={nameserver2}
                     onChange={setNameserver2}
                     onError={(value) => console.log("Invalid value", value, "for nameserver 2")}
@@ -110,7 +113,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
             <FormGroup>
                 <IPInput
                     id="dns_nameserver_three"
-                    placeholder={_("Nameserver 3")}
+                    placeholder={_("Nameserver IP")}
                     value={nameserver3}
                     onChange={setNameserver3}
                     onError={(value) => console.log("Invalid value", value, "for nameserver 3")}

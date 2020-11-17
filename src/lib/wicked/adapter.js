@@ -120,7 +120,7 @@ class WickedAdapter {
     async dnsSettings() {
         const filePath = `/etc/sysconfig/network/config`;
         const file = await new SysconfigFile(filePath).read();
-        const policy = await file.get("NETCONFIG_DNS_POLICY") || "auto";
+        const policy = await file.get("NETCONFIG_DNS_POLICY") || "";
         const nameServers = await file.get("NETCONFIG_DNS_STATIC_SERVERS") || "";
         const searchList = await file.get("NETCONFIG_DNS_STATIC_SEARCHLIST") || "";
 

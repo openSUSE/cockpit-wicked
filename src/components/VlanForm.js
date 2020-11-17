@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import cockpit from 'cockpit';
 import {
     FormGroup,
@@ -44,19 +44,18 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
     const dispatch = useNetworkDispatch();
     const [suggestName, setSuggestName] = useState(!isEditing);
 
-    const proposeName = () => {
+    const proposeName = useCallback(() => {
         if (!suggestName) return;
+
         setName(`${parentDevice}.${vlanId}`);
-    };
+    }, [suggestName, parentDevice, vlanId]);
 
     useEffect(() => {
         setCandidateInterfaces(Object.values(interfaces).filter(i => i.type !== interfaceType.VLAN));
         if (!parentDevice) setParentDevice(Object.values(interfaces)[0]?.name);
-    }, [interfaces]);
+    }, [interfaces, parentDevice]);
 
-    useEffect(() => {
-        proposeName();
-    }, [vlanId, parentDevice]);
+    useEffect(proposeName, [proposeName]);
 
     const addOrUpdateConnection = () => {
         if (isEditing) {

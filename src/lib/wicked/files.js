@@ -240,11 +240,12 @@ class SysconfigFile {
      * Get the value for a given variable
      *
      * @param {string} key - Variable name
-     * @return {string|undefined} - Variable value or undefined if not found
+     * @param {*} [defaultValue] - Default value in case of not found value
+     * @return {string|*} - Variable value or defaultValue if not found
      */
-    get(key) {
+    get(key, defaultValue) {
         const line = this.data.find(l => l.key === key);
-        return (line && !line.commented) ? line.value : undefined;
+        return (line && !line.commented) ? line.value : defaultValue;
     }
 
     /**

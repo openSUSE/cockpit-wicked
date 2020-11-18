@@ -33,6 +33,7 @@ const NetworkDispatchContext = React.createContext();
 const SET_INTERFACES = 'set_interfaces';
 const SET_CONNECTIONS = 'set_connections';
 const SET_ROUTES = 'set_routes';
+const SET_DNS = 'set_dns';
 const UPDATE_ROUTES = 'update_routes';
 const ADD_CONNECTION = 'add_connection';
 const DELETE_CONNECTION = 'delete_connection';
@@ -43,6 +44,7 @@ const CONNECTION_ERROR = 'connection_error';
 const actionTypes = {
     SET_INTERFACES,
     SET_CONNECTIONS,
+    SET_DNS,
     SET_ROUTES,
     UPDATE_ROUTES,
     ADD_CONNECTION,
@@ -67,6 +69,10 @@ function networkReducer(state, action) {
             return { ...all, [conn.id]: conn };
         }, {});
         return { ...state, connections };
+    }
+
+    case SET_DNS: {
+        return { ...state, dns: action.payload };
     }
 
     case SET_ROUTES: {
@@ -225,6 +231,12 @@ async function addConnection(dispatch, attrs) {
     return addedConn;
 }
 
+async function updateDnsSettings(dispatch, changes) {
+    dispatch({ type: SET_DNS, payload: changes });
+    // FIXME: handle errors
+    return await networkClient().updateDnsSettings(changes);
+}
+
 /**
  * Updates a connection using the NetworkClient
  *
@@ -312,6 +324,17 @@ function serviceIsActive() {
 }
 
 /**
+ * Obtain the DNS settings using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ */
+function fetchDnsSettings(dispatch) {
+    networkClient().getDnsSettings()
+            .then(result => dispatch({ type: actionTypes.SET_DNS, payload: result }))
+            .catch(console.error);
+}
+
+/**
  * Fetches the interfaces using the NetworkClient
  *
  * @param {function} dispatch - Dispatch function
@@ -385,6 +408,8 @@ export {
     fetchRoutes,
     fetchEssidList,
     serviceIsActive,
+    fetchDnsSettings,
+    updateDnsSettings,
     addRoute,
     updateRoute,
     deleteRoute,

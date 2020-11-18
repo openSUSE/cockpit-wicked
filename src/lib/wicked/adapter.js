@@ -23,7 +23,7 @@ import Client from './client';
 import { createConnection } from './connections';
 import { createInterface } from './interfaces';
 import model from '../model';
-import { IfcfgFile, IfrouteFile } from './files';
+import { SysconfigFile, IfcfgFile, IfrouteFile } from './files';
 
 /**
  * This class is responsible for retrieving and updating wicked's configuration.
@@ -111,6 +111,33 @@ class WickedAdapter {
         }
 
         return result;
+    }
+
+    /*
+     * Obtains the DNS global settings from /etc/sysconfig/network/config
+     */
+    async dnsSettings() {
+        const filePath = `/etc/sysconfig/network/config`;
+        const file = await new SysconfigFile(filePath).read();
+        const policy = file.get("NETCONFIG_DNS_POLICY", "");
+        const nameServers = file.get("NETCONFIG_DNS_STATIC_SERVERS", "").split(" ");
+        const searchList = file.get("NETCONFIG_DNS_STATIC_SEARCHLIST", "").split(" ");
+
+        return model.createDnsSettings({ policy, nameServers, searchList });
+    }
+
+    /**
+     * Write the DNS global settings to /etc/sysconfig/network/config
+     *
+     * @return {Promise} Result of the operation
+     */
+    async updateDnsSettings({ policy, nameServers, searchList }) {
+        const filePath = `/etc/sysconfig/network/config`;
+        const file = await new SysconfigFile(filePath).read();
+        file.set("NETCONFIG_DNS_POLICY", policy);
+        file.set("NETCONFIG_DNS_STATIC_SERVERS", nameServers.join(" "));
+        file.set("NETCONFIG_DNS_STATIC_SEARCHLIST", searchList.join(" "));
+        return file.write();
     }
 
     /**

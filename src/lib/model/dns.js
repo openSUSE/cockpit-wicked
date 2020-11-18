@@ -19,24 +19,32 @@
  * find current contact information at www.suse.com.
  */
 
-import { createAddressConfig } from './address';
-import { createInterface } from './interfaces';
-import { createConnection, mergeConnection } from './connections';
-import { createRoute } from './routes';
-import { createDnsSettings } from './dns';
-
 /**
- * This module offers a set of factory functions for domain concepts like connections,
- * interfaces or routes.
- *
- * @module model
+ * @typedef {Object} DnsSettings
+ * @property {string} policy - Merge policy
+ * @property {Array<string>} searchList - Domain names used for host-name lookup
+ * @property {Array<string>} nameServers - Nameserver IP addresses to use for host-name lookup
  */
 
-export default {
-    createInterface,
-    createConnection,
-    createDnsSettings,
-    mergeConnection,
-    createRoute,
-    createAddressConfig
+/**
+ * @function
+ *
+ * Returns an object representing the global DNS settings
+ *
+ * @param {string}  args.policy - Name
+ * @param {Array<string>} args.searchList - Domain names list
+ * @param {Array<string>} args.nameServers - Whether the connection was loaded from the system or not
+ *
+ * @return {DnsSettings} DnsSettings object
+ */
+export const createDnsSettings = ({
+    policy = "",
+    searchList = [],
+    nameServers = []
+}) => {
+    return {
+        policy,
+        searchList,
+        nameServers
+    };
 };

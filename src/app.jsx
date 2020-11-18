@@ -34,6 +34,7 @@ import StatusBar from './components/StatusBar';
 import InactiveServicePage from './components/InactiveServicePage';
 import InterfacesTab from './components/InterfacesTab';
 import RoutingTab from './components/RoutingTab';
+import DnsTab from './components/DnsTab';
 
 const _ = cockpit.gettext;
 
@@ -54,6 +55,9 @@ export const Application = () => {
                 </Tab>
                 <Tab eventKey={1} title={<TabTitleText>{_("Routing")}</TabTitleText>}>
                     <RoutingTab />
+                </Tab>
+                <Tab eventKey={2} title={<TabTitleText>{_("DNS")}</TabTitleText>}>
+                    <DnsTab />
                 </Tab>
             </Tabs>
         );

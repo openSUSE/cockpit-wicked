@@ -19,24 +19,32 @@
  * find current contact information at www.suse.com.
  */
 
-import { createAddressConfig } from './address';
-import { createInterface } from './interfaces';
-import { createConnection, mergeConnection } from './connections';
-import { createRoute } from './routes';
-import { createDnsSettings } from './dns';
+import cockpit from 'cockpit';
+import React, { useEffect } from 'react';
+import { useNetworkDispatch, useNetworkState, fetchDnsSettings } from '../context/network';
+import { Card, CardBody, CardTitle } from '@patternfly/react-core';
+import DnsSettings from './DnsSettings';
 
-/**
- * This module offers a set of factory functions for domain concepts like connections,
- * interfaces or routes.
- *
- * @module model
- */
+const _ = cockpit.gettext;
 
-export default {
-    createInterface,
-    createConnection,
-    createDnsSettings,
-    mergeConnection,
-    createRoute,
-    createAddressConfig
+const DnsTab = () => {
+    const { dns } = useNetworkState();
+    const dispatch = useNetworkDispatch();
+
+    useEffect(() => {
+        fetchDnsSettings(dispatch);
+    }, [dispatch]);
+
+    return (
+        <>
+            <Card>
+                <CardTitle>{_("DNS")}</CardTitle>
+                <CardBody>
+                    <DnsSettings dns={dns} />
+                </CardBody>
+            </Card>
+        </>
+    );
 };
+
+export default DnsTab;

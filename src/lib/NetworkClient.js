@@ -73,6 +73,21 @@ class NetworkClient {
         return await this.adapter.routes();
     }
 
+    /**
+     *
+     *  Returns the DNS global settings object
+     *
+     * @returns {Promise<DnsSettings>} - DNS global settings object
+     *
+     */
+    async getDnsSettings() {
+        return this.adapter.dnsSettings();
+    }
+
+    updateDnsSettings(changes) {
+        return this.adapter.updateDnsSettings(changes);
+    }
+
     addConnection(connection) {
         return this.adapter.addConnection(connection);
     }

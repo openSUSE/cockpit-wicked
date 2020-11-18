@@ -37,7 +37,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const dispatch = useNetworkDispatch();
 
     const columns = [
-        { title: "", props: { className: "warning-column"  }},
+        { title: "", props: { className: "warning-column" } },
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
         { title: _("Status") },
@@ -58,10 +58,10 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         return iface.addresses.map(i => i.local).join(', ');
     };
 
-    const renderAlertIcon = (iface)=> {
+    const renderAlertIcon = (iface) => {
         if (!iface.error) return;
 
-        return <><AlertIcon /></>
+        return <><AlertIcon /></>;
     };
 
     /**

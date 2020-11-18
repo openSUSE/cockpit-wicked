@@ -89,9 +89,10 @@ p {
         padding-right: var(--pf-global--spacer--xs);
     }
 
-    tr .warning-column {
+    tr .status-column {
         color: var(--pf-global--warning-color--200);
         padding: 0;
-        width: var(--pf-global--spacer--md);
+        width: var(--pf-global--spacer--lg);
+        text-align: center;
     }
 }

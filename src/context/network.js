@@ -40,6 +40,7 @@ const DELETE_CONNECTION = 'delete_connection';
 const UPDATE_CONNECTION = 'update_connection';
 const UPDATE_INTERFACE = 'update_interface';
 const CONNECTION_ERROR = 'connection_error';
+const CONNECTION_CHANGE_REQUEST = 'connection_change_request';
 
 const actionTypes = {
     SET_INTERFACES,
@@ -100,7 +101,7 @@ function networkReducer(state, action) {
 
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: iface },
+            interfaces: { ...interfaces, [iface.id]: { ...iface, pending: false } },
             connections: { ...connections, [conn.id]: conn }
         };
     }
@@ -109,13 +110,21 @@ function networkReducer(state, action) {
         const { interfaces, connections } = state;
         const conn = action.payload;
         const { [conn.id]: _value, ...nextConnections } = connections;
-
-        if (!conn.virtual) return { ...state, connections: nextConnections };
-
         const iface = Object.values(interfaces).find(i => i.name === conn.name);
+
+        if (!conn.virtual) return {
+            ...state,
+            interfaces: { ...interfaces, [iface.id]: { ...iface, pending: false } },
+            connections: nextConnections
+        };
+
         const { [iface.id]: _ivalue, ...nextInterfaces } = interfaces;
 
-        return { ...state, interfaces: nextInterfaces, connections: nextConnections };
+        return {
+            ...state,
+            interfaces: nextInterfaces,
+            connections: nextConnections
+        };
     }
 
     case UPDATE_CONNECTION: {
@@ -125,7 +134,7 @@ function networkReducer(state, action) {
         const { error, ...updatedIface } = iface;
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: updatedIface },
+            interfaces: { ...interfaces, [iface.id]: { ...updatedIface, pending: false } },
             connections: { ...connections, [id]: action.payload }
         };
     }
@@ -138,8 +147,22 @@ function networkReducer(state, action) {
 
         // FIXME: we need to keep the old ID. Perhaps we should consider how we are handled the IDs.
         return {
-            ...state, interfaces:
-            { ...interfaces, [oldIface.id]: { ...oldIface, ...action.payload, id: oldIface.id } }
+            ...state,
+            interfaces: {
+                ...interfaces, [oldIface.id]: { ...oldIface, ...action.payload, id: oldIface.id }
+            }
+        };
+    }
+
+    case CONNECTION_CHANGE_REQUEST: {
+        const { interfaces } = state;
+        const { name } = action.payload;
+        const iface = Object.values(interfaces).find(i => i.name === name);
+        if (!iface) return { ...state };
+
+        return {
+            ...state,
+            interfaces: { ...interfaces, [iface.id]: { ...iface, pending: true } }
         };
     }
 
@@ -217,24 +240,16 @@ const networkClient = () => {
  */
 async function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
-    dispatch({ type: ADD_CONNECTION, payload: addedConn });
+    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: addedConn.name } });
 
     try {
         await networkClient().addConnection(addedConn);
-        if (!attrs.exists) {
-            dispatch({ type: UPDATE_CONNECTION, payload: { ...addedConn, exists: true } });
-        }
+        dispatch({ type: ADD_CONNECTION, payload: { ...addedConn, exists: true } });
         await networkClient().reloadConnection(addedConn.name);
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection: addedConn } });
     }
     return addedConn;
-}
-
-async function updateDnsSettings(dispatch, changes) {
-    dispatch({ type: SET_DNS, payload: changes });
-    // FIXME: handle errors
-    return await networkClient().updateDnsSettings(changes);
 }
 
 /**
@@ -251,10 +266,11 @@ async function updateDnsSettings(dispatch, changes) {
  */
 async function updateConnection(dispatch, connection, changes) {
     const updatedConn = mergeConnection(connection, changes);
-    dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
+    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: updatedConn.name } });
     // FIXME: handle errors
     try {
         await networkClient().updateConnection(updatedConn);
+        dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
         await networkClient().reloadConnection(updatedConn.name);
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection: updatedConn } });
@@ -262,19 +278,21 @@ async function updateConnection(dispatch, connection, changes) {
     return updatedConn;
 }
 
-function deleteConnection(dispatch, connection) {
-    dispatch({ type: DELETE_CONNECTION, payload: connection });
+async function deleteConnection(dispatch, connection) {
+    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: connection.name } });
 
     try {
-        return networkClient()
-                .removeConnection(connection)
-                .then(() => networkClient().setDownConnection(connection));
+        await networkClient().removeConnection(connection);
+        dispatch({ type: DELETE_CONNECTION, payload: connection });
+        await networkClient().setDownConnection(connection);
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection } });
     }
 }
 
 async function changeConnectionState(dispatch, connection, setUp) {
+    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: connection.name } });
+
     try {
         if (setUp) {
             return await networkClient().setUpConnection(connection);
@@ -380,6 +398,12 @@ function listenToInterfacesChanges(dispatch) {
     networkClient().onInterfaceChange((signal, iface) => {
         dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: iface });
     });
+}
+
+async function updateDnsSettings(dispatch, changes) {
+    dispatch({ type: SET_DNS, payload: changes });
+    // FIXME: handle errors
+    return await networkClient().updateDnsSettings(changes);
 }
 
 /**

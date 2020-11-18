@@ -21,7 +21,7 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardTitle, CardBody } from '@patternfly/react-core';
+import { Card, CardHeader, CardTitle, CardBody, Spinner } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
 import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
@@ -37,7 +37,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const dispatch = useNetworkDispatch();
 
     const columns = [
-        { title: "", props: { className: "warning-column" } },
+        { title: "", props: { className: "status-column" } },
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
         { title: _("Status") },
@@ -58,10 +58,13 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         return iface.addresses.map(i => i.local).join(', ');
     };
 
-    const renderAlertIcon = (iface) => {
-        if (!iface.error) return;
-
-        return <><AlertIcon /></>;
+    const renderStatusIcon = (iface, conn) => {
+        console.log("IFACE; pending", iface.pending, "error", iface.error);
+        if (iface.error) {
+            return <><AlertIcon /></>;
+        } else if (iface.pending) {
+            return <><Spinner size="md" /></>;
+        }
     };
 
     /**
@@ -92,7 +95,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 {
                     isOpen: openRows.includes(parentId),
                     cells: [
-                        renderAlertIcon(i),
+                        renderStatusIcon(i, conn),
                         i.name,
                         interfaceType.label(i.type),
                         i.link ? _('Up') : _('Down'),

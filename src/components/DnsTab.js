@@ -33,7 +33,7 @@ const DnsTab = () => {
 
     useEffect(() => {
         fetchDnsSettings(dispatch);
-    }, []);
+    }, [dispatch]);
 
     return (
         <>

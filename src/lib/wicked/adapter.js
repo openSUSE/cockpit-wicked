@@ -113,7 +113,6 @@ class WickedAdapter {
         return result;
     }
 
-
     /*
      * Obtains the DNS global settings from /etc/sysconfig/network/config
      */
@@ -126,7 +125,6 @@ class WickedAdapter {
 
         return { policy, nameServers, searchList };
     }
-
 
     /**
      * Write the DNS global settings to /etc/sysconfig/network/config

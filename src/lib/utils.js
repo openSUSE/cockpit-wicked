@@ -47,6 +47,13 @@ const isValidIP = (value) => {
     }
 };
 
+const isValidDomain = (value) => {
+    const rexp = /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i;
+
+    return !!value.match(rexp);
+};
+
 export {
-    isValidIP
+    isValidIP,
+    isValidDomain
 };

@@ -21,9 +21,7 @@
 
 import React, { useEffect } from 'react';
 import InterfacesList from './InterfacesList';
-import AddBond from './AddBond';
-import AddBridge from './AddBridge';
-import AddVlan from './AddVlan';
+import AddConnectionButtons from './AddConnectionButtons';
 import {
     useNetworkDispatch, useNetworkState, fetchInterfaces, fetchConnections, listenToInterfacesChanges
 } from '../context/network';
@@ -47,13 +45,7 @@ const InterfacesTab = () => {
             <Toolbar id="interfaces-toolbar">
                 <ToolbarContent>
                     <ToolbarItem>
-                        <AddBond />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <AddBridge />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <AddVlan />
+                        <AddConnectionButtons />
                     </ToolbarItem>
                 </ToolbarContent>
             </Toolbar>

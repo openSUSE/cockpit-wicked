@@ -75,7 +75,9 @@ class NetworkClient {
 
     /**
      *
+     *  Returns the DNS global settings object
      *
+     * @returns {Promise<DnsSettings>} - DNS global settings object
      *
      */
     async getDnsSettings() {

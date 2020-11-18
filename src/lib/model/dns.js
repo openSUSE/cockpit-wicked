@@ -44,7 +44,7 @@ export const createDnsSettings = ({
 }) => {
     return {
         policy,
-        searchList: searchList,
-        nameServers: nameServers
+        searchList,
+        nameServers
     };
 };

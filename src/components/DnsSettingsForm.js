@@ -30,15 +30,10 @@ import { useNetworkDispatch, updateDnsSettings } from '../context/network';
 import ModalForm from './ModalForm';
 import IPInput from './IPInput';
 import { isValidIP, isValidDomain } from '../lib/utils';
-import { createDnsSettings } from '../lib/model/dnsSettings';
+import { createDnsSettings } from '../lib/model/dns';
 import deep_equal from 'deep-equal';
 
 const _ = cockpit.gettext;
-
-const sanitizeList = (value, delimiter = " ") => {
-    return value.split(delimiter).filter(Boolean)
-            .join(delimiter);
-};
 
 const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
     const dispatch = useNetworkDispatch();
@@ -58,7 +53,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
         if (searchList().some((d) => !isValidDomain(d))) {
             errors.push({
                 key: 'invalid-searchlist',
-                message: _("There are invalid searchList domains")
+                message: _("There are invalid domains in the search list.")
             });
 
             setSearchListInput(searchList().join(" "));
@@ -67,7 +62,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
         if (nameServers().some((s) => !isValidIP(s))) {
             errors.push({
                 key: 'invalid-nameservers',
-                message: _("There are invalid NameServers")
+                message: _("There are invalid name servers.")
             });
         }
 
@@ -76,7 +71,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
         return (errors.length == 0);
     };
 
-    const searchList = () => sanitizeList(searchListInput).split(" ");
+    const searchList = () => searchListInput.split(" ").filter(Boolean);
 
     const nameServers = () => [nameserver1, nameserver2, nameserver3].filter(Boolean);
 

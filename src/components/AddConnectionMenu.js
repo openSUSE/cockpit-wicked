@@ -35,7 +35,7 @@ const formComponents = {
     VlanForm: VlanForm
 };
 
-const AddConnectionButtons = () => {
+const AddConnectionMenu = () => {
     const [isOpen, setOpen] = useState(false);
     const [formComponent, setFormComponent] = useState(null);
     const Component = formComponents[formComponent];
@@ -73,4 +73,4 @@ const AddConnectionButtons = () => {
     );
 };
 
-export default AddConnectionButtons;
+export default AddConnectionMenu;

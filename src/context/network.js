@@ -38,6 +38,7 @@ const ADD_CONNECTION = 'add_connection';
 const DELETE_CONNECTION = 'delete_connection';
 const UPDATE_CONNECTION = 'update_connection';
 const UPDATE_INTERFACE = 'update_interface';
+const CONNECTION_ERROR = 'connection_error';
 
 const actionTypes = {
     SET_INTERFACES,
@@ -112,9 +113,15 @@ function networkReducer(state, action) {
     }
 
     case UPDATE_CONNECTION: {
-        const { id } = action.payload;
-        const { connections } = state;
-        return { ...state, connections: { ...connections, [id]: action.payload } };
+        const { id, name } = action.payload;
+        const { connections, interfaces } = state;
+        const iface = Object.values(interfaces).find(i => i.name === name);
+        const { error, ...updatedIface } = iface;
+        return {
+            ...state,
+            interfaces: { ...interfaces, [iface.id]: updatedIface },
+            connections: { ...connections, [id]: action.payload }
+        };
     }
 
     case UPDATE_INTERFACE: {
@@ -127,6 +134,16 @@ function networkReducer(state, action) {
         return {
             ...state, interfaces:
             { ...interfaces, [oldIface.id]: { ...oldIface, ...action.payload, id: oldIface.id } }
+        };
+    }
+
+    case CONNECTION_ERROR: {
+        const { interfaces } = state;
+        const { connection: { name }, error: { message } } = action.payload;
+        const iface = Object.values(interfaces).find(i => i.name === name);
+        return {
+            ...state,
+            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message } }
         };
     }
 
@@ -192,17 +209,20 @@ const networkClient = () => {
  * @param {Object} attrs - Attributes for the new connection
  * @return {Promise}
  */
-function addConnection(dispatch, attrs) {
+async function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
     dispatch({ type: ADD_CONNECTION, payload: addedConn });
-    const promise = networkClient().addConnection(addedConn);
-    promise.then(conn => {
+
+    try {
+        await networkClient().addConnection(addedConn);
         if (!attrs.exists) {
             dispatch({ type: UPDATE_CONNECTION, payload: { ...addedConn, exists: true } });
         }
-        networkClient().reloadConnection(addedConn.name);
-    });
-    return promise;
+        await networkClient().reloadConnection(addedConn.name);
+    } catch (error) {
+        dispatch({ type: CONNECTION_ERROR, payload: { error, connection: addedConn } });
+    }
+    return addedConn;
 }
 
 /**
@@ -217,28 +237,40 @@ function addConnection(dispatch, attrs) {
  * @param {Object|Connection} changes - Changes to apply to the connection
  * @return {Promise}
  */
-function updateConnection(dispatch, connection, changes) {
+async function updateConnection(dispatch, connection, changes) {
     const updatedConn = mergeConnection(connection, changes);
     dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
     // FIXME: handle errors
-    const promise = networkClient().updateConnection(updatedConn);
-    promise.then(() => networkClient().reloadConnection(updatedConn.name));
-    return promise;
+    try {
+        await networkClient().updateConnection(updatedConn);
+        await networkClient().reloadConnection(updatedConn.name);
+    } catch (error) {
+        dispatch({ type: CONNECTION_ERROR, payload: { error, connection: updatedConn } });
+    }
+    return updatedConn;
 }
 
 function deleteConnection(dispatch, connection) {
     dispatch({ type: DELETE_CONNECTION, payload: connection });
 
-    return networkClient()
-            .removeConnection(connection)
-            .then(() => networkClient().setDownConnection(connection));
+    try {
+        return networkClient()
+                .removeConnection(connection)
+                .then(() => networkClient().setDownConnection(connection));
+    } catch (error) {
+        dispatch({ type: CONNECTION_ERROR, payload: { error, connection } });
+    }
 }
 
 async function changeConnectionState(dispatch, connection, setUp) {
-    if (setUp) {
-        return await networkClient().setUpConnection(connection);
-    } else {
-        return await networkClient().setDownConnection(connection);
+    try {
+        if (setUp) {
+            return await networkClient().setUpConnection(connection);
+        } else {
+            return await networkClient().setDownConnection(connection);
+        }
+    } catch (error) {
+        dispatch({ type: CONNECTION_ERROR, payload: { error, connection } });
     }
 }
 

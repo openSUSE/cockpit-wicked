@@ -27,6 +27,7 @@ import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import { createConnection } from '../lib/model/connections';
+import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
 const _ = cockpit.gettext;
 
@@ -54,6 +55,15 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         if (iface.addresses.length === 0) return;
 
         return iface.addresses.map(i => i.local).join(', ');
+    };
+
+    const interfaceName = (iface) => {
+        return (
+            <>
+                { iface.name }
+                { iface.error && <AlertIcon /> }
+            </>
+        );
     };
 
     /**
@@ -84,7 +94,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 {
                     isOpen: openRows.includes(parentId),
                     cells: [
-                        i.name,
+                        { title: interfaceName(i) },
                         interfaceType.label(i.type),
                         i.link ? _('Up') : _('Down'),
                         interfaceAddresses(i)

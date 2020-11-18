@@ -29,7 +29,7 @@ import WirelessDetails from './WirelessDetails';
 import IPSettingsLink from './IPSettingsLink';
 import DeleteConnection from './DeleteConnection';
 import interfaceTypeEnum from '../lib/model/interfaceType';
-import { Split, SplitItem, Switch, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Alert, Split, SplitItem, Switch, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 
 const _ = cockpit.gettext;
 
@@ -105,6 +105,12 @@ const ipV6Details = (connection) => {
     );
 };
 
+const renderError = (error) => {
+    if (!error) return;
+
+    return <Alert variant="warning" isInline title={error} />;
+};
+
 const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConnection }) => {
     const renderFullDetails = () => {
         if (connection.exists) {
@@ -147,20 +153,24 @@ const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConn
     };
 
     return (
-        <Split hasGutter>
-            <SplitItem isFilled>
-                <dl className="details-list">
-                    <dt>{_("Type")}</dt>
-                    <dd>{interfaceTypeEnum.label(iface.type)}</dd>
-                    { iface.mac && macAddress(iface) }
-                    {startMode(connection)}
-                    {renderFullDetails()}
-                </dl>
-            </SplitItem>
-            <SplitItem>
-                { renderActions() }
-            </SplitItem>
-        </Split>
+        <>
+            {renderError(iface.error)}
+
+            <Split hasGutter>
+                <SplitItem isFilled>
+                    <dl className="details-list">
+                        <dt>{_("Type")}</dt>
+                        <dd>{interfaceTypeEnum.label(iface.type)}</dd>
+                        { iface.mac && macAddress(iface) }
+                        {startMode(connection)}
+                        {renderFullDetails()}
+                    </dl>
+                </SplitItem>
+                <SplitItem>
+                    { renderActions() }
+                </SplitItem>
+            </Split>
+        </>
     );
 };
 

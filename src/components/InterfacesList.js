@@ -27,6 +27,7 @@ import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import { createConnection } from '../lib/model/connections';
+import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
 const _ = cockpit.gettext;
 
@@ -36,6 +37,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const dispatch = useNetworkDispatch();
 
     const columns = [
+        { title: "", props: { className: "warning-column" } },
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
         { title: _("Status") },
@@ -54,6 +56,12 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         if (iface.addresses.length === 0) return;
 
         return iface.addresses.map(i => i.local).join(', ');
+    };
+
+    const renderAlertIcon = (iface) => {
+        if (!iface.error) return;
+
+        return <><AlertIcon /></>;
     };
 
     /**
@@ -84,6 +92,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 {
                     isOpen: openRows.includes(parentId),
                     cells: [
+                        renderAlertIcon(i),
                         i.name,
                         interfaceType.label(i.type),
                         i.link ? _('Up') : _('Down'),
@@ -95,8 +104,10 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 {
                     parent: parentId,
                     cells: [
+                        "",
                         {
-                            title: <InterfaceDetails iface={i} connection={conn} removeConnection={removeConnection} changeConnectionState={changeState} />
+                            title: <InterfaceDetails iface={i} connection={conn} removeConnection={removeConnection} changeConnectionState={changeState} />,
+                            props: { colSpan: 4 }
                         }
                     ]
                 }
@@ -134,6 +145,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     aria-label="Networking interfaces"
                     variant={TableVariant.compact}
                     onCollapse={onCollapseFn()}
+                    className="interfaces-list"
                     cells={columns}
                     rows={rows}
                 >

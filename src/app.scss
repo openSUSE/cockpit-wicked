@@ -82,3 +82,16 @@ p {
         padding-right: 1ex;
     }
 }
+
+.interfaces-list {
+    .pf-c-table__toggle .pf-c-button {
+        padding-left: var(--pf-global--spacer--xs);
+        padding-right: var(--pf-global--spacer--xs);
+    }
+
+    tr .warning-column {
+        color: var(--pf-global--warning-color--200);
+        padding: 0;
+        width: var(--pf-global--spacer--md);
+    }
+}

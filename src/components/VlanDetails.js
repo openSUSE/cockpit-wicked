@@ -27,10 +27,27 @@ const _ = cockpit.gettext;
 
 const VlanDetails = ({ connection }) => {
     const [isFormOpen, setFormOpen] = useState(false);
+    const { vlan } = connection;
 
+    const renderLinkDetails = () => {
+        return (
+            <a href="#" onClick={() => setFormOpen(true)}>
+                <ul>
+                    <li>
+                        {_("Parent:")} {vlan.parentDevice}
+                    </li>
+                    <li>
+                        {_("Id:")} {vlan.vlanId}
+                    </li>
+                </ul>
+            </a>
+        );
+    };
     return (
         <>
-            <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>
+            { vlan
+                ? renderLinkDetails()
+                : <a href="#" onClick={() => setFormOpen(true)}>{_("Configure")}</a>}
             { isFormOpen && <VlanForm isOpen={isFormOpen} connection={connection} onClose={() => setFormOpen(false)} /> }
         </>
     );

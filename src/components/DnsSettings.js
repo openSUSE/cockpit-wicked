@@ -37,41 +37,42 @@ const PolicyDetails = ({ onClick, dns }) => {
 };
 
 const SearchListDetails = ({ onClick, dns }) => {
-    const { searchList = "" } = dns;
+    const { searchList } = dns;
 
     return (
         <>
             <dt>{_("SearchList")}</dt>
-            <dd><a href="#" onClick={onClick}>{searchList}</a></dd>
+            <dd><a href="#" onClick={onClick}>{searchList.join(" ")}</a></dd>
         </>
     );
 };
 
 const NameServersDetails = ({ onClick, dns }) => {
-    const { nameServers = "" } = dns;
+    const { nameServers } = dns;
 
     return (
         <>
             <dt>{_("NameServers")}</dt>
-            <dd><a href="#" onClick={onClick}>{nameServers}</a></dd>
+            <dd><a href="#" onClick={onClick}>{nameServers.join(" ")}</a></dd>
         </>
     );
 };
 
-const DnsSettings = ({ dns = {} }) => {
+const DnsSettings = ({ dns }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
-    const onClick = () => setFormOpen(true);
-    const onClose = () => setFormOpen(false);
+    const openForm = () => setFormOpen(true);
+    const closeForm = () => setFormOpen(false);
 
     return (
         <dl className="details-list">
+
             { dns &&
                 <>
-                    <PolicyDetails dns={dns} onClick={onClick} />
-                    <SearchListDetails dns={dns} onClick={onClick} />
-                    <NameServersDetails dns={dns} onClick={onClick} />
-                    { isFormOpen && <DnsSettingsForm isOpen={isFormOpen} onClose={onClose} dns={dns} /> }
+                    <PolicyDetails dns={dns} onClick={openForm} />
+                    <SearchListDetails dns={dns} onClick={openForm} />
+                    <NameServersDetails dns={dns} onClick={openForm} />
+                    { isFormOpen && <DnsSettingsForm isOpen={isFormOpen} onClose={closeForm} dns={dns} /> }
                 </> }
         </dl>
     );

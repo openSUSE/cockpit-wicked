@@ -23,6 +23,7 @@ import { createAddressConfig } from './address';
 import { createInterface } from './interfaces';
 import { createConnection, mergeConnection } from './connections';
 import { createRoute } from './routes';
+import { createDnsSettings } from './dnsSettings';
 
 /**
  * This module offers a set of factory functions for domain concepts like connections,
@@ -34,6 +35,7 @@ import { createRoute } from './routes';
 export default {
     createInterface,
     createConnection,
+    createDnsSettings,
     mergeConnection,
     createRoute,
     createAddressConfig

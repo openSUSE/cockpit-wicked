@@ -119,11 +119,11 @@ class WickedAdapter {
     async dnsSettings() {
         const filePath = `/etc/sysconfig/network/config`;
         const file = await new SysconfigFile(filePath).read();
-        const policy = await file.get("NETCONFIG_DNS_POLICY") || "";
-        const nameServers = await file.get("NETCONFIG_DNS_STATIC_SERVERS") || "";
-        const searchList = await file.get("NETCONFIG_DNS_STATIC_SEARCHLIST") || "";
+        const policy = file.get("NETCONFIG_DNS_POLICY");
+        const nameServers = (file.get("NETCONFIG_DNS_STATIC_SERVERS") || "").split(" ");
+        const searchList = (file.get("NETCONFIG_DNS_STATIC_SEARCHLIST") || "").split(" ");
 
-        return { policy, nameServers, searchList };
+        return model.createDnsSettings({ policy, nameServers, searchList });
     }
 
     /**
@@ -135,8 +135,8 @@ class WickedAdapter {
         const filePath = `/etc/sysconfig/network/config`;
         const file = await new SysconfigFile(filePath).read();
         file.set("NETCONFIG_DNS_POLICY", policy);
-        file.set("NETCONFIG_DNS_STATIC_SERVERS", nameServers);
-        file.set("NETCONFIG_DNS_STATIC_SEARCHLIST", searchList);
+        file.set("NETCONFIG_DNS_STATIC_SERVERS", nameServers.join(" "));
+        file.set("NETCONFIG_DNS_STATIC_SEARCHLIST", searchList.join(" "));
         return file.write();
     }
 

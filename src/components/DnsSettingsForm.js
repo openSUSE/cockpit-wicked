@@ -30,37 +30,41 @@ import { useNetworkDispatch, updateDnsSettings } from '../context/network';
 import ModalForm from './ModalForm';
 import IPInput from './IPInput';
 import { isValidIP, isValidDomain } from '../lib/utils';
+import { createDnsSettings } from '../lib/model/dnsSettings';
+import deep_equal from 'deep-equal';
 
 const _ = cockpit.gettext;
 
+const sanitizeList = (value, delimiter = " ") => {
+    return value.split(delimiter).filter(Boolean)
+            .join(delimiter);
+};
+
 const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
     const dispatch = useNetworkDispatch();
-    const originalNameServers = (dns?.nameServers || "").split(" ");
-    const [nameserver1, setNameserver1] = useState(originalNameServers[0] || "");
-    const [nameserver2, setNameserver2] = useState(originalNameServers[1] || "");
-    const [nameserver3, setNameserver3] = useState(originalNameServers[2] || "");
-    const [policy, setPolicy] = useState(dns?.policy || "");
-    const [searchList, setSearchList] = useState(dns?.searchList || "");
+    const [nameserver1, setNameserver1] = useState(dns.nameServers[0]);
+    const [nameserver2, setNameserver2] = useState(dns.nameServers[1]);
+    const [nameserver3, setNameserver3] = useState(dns.nameServers[2]);
+    const [policy, setPolicy] = useState(dns.policy);
+    const [searchListInput, setSearchListInput] = useState(dns.searchList.join(" "));
     const [errorMessages, setErrorMessages] = useState([]);
 
     const validate = () => {
-        let result = true;
         const errors = [];
 
         // Clean previous error messages
         setErrorMessages([]);
 
-        if (searchList.split(" ").filter(Boolean)
-                .some((d) => !isValidDomain(d))) {
-            result = false;
+        if (searchList().some((d) => !isValidDomain(d))) {
             errors.push({
                 key: 'invalid-searchlist',
                 message: _("There are invalid searchList domains")
             });
+
+            setSearchListInput(searchList().join(" "));
         }
 
         if (nameServers().some((s) => !isValidIP(s))) {
-            result = false;
             errors.push({
                 key: 'invalid-nameservers',
                 message: _("There are invalid NameServers")
@@ -69,27 +73,24 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
 
         setErrorMessages(errors);
 
-        return result;
+        return (errors.length == 0);
     };
 
-    const nameServers = () => {
-        return [nameserver1, nameserver2, nameserver3].filter(Boolean);
-    };
+    const searchList = () => sanitizeList(searchListInput).split(" ");
+
+    const nameServers = () => [nameserver1, nameserver2, nameserver3].filter(Boolean);
 
     const configChanged = () => {
-        return ((nameServers().join(" ") !== (dns?.nameServers || "")) ||
-            (policy !== (dns?.policy || "")) || (searchList !== (dns?.searchList || "")));
+        return !deep_equal(dns, createDnsSettings({ policy, searchList: searchList(), nameServers: nameServers() }));
     };
 
     const handleSubmit = () => {
-        const sanitizedSearchList = searchList.split(" ").filter(Boolean)
-                .join(" ");
-        setSearchList(sanitizedSearchList);
-
         if (!validate()) return false;
 
-        if (configChanged())
-            updateDnsSettings(dispatch, { nameServers: nameServers().join(" "), policy, searchList: sanitizedSearchList });
+        if (configChanged()) {
+            updateDnsSettings(dispatch, { nameServers: nameServers(), policy, searchList: searchList() });
+        }
+
         onClose();
     };
 
@@ -143,8 +144,8 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
                 <TextInput
                     id="dns_search_list"
                     placeholder={_("example.com another.com")}
-                    value={searchList}
-                    onChange={setSearchList}
+                    value={searchListInput}
+                    onChange={setSearchListInput}
                 />
             </FormGroup>
             <FormGroup

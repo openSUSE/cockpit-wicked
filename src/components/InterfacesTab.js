@@ -21,7 +21,7 @@
 
 import React, { useEffect } from 'react';
 import InterfacesList from './InterfacesList';
-import AddConnectionButtons from './AddConnectionButtons';
+import AddConnectionMenu from './AddConnectionMenu';
 import {
     useNetworkDispatch, useNetworkState, fetchInterfaces, fetchConnections, listenToInterfacesChanges
 } from '../context/network';
@@ -45,7 +45,7 @@ const InterfacesTab = () => {
             <Toolbar id="interfaces-toolbar">
                 <ToolbarContent>
                     <ToolbarItem>
-                        <AddConnectionButtons />
+                        <AddConnectionMenu />
                     </ToolbarItem>
                 </ToolbarContent>
             </Toolbar>

@@ -250,8 +250,6 @@ async function addConnection(dispatch, attrs) {
  *
  * If the update was successful, it dispatches the UPDATE_CONNECTION action.
  *
- * @todo Notify when something went wrong.
- *
  * @param {function} dispatch - Dispatch function
  * @param {Connection} connection - Connection to update
  * @param {Object|Connection} changes - Changes to apply to the connection
@@ -272,6 +270,13 @@ async function updateConnection(dispatch, connection, changes) {
     return updatedConn;
 }
 
+/**
+ * Deletes a coonnection using the NetworkClient
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Connection} connection - Connection to delete
+ * @return {Promise}
+ */
 async function deleteConnection(dispatch, connection) {
     dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.CONFIGURING } });
 
@@ -285,6 +290,14 @@ async function deleteConnection(dispatch, connection) {
     }
 }
 
+/**
+ * Activate/Deactivate a connection
+ *
+ * @param {function} dispatch - Dispatch function
+ * @param {Connection} connection - Connection to activate/deactivate
+ * @param {Boolean} setUp - Whether the connection should be activated (true) or deactivated (false)
+ * @return {Promise}
+ */
 async function changeConnectionState(dispatch, connection, setUp) {
     dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.IN_PROGRESS } });
 
@@ -384,6 +397,12 @@ function fetchRoutes(dispatch) {
             .catch(console.error);
 }
 
+/**
+ * Fetches the list of wireless ESSIDs
+ *
+ * @param {string} name - Interface name
+ * @return {Promise.<string[]>} List of ESSIDs.
+ */
 function fetchEssidList(name) {
     return networkClient().getEssidList(name);
 }

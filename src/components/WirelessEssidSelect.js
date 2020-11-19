@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchEssidList } from '../context/network';
 import {
     Bullseye,
@@ -35,31 +35,28 @@ import cockpit from 'cockpit';
 const _ = cockpit.gettext;
 
 const WirelessEssidSelect = ({ essid, setEssid, name }) => {
+    const oldEssid = essid;
     const [isOpen, setIsOpen] = useState(false);
     const [essidList, setEssidList] = useState([]);
-    const [options, setOptions] = useState([]);
     const [scanning, setScanning] = useState(true);
 
-    const obtainEssids = () => {
+    const refreshList = useCallback((name) => {
         fetchEssidList(name)
-                .then(result => { setEssidList([...new Set([...result])]) })
+                .then(result => {
+                    const list = [...new Set((oldEssid && !result.includes(oldEssid)) ? [...result, oldEssid] : [...result])];
+                    setEssidList(list.sort());
+                    setScanning(false);
+                })
                 .catch(console.error);
-    };
-
-    const refreshOptions = React.useCallback(() => {
-        const list = (essid && !essidList.includes(essid)) ? [...essidList, essid] : essidList;
-        setOptions(list);
-        setScanning(false);
-        return list;
-    }, [essidList, essid]);
+    }, [oldEssid]);
 
     useEffect(() => {
-        refreshOptions();
-    }, [refreshOptions]);
+        refreshList(name);
+    }, [name, refreshList]);
 
     const reScan = () => {
         setScanning(true);
-        obtainEssids();
+        refreshList(name);
     };
 
     const onToggle = isOpen => setIsOpen(isOpen);
@@ -70,7 +67,7 @@ const WirelessEssidSelect = ({ essid, setEssid, name }) => {
     };
 
     const onCreateOption = (newValue) => {
-        setOptions([...options, newValue]);
+        setEssidList([...essidList, newValue]);
     };
 
     const onSelect = (event, selection, isPlaceholder) => {
@@ -102,14 +99,14 @@ const WirelessEssidSelect = ({ essid, setEssid, name }) => {
                           onCreateOption={onCreateOption}
                           id="essid"
                     >
-                        {options.map((option, index) => (
+                        {essidList.map((option, index) => (
                             <SelectOption
                                         key={index}
                                         value={option} label={option}
                             />
                         ))}
                     </Select>
-                    <Button variant="primary" aria-label="scan essid network list" onClick={() => reScan()}>{_("Rescan")}</Button>
+                    <Button variant="control" aria-label="scan essid network list" onClick={() => reScan()}>{_("Rescan")}</Button>
                 </>)}
         </InputGroup>
     );

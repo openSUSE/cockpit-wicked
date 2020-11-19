@@ -160,7 +160,7 @@ class WickedAdapter {
      * @param {Connection} connection - Connection to be removed
      * @return {Promise} Result of the operation
      */
-    removeConnection(connection) {
+    deleteConnection(connection) {
         return new Promise((resolve, reject) => {
             this.deleteConnectionConfig(connection)
                     .then(() => resolve(connection))

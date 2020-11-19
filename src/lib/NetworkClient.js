@@ -92,8 +92,8 @@ class NetworkClient {
         return this.adapter.addConnection(connection);
     }
 
-    removeConnection(connection) {
-        return this.adapter.removeConnection(connection);
+    deleteConnection(connection) {
+        return this.adapter.deleteConnection(connection);
     }
 
     /**

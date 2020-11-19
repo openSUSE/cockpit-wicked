@@ -21,13 +21,22 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardTitle, CardBody } from '@patternfly/react-core';
-import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
+import { Card, CardHeader, CardTitle, CardBody, Spinner } from '@patternfly/react-core';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableVariant,
+    cellWidth,
+    expandable,
+    truncate
+} from '@patternfly/react-table';
+import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
+import interfaceStatus from '../lib/model/interfaceStatus';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import { createConnection } from '../lib/model/connections';
-import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
 const _ = cockpit.gettext;
 
@@ -37,14 +46,14 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const dispatch = useNetworkDispatch();
 
     const columns = [
-        { title: "", props: { className: "warning-column" } },
+        { title: "", props: { className: "status-column" } },
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
-        { title: _("Status") },
+        { title: _("Status"), transforms: [cellWidth(10)], cellTransforms: [truncate] },
         { title: _("Addresses") }
     ];
 
-    const removeConnection = useCallback((connection) => {
+    const onDeleteConnection = useCallback((connection) => {
         deleteConnection(dispatch, connection);
     }, [dispatch]);
 
@@ -58,10 +67,24 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         return iface.addresses.map(i => i.local).join(', ');
     };
 
-    const renderAlertIcon = (iface) => {
-        if (!iface.error) return;
+    const renderStatusIcon = (iface) => {
+        if (!iface.status) return;
 
-        return <><AlertIcon /></>;
+        if (iface.error) {
+            return <><AlertIcon /></>;
+        } else if (iface.status !== interfaceStatus.READY) {
+            return <><Spinner size="md" /></>;
+        }
+    };
+
+    const renderStatusText = (iface) => {
+        const linkText = iface.link ? _('Up') : _('Down');
+
+        if (!iface.status || iface.status === interfaceStatus.READY) {
+            return linkText;
+        } else {
+            return interfaceStatus.label(iface.status);
+        }
     };
 
     /**
@@ -92,10 +115,10 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 {
                     isOpen: openRows.includes(parentId),
                     cells: [
-                        renderAlertIcon(i),
+                        renderStatusIcon(i),
                         i.name,
                         interfaceType.label(i.type),
-                        i.link ? _('Up') : _('Down'),
+                        renderStatusText(i),
                         interfaceAddresses(i)
                     ]
                 }
@@ -106,7 +129,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     cells: [
                         "",
                         {
-                            title: <InterfaceDetails iface={i} connection={conn} removeConnection={removeConnection} changeConnectionState={changeState} />,
+                            title: <InterfaceDetails iface={i} connection={conn} deleteConnection={onDeleteConnection} changeConnectionState={changeState} />,
                             props: { colSpan: 4 }
                         }
                     ]
@@ -117,7 +140,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
             return list;
         }, []);
-    }, [interfaces, openRows, removeConnection, changeState, findOrCreateConnection]);
+    }, [interfaces, openRows, onDeleteConnection, changeState, findOrCreateConnection]);
 
     /**
      * Keeps the openRows internal state up to date using the information provided by the

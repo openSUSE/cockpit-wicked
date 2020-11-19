@@ -58,7 +58,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         return iface.addresses.map(i => i.local).join(', ');
     };
 
-    const renderStatusIcon = (iface, conn) => {
+    const renderStatusIcon = (iface) => {
         if (iface.error) {
             return <><AlertIcon /></>;
         } else if (iface.pending) {

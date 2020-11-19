@@ -151,7 +151,9 @@ function networkReducer(state, action) {
         return {
             ...state,
             interfaces: {
-                ...interfaces, [oldIface.id]: { ...oldIface, ...action.payload, id: oldIface.id }
+                ...interfaces, [oldIface.id]: {
+                    ...oldIface, ...action.payload, id: oldIface.id, pending: false, error: false
+                }
             }
         };
     }
@@ -164,7 +166,7 @@ function networkReducer(state, action) {
 
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, pending: true } }
+            interfaces: { ...interfaces, [iface.id]: { ...iface, error: false, pending: true } }
         };
     }
 
@@ -174,7 +176,7 @@ function networkReducer(state, action) {
         const iface = Object.values(interfaces).find(i => i.name === name);
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message } }
+            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message, pending: false } }
         };
     }
 

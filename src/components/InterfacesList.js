@@ -59,7 +59,6 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     };
 
     const renderStatusIcon = (iface, conn) => {
-        console.log("IFACE; pending", iface.pending, "error", iface.error);
         if (iface.error) {
             return <><AlertIcon /></>;
         } else if (iface.pending) {

@@ -19,9 +19,8 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
-    Bullseye,
     Button,
     Form,
     FormGroup,
@@ -30,15 +29,15 @@ import {
     Modal,
     ModalVariant,
     TextInput,
-    Spinner
 } from '@patternfly/react-core';
 import cockpit from 'cockpit';
 import {
-    useNetworkDispatch, addConnection, updateConnection, fetchEssidList
+    useNetworkDispatch, addConnection, updateConnection
 } from '../context/network';
 import interfaceType from '../lib/model/interfaceType';
 import wirelessModes from '../lib/model/wirelessMode';
 import wirelessAuthModes from '../lib/model/wirelessAuthMode';
+import WirelessEssidSelect from './WirelessEssidSelect';
 
 const _ = cockpit.gettext;
 
@@ -51,29 +50,12 @@ const authModeOptions = wirelessAuthModes.values.map(mode => {
 
 const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
     const { wireless } = connection || {};
-    const oldEssid = wireless?.essid;
     const isEditing = !!connection;
     const [essid, setEssid] = useState(wireless?.essid);
     const [mode, setMode] = useState(wireless?.mode || wirelessModes.MANAGED);
     const [authMode, setAuthMode] = useState(wireless?.authMode || wirelessAuthModes.WEP_OPEN);
     const [password, setPassword] = useState(wireless?.password || "");
-    const [essidList, setEssidList] = useState([]);
-    const [scanning, setScanning] = useState(true);
     const dispatch = useNetworkDispatch();
-
-    const refreshList = useCallback((name) => {
-        fetchEssidList(name)
-                .then(result => {
-                    const list = (oldEssid && !result.includes(oldEssid)) ? [...result, oldEssid] : [...result];
-                    setEssidList(list.sort());
-                    setScanning(false);
-                })
-                .catch(console.error);
-    }, [oldEssid]);
-
-    useEffect(() => {
-        refreshList(iface.name);
-    }, [iface.name, refreshList]);
 
     const addOrUpdateConnection = () => {
         if (isEditing) {
@@ -122,15 +104,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                     isRequired
                     fieldId="essid"
                 >
-                    { scanning ? (
-                        <Bullseye><Spinner size="lg" /></Bullseye>
-                    ) : (
-                        <FormSelect value={essid} onChange={setEssid} id="essid">
-                            {essidList.map((option, index) => (
-                                <FormSelectOption key={option} value={option} label={option} />
-                            ))}
-                        </FormSelect>
-                    ) }
+                    <WirelessEssidSelect essid={essid} setEssid={setEssid} name={iface.name} />
                 </FormGroup>
                 <FormGroup
                     label={_("Auth Mode")}

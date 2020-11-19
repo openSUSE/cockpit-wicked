@@ -35,7 +35,6 @@ import cockpit from 'cockpit';
 const _ = cockpit.gettext;
 
 const WirelessEssidSelect = ({ essid, setEssid, name }) => {
-    const oldEssid = essid;
     const [isOpen, setIsOpen] = useState(false);
     const [essidList, setEssidList] = useState([]);
     const [scanning, setScanning] = useState(true);
@@ -43,12 +42,12 @@ const WirelessEssidSelect = ({ essid, setEssid, name }) => {
     const refreshList = useCallback((name) => {
         fetchEssidList(name)
                 .then(result => {
-                    const list = [...new Set((oldEssid && !result.includes(oldEssid)) ? [...result, oldEssid] : [...result])];
+                    const list = [...new Set([...result, essid])];
                     setEssidList(list.sort());
                     setScanning(false);
                 })
                 .catch(console.error);
-    }, [oldEssid]);
+    }, [essid]);
 
     useEffect(() => {
         refreshList(name);

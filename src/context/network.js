@@ -163,7 +163,7 @@ function networkReducer(state, action) {
         const iface = Object.values(interfaces).find(i => i.name === name);
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message, status: 'error' } }
+            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message, status: interfaceStatus.ERROR } }
         };
     }
 

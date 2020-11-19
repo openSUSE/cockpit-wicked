@@ -64,7 +64,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
         if (iface.error) {
             return <><AlertIcon /></>;
-        } else if (iface.status !== 'ready') {
+        } else if (iface.status !== interfaceStatus.READY) {
             return <><Spinner size="md" /></>;
         }
     };

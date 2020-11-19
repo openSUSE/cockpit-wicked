@@ -51,7 +51,9 @@ const actionTypes = {
     ADD_CONNECTION,
     DELETE_CONNECTION,
     UPDATE_CONNECTION,
-    UPDATE_INTERFACE
+    UPDATE_INTERFACE,
+    CONNECTION_CHANGE_REQUEST,
+    CONNECTION_ERROR
 };
 
 function networkReducer(state, action) {
@@ -249,6 +251,7 @@ async function addConnection(dispatch, attrs) {
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection: addedConn } });
     }
+
     return addedConn;
 }
 

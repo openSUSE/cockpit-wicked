@@ -22,13 +22,21 @@
 import cockpit from "cockpit";
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardBody, Spinner } from '@patternfly/react-core';
-import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableVariant,
+    cellWidth,
+    expandable,
+    truncate
+} from '@patternfly/react-table';
+import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
 import interfaceStatus from '../lib/model/interfaceStatus';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import { createConnection } from '../lib/model/connections';
-import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
 const _ = cockpit.gettext;
 
@@ -41,7 +49,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         { title: "", props: { className: "status-column" } },
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
-        { title: _("Status") },
+        { title: _("Status"), transforms: [cellWidth(10)], cellTransforms: [truncate] },
         { title: _("Addresses") }
     ];
 

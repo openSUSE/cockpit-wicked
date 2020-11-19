@@ -344,13 +344,12 @@ function addRoute(dispatch, routes, attrs) {
  *
  * @return {Promise.<boolean>} Promise that resolves to true if service is active or false if not
  */
-function serviceIsActive() {
-    return networkClient().isActive()
-            .then(result => result)
-            .catch((error) => {
-                console.error(error);
-                return false;
-            });
+async function serviceIsActive() {
+    try {
+        return await networkClient().isActive();
+    } catch (error) {
+        return false;
+    }
 }
 
 /**

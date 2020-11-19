@@ -23,6 +23,7 @@ import {
     addConnection,
     updateConnection,
     deleteConnection,
+    serviceIsActive,
     actionTypes,
     resetClient
 } from './network';
@@ -80,7 +81,7 @@ describe('#addConnection', () => {
         );
     });
 
-    it('updates the interface status', async () => {
+    it('updates the interface status during the process', async () => {
         const dispatchFn = jest.fn();
 
         await addConnection(dispatchFn, { name: 'eth0', type: interfaceType.BRIDGE });
@@ -172,6 +173,30 @@ describe('#updateConnection', () => {
         );
     });
 
+    it('updates the interface status during the process', async () => {
+        const dispatchFn = jest.fn();
+
+        await updateConnection(dispatchFn, { name: 'eth1' });
+
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.UPDATE_INTERFACE,
+                    payload: expect.objectContaining({ name: 'eth1', status: interfaceStatus.CONFIGURING })
+                }
+            )
+        );
+
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.UPDATE_INTERFACE,
+                    payload: expect.objectContaining({ name: 'eth1', status: interfaceStatus.READY })
+                }
+            )
+        );
+    });
+
     it('dispatches a CONNECTION_ERROR if something went wrong', async () => {
         const dispatchFn = jest.fn();
         const error = new Error({ message: 'something went wrong' });
@@ -240,6 +265,30 @@ describe('#deleteConnection', () => {
         );
     });
 
+    it('updates the interface status during the process', async () => {
+        const dispatchFn = jest.fn();
+
+        await deleteConnection(dispatchFn, { name: 'eth0' });
+
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.UPDATE_INTERFACE,
+                    payload: expect.objectContaining({ name: 'eth0', status: interfaceStatus.CONFIGURING })
+                }
+            )
+        );
+
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.UPDATE_INTERFACE,
+                    payload: expect.objectContaining({ name: 'eth0', status: interfaceStatus.READY })
+                }
+            )
+        );
+    });
+
     it('dispatches a CONNECTION_ERROR if something went wrong', async () => {
         const dispatchFn = jest.fn();
         const error = new Error({ message: 'something went wrong' });
@@ -258,5 +307,37 @@ describe('#deleteConnection', () => {
                 }
             )
         );
+    });
+});
+
+describe('#serviceIsActive', () => {
+    const isActiveMock = jest.fn();
+
+    beforeAll(() => {
+        resetClient();
+        NetworkClient.mockImplementation(() => {
+            return {
+                isActive: isActiveMock
+            };
+        });
+    });
+
+    it('returns true if the service is active', async () => {
+        isActiveMock.mockImplementation(() => Promise.resolve(true));
+        const isActive = await serviceIsActive();
+        expect(isActive).toEqual(true);
+    });
+
+    it('returns false if the service is inactive', async () => {
+        isActiveMock.mockImplementation(() => false);
+        const isActive = await serviceIsActive();
+        expect(isActive).toEqual(false);
+    });
+
+    it('returns false if something went wrong', async () => {
+        const error = new Error('unknown error');
+        isActiveMock.mockImplementation(() => { throw error });
+        const isActive = await serviceIsActive();
+        expect(isActive).toEqual(false);
     });
 });

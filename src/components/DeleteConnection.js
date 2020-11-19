@@ -31,7 +31,7 @@ const DeleteConnection = ({ connection, deleteConnection }) => {
 
     const onClose = () => setConfirmationOpen(false);
 
-    const removeConnectionConfig = () => {
+    const deleteConnectionConfig = () => {
         deleteConnection(connection);
         onClose();
     };
@@ -44,7 +44,7 @@ const DeleteConnection = ({ connection, deleteConnection }) => {
                     title={cockpit.format(_("Delete '$0' configuration"), connection?.name)}
                     isOpen={isConfirmationOpen}
                     onCancel={onClose}
-                    onConfirm={removeConnectionConfig}
+                    onConfirm={deleteConnectionConfig}
                 >
                     {_("Please, confirm that you really want to the delete the interface configuration.")}
                 </ModalConfirm>}

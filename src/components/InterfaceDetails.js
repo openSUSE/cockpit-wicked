@@ -111,7 +111,7 @@ const renderError = (error) => {
     return <Alert variant="warning" isInline title={error} />;
 };
 
-const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConnection }) => {
+const InterfaceDetails = ({ iface, connection, changeConnectionState, deleteConnection }) => {
     const renderFullDetails = () => {
         if (connection.exists) {
             return (
@@ -134,7 +134,7 @@ const InterfaceDetails = ({ iface, connection, changeConnectionState, removeConn
             <Toolbar>
                 <ToolbarContent>
                     <ToolbarItem>
-                        <DeleteConnection connection={connection} deleteConnection={removeConnection} />
+                        <DeleteConnection connection={connection} deleteConnection={deleteConnection} />
                     </ToolbarItem>
 
                     {

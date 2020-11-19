@@ -285,7 +285,7 @@ async function deleteConnection(dispatch, connection) {
     dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: connection.name } });
 
     try {
-        await networkClient().removeConnection(connection);
+        await networkClient().deleteConnection(connection);
         dispatch({ type: DELETE_CONNECTION, payload: connection });
         await networkClient().setDownConnection(connection);
     } catch (error) {

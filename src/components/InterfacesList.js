@@ -44,7 +44,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         { title: _("Addresses") }
     ];
 
-    const removeConnection = useCallback((connection) => {
+    const onDeleteConnection = useCallback((connection) => {
         deleteConnection(dispatch, connection);
     }, [dispatch]);
 
@@ -108,7 +108,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     cells: [
                         "",
                         {
-                            title: <InterfaceDetails iface={i} connection={conn} removeConnection={removeConnection} changeConnectionState={changeState} />,
+                            title: <InterfaceDetails iface={i} connection={conn} deleteConnection={onDeleteConnection} changeConnectionState={changeState} />,
                             props: { colSpan: 4 }
                         }
                     ]
@@ -119,7 +119,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
             return list;
         }, []);
-    }, [interfaces, openRows, removeConnection, changeState, findOrCreateConnection]);
+    }, [interfaces, openRows, onDeleteConnection, changeState, findOrCreateConnection]);
 
     /**
      * Keeps the openRows internal state up to date using the information provided by the

@@ -19,7 +19,13 @@
  * find current contact information at www.suse.com.
  */
 
-import { addConnection, updateConnection, actionTypes, resetClient } from './network';
+import {
+    addConnection,
+    updateConnection,
+    deleteConnection,
+    actionTypes,
+    resetClient
+} from './network';
 import interfaceType from '../lib/model/interfaceType';
 import NetworkClient from '../lib/NetworkClient';
 
@@ -147,7 +153,75 @@ describe('#updateConnection', () => {
         const error = new Error({ message: 'something went wrong' });
         updateConnectionMock.mockImplementation((conn) => { throw error });
 
-        await updateConnection(dispatchFn, { name: 'eth0', type: interfaceType.BRIDGE });
+        await updateConnection(dispatchFn, { name: 'eth0' });
+
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.CONNECTION_ERROR,
+                    payload: expect.objectContaining({
+                        error,
+                        connection: expect.objectContaining({ name: 'eth0' })
+                    })
+                }
+            )
+        );
+    });
+});
+
+describe('#deleteConnection', () => {
+    const deleteConnectionMock = jest.fn(conn => Promise.resolve(conn));
+    const setDownConnectionMock = jest.fn(name => Promise.resolve());
+
+    beforeAll(() => {
+        resetClient();
+        NetworkClient.mockImplementation(() => {
+            return {
+                deleteConnection: deleteConnectionMock,
+                setDownConnection: setDownConnectionMock
+            };
+        });
+    });
+
+    afterAll(() => {
+        deleteConnectionMock.mockClear();
+        setDownConnectionMock.mockClear();
+    });
+
+    it('asks the network client to delete the connection', async () => {
+        const dispatchFn = jest.fn();
+
+        await deleteConnection(dispatchFn, { name: 'eth0' });
+
+        expect(deleteConnectionMock).toHaveBeenCalledWith(
+            expect.objectContaining({ name: 'eth0' })
+        );
+        expect(setDownConnectionMock).toHaveBeenCalledWith(
+            expect.objectContaining({ name: 'eth0' })
+        );
+    });
+
+    it('dispatches an DELETE_CONNECTION action', async () => {
+        const dispatchFn = jest.fn();
+
+        await deleteConnection(dispatchFn, { name: 'eth0' });
+
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.DELETE_CONNECTION,
+                    payload: expect.objectContaining({ name: 'eth0' })
+                }
+            )
+        );
+    });
+
+    it('dispatches a CONNECTION_ERROR if something went wrong', async () => {
+        const dispatchFn = jest.fn();
+        const error = new Error({ message: 'something went wrong' });
+        deleteConnectionMock.mockImplementation((conn) => { throw error });
+
+        await deleteConnection(dispatchFn, { name: 'eth0' });
 
         expect(dispatchFn).toHaveBeenCalledWith(
             expect.objectContaining(

@@ -27,6 +27,7 @@ import {
     resetClient
 } from './network';
 import interfaceType from '../lib/model/interfaceType';
+import interfaceStatus from '../lib/model/interfaceStatus';
 import NetworkClient from '../lib/NetworkClient';
 
 jest.mock('../lib/NetworkClient');
@@ -74,6 +75,29 @@ describe('#addConnection', () => {
                 {
                     type: actionTypes.ADD_CONNECTION,
                     payload: expect.objectContaining({ name: 'eth0' })
+                }
+            )
+        );
+    });
+
+    it('updates the interface status', async () => {
+        const dispatchFn = jest.fn();
+
+        await addConnection(dispatchFn, { name: 'eth0', type: interfaceType.BRIDGE });
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.UPDATE_INTERFACE,
+                    payload: expect.objectContaining({ name: 'eth0', status: interfaceStatus.CONFIGURING })
+                }
+            )
+        );
+
+        expect(dispatchFn).toHaveBeenCalledWith(
+            expect.objectContaining(
+                {
+                    type: actionTypes.UPDATE_INTERFACE,
+                    payload: expect.objectContaining({ name: 'eth0', status: interfaceStatus.READY })
                 }
             )
         );

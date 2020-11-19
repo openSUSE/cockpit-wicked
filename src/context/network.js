@@ -23,6 +23,7 @@ import React from 'react';
 import { createConnection, mergeConnection } from '../lib/model/connections';
 import { createInterface } from '../lib/model/interfaces';
 import { createRoute } from '../lib/model/routes';
+import interfaceStatus from '../lib/model/interfaceStatus';
 import NetworkClient from '../lib/NetworkClient';
 
 const NetworkStateContext = React.createContext();
@@ -40,7 +41,6 @@ const DELETE_CONNECTION = 'delete_connection';
 const UPDATE_CONNECTION = 'update_connection';
 const UPDATE_INTERFACE = 'update_interface';
 const CONNECTION_ERROR = 'connection_error';
-const CONNECTION_CHANGE_REQUEST = 'connection_change_request';
 
 const actionTypes = {
     SET_INTERFACES,
@@ -52,7 +52,6 @@ const actionTypes = {
     DELETE_CONNECTION,
     UPDATE_CONNECTION,
     UPDATE_INTERFACE,
-    CONNECTION_CHANGE_REQUEST,
     CONNECTION_ERROR
 };
 
@@ -103,7 +102,7 @@ function networkReducer(state, action) {
 
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, pending: false } },
+            interfaces: { ...interfaces, [iface.id]: { ...iface, status: interfaceStatus.IN_PROGRESS } },
             connections: { ...connections, [conn.id]: conn }
         };
     }
@@ -116,7 +115,7 @@ function networkReducer(state, action) {
 
         if (!conn.virtual) return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, pending: false } },
+            interfaces: { ...interfaces, [iface.id]: { ...iface, status: interfaceStatus.IN_PROGRESS } },
             connections: nextConnections
         };
 
@@ -136,7 +135,7 @@ function networkReducer(state, action) {
         const { error, ...updatedIface } = iface;
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...updatedIface, pending: false } },
+            interfaces: { ...interfaces, [iface.id]: { ...updatedIface, status: interfaceStatus.IN_PROGRESS } },
             connections: { ...connections, [id]: action.payload }
         };
     }
@@ -152,21 +151,9 @@ function networkReducer(state, action) {
             ...state,
             interfaces: {
                 ...interfaces, [oldIface.id]: {
-                    ...oldIface, ...action.payload, id: oldIface.id, pending: false, error: false
+                    ...oldIface, ...action.payload, id: oldIface.id
                 }
             }
-        };
-    }
-
-    case CONNECTION_CHANGE_REQUEST: {
-        const { interfaces } = state;
-        const { name } = action.payload;
-        const iface = Object.values(interfaces).find(i => i.name === name);
-        if (!iface) return { ...state };
-
-        return {
-            ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, error: false, pending: true } }
         };
     }
 
@@ -176,7 +163,7 @@ function networkReducer(state, action) {
         const iface = Object.values(interfaces).find(i => i.name === name);
         return {
             ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message, pending: false } }
+            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message, status: 'error' } }
         };
     }
 
@@ -244,12 +231,13 @@ const networkClient = () => {
  */
 async function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
-    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: addedConn.name } });
+    dispatch({ type: UPDATE_INTERFACE, payload: { name: addedConn.name, status: interfaceStatus.CONFIGURING } });
 
     try {
         await networkClient().addConnection(addedConn);
         dispatch({ type: ADD_CONNECTION, payload: { ...addedConn, exists: true } });
         await networkClient().reloadConnection(addedConn.name);
+        dispatch({ type: UPDATE_INTERFACE, payload: { name: addedConn.name, status: interfaceStatus.READY } });
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection: addedConn } });
     }
@@ -271,12 +259,13 @@ async function addConnection(dispatch, attrs) {
  */
 async function updateConnection(dispatch, connection, changes) {
     const updatedConn = mergeConnection(connection, changes);
-    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: updatedConn.name } });
-    // FIXME: handle errors
+    dispatch({ type: UPDATE_INTERFACE, payload: { name: updatedConn.name, status: interfaceStatus.CONFIGURING } });
+
     try {
         await networkClient().updateConnection(updatedConn);
         dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
         await networkClient().reloadConnection(updatedConn.name);
+        dispatch({ type: UPDATE_INTERFACE, payload: { name: updatedConn.name, status: interfaceStatus.READY } });
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection: updatedConn } });
     }
@@ -284,29 +273,34 @@ async function updateConnection(dispatch, connection, changes) {
 }
 
 async function deleteConnection(dispatch, connection) {
-    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: connection.name } });
+    dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.CONFIGURING } });
 
     try {
         await networkClient().deleteConnection(connection);
         dispatch({ type: DELETE_CONNECTION, payload: connection });
         await networkClient().setDownConnection(connection);
+        dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.READY } });
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection } });
     }
 }
 
 async function changeConnectionState(dispatch, connection, setUp) {
-    dispatch({ type: CONNECTION_CHANGE_REQUEST, payload: { name: connection.name } });
+    dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.IN_PROGRESS } });
 
+    let result;
     try {
         if (setUp) {
-            return await networkClient().setUpConnection(connection);
+            result = await networkClient().setUpConnection(connection);
         } else {
-            return await networkClient().setDownConnection(connection);
+            result = await networkClient().setDownConnection(connection);
         }
     } catch (error) {
         dispatch({ type: CONNECTION_ERROR, payload: { error, connection } });
     }
+
+    dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.READY } });
+    return result;
 }
 
 // FIXME

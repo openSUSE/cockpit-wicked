@@ -25,6 +25,7 @@ import { Card, CardHeader, CardTitle, CardBody, Spinner } from '@patternfly/reac
 import { Table, TableHeader, TableBody, TableVariant, expandable } from '@patternfly/react-table';
 import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';
+import interfaceStatus from '../lib/model/interfaceStatus';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import { createConnection } from '../lib/model/connections';
 import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
@@ -59,10 +60,22 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     };
 
     const renderStatusIcon = (iface) => {
+        if (!iface.status) return;
+
         if (iface.error) {
             return <><AlertIcon /></>;
-        } else if (iface.pending) {
+        } else if (iface.status !== 'ready') {
             return <><Spinner size="md" /></>;
+        }
+    };
+
+    const renderStatusText = (iface) => {
+        const linkText = iface.link ? _('Up') : _('Down');
+
+        if (!iface.status || iface.status === interfaceStatus.READY) {
+            return linkText;
+        } else {
+            return interfaceStatus.label(iface.status);
         }
     };
 
@@ -94,10 +107,10 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                 {
                     isOpen: openRows.includes(parentId),
                     cells: [
-                        renderStatusIcon(i, conn),
+                        renderStatusIcon(i),
                         i.name,
                         interfaceType.label(i.type),
-                        i.link ? _('Up') : _('Down'),
+                        renderStatusText(i),
                         interfaceAddresses(i)
                     ]
                 }

@@ -1,30 +1,15 @@
-/*
- * Copyright (c) [2020] SUSE LLC
- *
- * All Rights Reserved.
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as published
- * by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, contact SUSE LLC.
- *
- * To contact SUSE LLC about this file by physical or electronic mail, you may
- * find current contact information at www.suse.com.
- */
 
 import React from 'react';
 import { createConnection, mergeConnection } from '../lib/model/connections';
-import { createInterface } from '../lib/model/interfaces';
 import { createRoute } from '../lib/model/routes';
 import interfaceStatus from '../lib/model/interfaceStatus';
 import NetworkClient from '../lib/NetworkClient';
+import useRootReducer from 'use-root-reducer';
+
+import { interfacesReducer } from './interfaces';
+import { connectionsReducer } from './connections';
+import { routesReducer } from './routes';
+import { dnsReducer } from './dns';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
@@ -35,7 +20,6 @@ const SET_INTERFACES = 'set_interfaces';
 const SET_CONNECTIONS = 'set_connections';
 const SET_ROUTES = 'set_routes';
 const SET_DNS = 'set_dns';
-const UPDATE_ROUTES = 'update_routes';
 const ADD_CONNECTION = 'add_connection';
 const DELETE_CONNECTION = 'delete_connection';
 const UPDATE_CONNECTION = 'update_connection';
@@ -47,132 +31,12 @@ const actionTypes = {
     SET_CONNECTIONS,
     SET_DNS,
     SET_ROUTES,
-    UPDATE_ROUTES,
     ADD_CONNECTION,
     DELETE_CONNECTION,
     UPDATE_CONNECTION,
     UPDATE_INTERFACE,
     CONNECTION_ERROR
 };
-
-function networkReducer(state, action) {
-    switch (action.type) {
-    case SET_INTERFACES: {
-        const interfaces = action.payload.reduce((all, ifaceData) => {
-            const iface = createInterface(ifaceData);
-            return { ...all, [iface.id]: iface };
-        }, {});
-        return { ...state, interfaces };
-    }
-
-    case SET_CONNECTIONS: {
-        const connections = action.payload.reduce((all, connData) => {
-            const conn = createConnection(connData);
-            return { ...all, [conn.id]: conn };
-        }, {});
-        return { ...state, connections };
-    }
-
-    case SET_DNS: {
-        return { ...state, dns: action.payload };
-    }
-
-    case SET_ROUTES: {
-        const routes = action.payload.reduce((all, routeData) => {
-            const route = createRoute(routeData);
-            return { ...all, [route.id]: route };
-        }, {});
-
-        return { ...state, routes };
-    }
-
-    case UPDATE_ROUTES: {
-        return { ...state, routes: action.payload };
-    }
-
-    case ADD_CONNECTION: {
-        const { interfaces, connections } = state;
-        const conn = action.payload;
-
-        // Configuring an existing iface?
-        let iface = Object.values(interfaces).find((i) => i.name === conn.name);
-
-        // or just adding a new one?
-        iface ||= createInterface({ name: conn.name, type: conn.type });
-
-        return {
-            ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, status: interfaceStatus.IN_PROGRESS } },
-            connections: { ...connections, [conn.id]: conn }
-        };
-    }
-
-    case DELETE_CONNECTION: {
-        const { interfaces, connections } = state;
-        const conn = action.payload;
-        const { [conn.id]: _value, ...nextConnections } = connections;
-        const iface = Object.values(interfaces).find(i => i.name === conn.name);
-
-        if (!conn.virtual) return {
-            ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, status: interfaceStatus.IN_PROGRESS } },
-            connections: nextConnections
-        };
-
-        const { [iface.id]: _ivalue, ...nextInterfaces } = interfaces;
-
-        return {
-            ...state,
-            interfaces: nextInterfaces,
-            connections: nextConnections
-        };
-    }
-
-    case UPDATE_CONNECTION: {
-        const { id, name } = action.payload;
-        const { connections, interfaces } = state;
-        const iface = Object.values(interfaces).find(i => i.name === name);
-        const { error, ...updatedIface } = iface;
-        return {
-            ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...updatedIface, status: interfaceStatus.IN_PROGRESS } },
-            connections: { ...connections, [id]: action.payload }
-        };
-    }
-
-    case UPDATE_INTERFACE: {
-        const { interfaces } = state;
-        const { name } = action.payload;
-        const oldIface = Object.values(interfaces).find(i => i.name === name);
-        if (!oldIface) return state;
-
-        // FIXME: we need to keep the old ID. Perhaps we should consider how we are handled the IDs.
-        return {
-            ...state,
-            interfaces: {
-                ...interfaces, [oldIface.id]: {
-                    ...oldIface, ...action.payload, id: oldIface.id
-                }
-            }
-        };
-    }
-
-    case CONNECTION_ERROR: {
-        const { interfaces } = state;
-        const { connection: { name }, error: { message } } = action.payload;
-        const iface = Object.values(interfaces).find(i => i.name === name);
-        return {
-            ...state,
-            interfaces: { ...interfaces, [iface.id]: { ...iface, error: message, status: interfaceStatus.ERROR } }
-        };
-    }
-
-    default: {
-        console.error("Unknown action", action.type, action.payload);
-        return state;
-    }
-    }
-}
 
 function useNetworkState() {
     const context = React.useContext(NetworkStateContext);
@@ -193,7 +57,12 @@ function useNetworkDispatch() {
 }
 
 function NetworkProvider({ children }) {
-    const [state, dispatch] = React.useReducer(networkReducer, { interfaces: [], connections: [], routes: [] });
+    const [state, dispatch] = useRootReducer({
+        interfaces: React.useReducer(interfacesReducer, {}),
+        connections: React.useReducer(connectionsReducer, {}),
+        routes: React.useReducer(routesReducer, {}),
+        dns: React.useReducer(dnsReducer, { searchList: [], nameServers: [] })
+    });
 
     return (
         <NetworkStateContext.Provider value={state}>
@@ -320,7 +189,7 @@ async function changeConnectionState(dispatch, connection, setUp) {
 function deleteRoute(dispatch, routes, routeId) {
     const nextRoutes = routes.filter((r) => r.id !== routeId);
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: UPDATE_ROUTES, payload: nextRoutes });
+    dispatch({ type: SET_ROUTES, payload: nextRoutes });
 }
 
 // FIXME
@@ -328,7 +197,7 @@ function updateRoute(dispatch, routes, routeId, changes) {
     const route = routes[routeId];
     const nextRoutes = { ...routes, [routeId]: { ...route, ...changes } };
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: UPDATE_ROUTES, payload: nextRoutes });
+    dispatch({ type: SET_ROUTES, payload: nextRoutes });
 }
 
 // FIXME
@@ -336,7 +205,7 @@ function addRoute(dispatch, routes, attrs) {
     const route = createRoute(attrs);
     const nextRoutes = { ...routes, [route.id]: route };
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: UPDATE_ROUTES, payload: nextRoutes });
+    dispatch({ type: SET_ROUTES, payload: nextRoutes });
 }
 
 /**

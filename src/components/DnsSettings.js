@@ -31,7 +31,7 @@ const PolicyDetails = ({ onClick, dns }) => {
     return (
         <>
             <dt>{_("Policy")}</dt>
-            <dd><a href="#" onClick={onClick}>{policy}</a></dd>
+            <dd><a href="#" onClick={onClick}>{policy || _("Disabled")}</a></dd>
         </>
     );
 };
@@ -42,7 +42,7 @@ const SearchListDetails = ({ onClick, dns }) => {
     return (
         <>
             <dt>{_("Search list")}</dt>
-            <dd><a href="#" onClick={onClick}>{searchList.join(" ")}</a></dd>
+            <dd><a href="#" onClick={onClick}>{(searchList.length == 0) ? _("Empty") : searchList.join(" ")}</a></dd>
         </>
     );
 };
@@ -53,7 +53,7 @@ const NameServersDetails = ({ onClick, dns }) => {
     return (
         <>
             <dt>{_("Name servers")}</dt>
-            <dd><a href="#" onClick={onClick}>{nameServers.join(" ")}</a></dd>
+            <dd><a href="#" onClick={onClick}>{(nameServers.length == 0) ? _("Empty") : nameServers.join(" ")}</a></dd>
         </>
     );
 };

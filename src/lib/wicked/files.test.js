@@ -120,15 +120,27 @@ describe('SysconfigParser', () => {
     });
 
     describe('#parse', () => {
-        const content = '## Type: boolean\n## Default: "no"\n\n WICKED_DEBUG="yes"\n#WICKED_LOG_LEVEL=info';
+        const content = [
+            '## Type: boolean',
+            '## Default: "no"',
+            '',
+            'DEBUG="yes"',
+            '#LOG_LEVEL="info"',
+            'MTU=1500',
+            'LINK_REQUIRED=',
+            'ZONE=""'
+        ].join('\n');
 
         it('returns an array containing one object for each line', () => {
             expect(parser.parse(content)).toEqual([
                 { comment: '## Type: boolean' },
                 { comment: '## Default: "no"' },
                 { comment: '' },
-                { key: 'WICKED_DEBUG', value: 'yes', commented: false },
-                { key: 'WICKED_LOG_LEVEL', value: 'info', commented: true }
+                { key: 'DEBUG', value: 'yes', commented: false },
+                { key: 'LOG_LEVEL', value: 'info', commented: true },
+                { key: 'MTU', value: '1500', commented: false },
+                { key: 'LINK_REQUIRED', value: '', commented: false },
+                { key: 'ZONE', value: '', commented: false }
             ]);
         });
     });

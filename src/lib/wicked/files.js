@@ -193,7 +193,7 @@ class SysconfigParser {
      * @return {Array<SysconfigFileLine>} An array of objects describing each line
      */
     parse(text) {
-        const keyValueLine = new RegExp(/^ *(#)? *([A-Za-z_0-9]+) *= *"?([^"]+)"?/);
+        const keyValueLine = new RegExp(/^ *(#)? *([A-Za-z_0-9]+) *= *"?([^"]*)"?/);
 
         const lines = text.split(/\r?\n/);
         return lines.reduce((content, line) => {

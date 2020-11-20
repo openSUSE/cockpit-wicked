@@ -59,7 +59,7 @@ describe('InterfacesTab', () => {
         });
     });
 
-    test('configure a unconfigured interface', async () => {
+    test('configure an unconfigured interface', async () => {
         act(() => {
             customRender(<InterfacesTab />, { value: { interfaces: {}, connections: {} } });
         });

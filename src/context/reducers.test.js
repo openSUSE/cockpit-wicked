@@ -19,12 +19,61 @@
  * find current contact information at www.suse.com.
  */
 
-import { interfacesReducer } from './reducers';
+import { interfacesReducer, connectionsReducer } from './reducers';
 import { createConnection } from '../lib/model/connections';
 import { createInterface } from '../lib/model/interfaces';
 import actionTypes from './actionTypes';
 import interfaceType from '../lib/model/interfaceType';
 import interfaceStatus from '../lib/model/interfaceStatus';
+import startModeEnum from '../lib/model/startMode';
+
+describe('connectionsReducer', () => {
+    describe('SET_CONNECTIONS', () => {
+        it('set the interfaces', () => {
+            const action = { type: actionTypes.SET_CONNECTIONS, payload: [{ name: 'eth0' }] };
+            const newState = connectionsReducer({}, action);
+
+            expect(Object.values(newState)).toEqual([
+                expect.objectContaining({ name: 'eth0', type: interfaceType.ETHERNET })
+            ]);
+        });
+    });
+
+    describe('ADD_CONNECTION', () => {
+        it('adds a connection', () => {
+            const conn = createConnection({ name: 'eth0' });
+            const action = { type: actionTypes.ADD_CONNECTION, payload: conn };
+            const newState = connectionsReducer({}, action);
+
+            expect(newState).toEqual({ [conn.id]: conn });
+        });
+    });
+
+    describe('UPDATE_CONNECTION', () => {
+        it('updates the connection with the same id', () => {
+            const conn = createConnection({ name: 'eth0' });
+            const updatedConn = { ...conn, startMode: startModeEnum.OFF };
+            const state = { [conn.id]: conn };
+            const action = { type: actionTypes.UPDATE_CONNECTION, payload: updatedConn };
+            const newState = connectionsReducer(state, action);
+
+            expect(newState).toEqual({
+                [conn.id]: expect.objectContaining({ startMode: startModeEnum.OFF })
+            });
+        });
+    });
+
+    describe('DELETE_CONNECTION', () => {
+        it('deletes the connection with the same id', () => {
+            const conn = createConnection({ name: 'eth0' });
+            const state = { [conn.id]: conn };
+            const action = { type: actionTypes.DELETE_CONNECTION, payload: { id: conn.id } };
+            const newState = connectionsReducer(state, action);
+
+            expect(newState).toEqual({});
+        });
+    });
+});
 
 describe('interfacesReducer', () => {
     describe('SET_INTERFACES', () => {

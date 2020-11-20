@@ -119,3 +119,52 @@ describe('#interfaces', () => {
         });
     });
 });
+
+describe('#reloadConnection', () => {
+    const reloadConnectionMock = jest.fn();
+
+    beforeAll(() => {
+        Client.mockImplementation(() => {
+            return {
+                reloadConnection: reloadConnectionMock
+            };
+        });
+    });
+
+    afterAll(() => {
+        reloadConnectionMock.mockClear();
+    });
+
+    it('returns the connection name if everything works', async () => {
+        reloadConnectionMock.mockImplementation(name => Promise.resolve(name));
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        const name = await adapter.reloadConnection("eth0");
+        expect(name).toEqual("eth0");
+    });
+
+    it('returns the connection name even if there is a known and ignored error', async () => {
+        const error = { message: "This error should be ignored", exit_status: 162 };
+
+        reloadConnectionMock.mockImplementation(name => Promise.reject(error));
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        const name = await adapter.reloadConnection("eth0");
+        expect(name).toEqual("eth0");
+    });
+
+    it('rejects if there is a not ignored error', async () => {
+        const error = { message: "This error should not be ignored", exit_status: 157 };
+
+        reloadConnectionMock.mockImplementation(name => Promise.reject(error));
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        await expect(adapter.reloadConnection("eth0")).rejects.toEqual(error);
+    });
+});

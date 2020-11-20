@@ -34,9 +34,9 @@ const WirelessDetails = ({ iface, connection }) => {
     const renderLinkDetails = () => {
         return (
             <a href="#" onClick={() => setFormOpen(true)}>
-              { [wirelessMode.label(wireless.mode),
-                   wireless.essid,
-                   wirelessAuthModes.label(wireless.authMode)].join(', ') }
+                { [wirelessMode.label(wireless.mode),
+                    wireless.essid,
+                    wirelessAuthModes.label(wireless.authMode)].join(', ') }
             </a>
         );
     };

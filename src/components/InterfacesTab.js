@@ -44,7 +44,7 @@ const InterfacesTab = () => {
         <>
             <Toolbar id="interfaces-toolbar">
                 <ToolbarContent>
-                    <ToolbarItem>
+                    <ToolbarItem alignment={{ default: 'alignRight' }}>
                         <AddConnectionMenu />
                     </ToolbarItem>
                 </ToolbarContent>

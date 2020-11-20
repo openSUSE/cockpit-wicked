@@ -110,7 +110,7 @@ describe('interfacesReducer', () => {
     });
 
     describe('ADD_CONNECTION', () => {
-        it('sets the status to IN_PROGRESS is the interface existed', () => {
+        it('sets the status to CHANGING is the interface existed', () => {
             const conn = createConnection({ name: 'eth0' });
             const eth0 = createInterface({ name: 'eth0' });
             const state = { [eth0.id]: eth0 };
@@ -118,13 +118,13 @@ describe('interfacesReducer', () => {
             const newState = interfacesReducer(state, action);
 
             expect(newState).toEqual({
-                [eth0.id]: expect.objectContaining({ status: interfaceStatus.IN_PROGRESS })
+                [eth0.id]: expect.objectContaining({ status: interfaceStatus.CHANGING })
             });
         });
     });
 
     describe('UPDATE_CONNECTION', () => {
-        it('sets the status to IN_PROGRESS and resets the error (if any)', () => {
+        it('sets the status to CHANGING and resets the error (if any)', () => {
             const conn = createConnection({ name: 'eth0' });
             const eth0 = { ...createInterface({ name: 'eth0' }), error: 'something went wrong' };
             const state = { [eth0.id]: eth0 };
@@ -132,13 +132,13 @@ describe('interfacesReducer', () => {
             const newState = interfacesReducer(state, action);
 
             const { [eth0.id]: newIface } = newState;
-            expect(newIface.status).toEqual(interfaceStatus.IN_PROGRESS);
+            expect(newIface.status).toEqual(interfaceStatus.CHANGING);
             expect(newIface.error).toBeUndefined();
         });
     });
 
     describe('DELETE_CONNECTION', () => {
-        it('sets the status to IN_PROGRESS if it is physical', () => {
+        it('sets the status to CHANGING if it is physical', () => {
             const conn = createConnection({ name: 'eth0' });
             const eth0 = createInterface({ name: 'eth0' });
             const state = { [eth0.id]: eth0 };
@@ -146,7 +146,7 @@ describe('interfacesReducer', () => {
             const newState = interfacesReducer(state, action);
 
             const { [eth0.id]: newIface } = newState;
-            expect(newIface.status).toEqual(interfaceStatus.IN_PROGRESS);
+            expect(newIface.status).toEqual(interfaceStatus.CHANGING);
         });
 
         it('removes the interface if it was virtual', () => {

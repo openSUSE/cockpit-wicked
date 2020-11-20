@@ -21,6 +21,8 @@
 
 import React, { useState } from 'react';
 import WirelessForm from './WirelessForm';
+import wirelessAuthModes from '../lib/model/wirelessAuthMode';
+import wirelessMode from '../lib/model/wirelessMode';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
@@ -32,17 +34,9 @@ const WirelessDetails = ({ iface, connection }) => {
     const renderLinkDetails = () => {
         return (
             <a href="#" onClick={() => setFormOpen(true)}>
-                <ul>
-                    <li>
-                        {_("ESSID: ")}{wireless.essid}
-                    </li>
-                    <li>
-                        {_("Mode: ")}{wireless.mode}
-                    </li>
-                    <li>
-                        {_("Auth Mode: ")}{wireless.authMode}
-                    </li>
-                </ul>
+                { [wirelessMode.label(wireless.mode),
+                    wireless.essid,
+                    wirelessAuthModes.label(wireless.authMode)].join(', ') }
             </a>
         );
     };

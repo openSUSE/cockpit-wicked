@@ -120,15 +120,27 @@ describe('SysconfigParser', () => {
     });
 
     describe('#parse', () => {
-        const content = '## Type: boolean\n## Default: "no"\n\n WICKED_DEBUG="yes"\n#WICKED_LOG_LEVEL=info';
+        const content = [
+            '## Type: boolean',
+            '## Default: "no"',
+            '',
+            'DEBUG="yes"',
+            '#LOG_LEVEL="info"',
+            'MTU=1500',
+            'LINK_REQUIRED=',
+            'ZONE=""'
+        ].join('\n');
 
         it('returns an array containing one object for each line', () => {
             expect(parser.parse(content)).toEqual([
                 { comment: '## Type: boolean' },
                 { comment: '## Default: "no"' },
                 { comment: '' },
-                { key: 'WICKED_DEBUG', value: 'yes', commented: false },
-                { key: 'WICKED_LOG_LEVEL', value: 'info', commented: true }
+                { key: 'DEBUG', value: 'yes', commented: false },
+                { key: 'LOG_LEVEL', value: 'info', commented: true },
+                { key: 'MTU', value: '1500', commented: false },
+                { key: 'LINK_REQUIRED', value: '', commented: false },
+                { key: 'ZONE', value: '', commented: false }
             ]);
         });
     });
@@ -143,14 +155,14 @@ describe('SysconfigFile', () => {
     const readFn = () => {
         return new Promise((resolve, reject) => {
             process.nextTick(() => {
-                resolve(fileContent);
+                resolve([...fileContent]);
             });
         });
     };
 
     const replaceFn = jest.fn();
 
-    const file = new SysconfigFile('/foo/bar');
+    const file = new SysconfigFile('/tmp/foo/bar');
 
     describe('get', () => {
         beforeAll(() => {
@@ -192,12 +204,14 @@ describe('SysconfigFile', () => {
             file.update({
                 NAME: 'eth0',
                 BOOTPROTO: undefined,
-                STARTMODE: 'ifplugd'
+                STARTMODE: 'ifplugd',
+                IPADDR: ''
             });
 
             expect(file.get('NAME')).toEqual('eth0');
             expect(file.get('BOOTPROTO')).toBeUndefined();
             expect(file.get('STARTMODE')).toEqual('ifplugd');
+            expect(file.get('IPADDR')).toEqual('');
         });
     });
 
@@ -207,14 +221,16 @@ describe('SysconfigFile', () => {
             file.update({
                 NAME: 'eth0',
                 BOOTPROTO: undefined,
-                STARTMODE: 'ifplugd'
+                STARTMODE: 'ifplugd',
+                IPADDR: ''
             });
             file.write();
 
             expect(replaceFn).toHaveBeenCalledWith([
                 { key: 'NAME', value: 'eth0', commented: false },
                 { key: 'BOOTPROTO', value: 'dhcp', commented: true },
-                { key: 'STARTMODE', value: 'ifplugd', commented: false }
+                { key: 'STARTMODE', value: 'ifplugd', commented: false },
+                { key: 'IPADDR', value: '', commented: false }
             ]);
         });
     });

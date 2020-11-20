@@ -193,7 +193,7 @@ class SysconfigParser {
      * @return {Array<SysconfigFileLine>} An array of objects describing each line
      */
     parse(text) {
-        const keyValueLine = new RegExp(/^ *(#)? *([A-Za-z_0-9]+) *= *"?([^"]+)"?/);
+        const keyValueLine = new RegExp(/^ *(#)? *([A-Za-z_0-9]+) *= *"?([^"]*)"?/);
 
         const lines = text.split(/\r?\n/);
         return lines.reduce((content, line) => {
@@ -256,14 +256,17 @@ class SysconfigFile {
      */
     set(key, value) {
         const line = this.data.find(l => l.key === key);
+        const someValue = (value !== undefined && value !== null);
 
-        if (!line && value) {
+        if (!line && someValue) {
             this.data.push({ key, value, commented: false });
-        } else if (line && value) {
-            line.value = value;
-            line.commented = false;
-        } else if (line && !value) {
-            line.commented = true;
+        } else if (line) {
+            if (someValue) {
+                line.value = value;
+                line.commented = false;
+            } else {
+                line.commented = true;
+            }
         }
     }
 

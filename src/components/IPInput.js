@@ -27,7 +27,7 @@ import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const IPInput = ({ placeholder, onError, ...props }) => {
+const IPInput = ({ placeholder, onError = () => null, ...props }) => {
     const [validated, setValidated] = useState("default");
 
     return (

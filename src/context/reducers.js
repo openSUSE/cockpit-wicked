@@ -110,7 +110,7 @@ export function interfacesReducer(state, action) {
         if (!conn.virtual) {
             return {
                 ...state,
-                status: interfaceStatus.IN_PROGRESS
+                [iface.id]: { ...iface, status: interfaceStatus.IN_PROGRESS }
             };
         }
 

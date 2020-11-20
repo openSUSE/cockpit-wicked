@@ -28,18 +28,18 @@ const NC_ = cockpit.noop;
  * This enum indicates the status interface within the workflow.
  *
  * - CONFIGURING: the configuration is being updated (writing files and so on).
- * - IN_PROGRESS: the interface is changing its status (according to the configuration or on demand).
+ * - CHANGING: the interface is changing its status (according to the configuration or on demand).
  * - READY: the interface has been configured with no error.
  * - ERROR: the interface could not be configured accoding to the configuration.
  */
 const CONFIGURING = 'configuring';
-const IN_PROGRESS = 'in_progress';
+const CHANGING = 'in_progress';
 const READY = 'ready';
 const ERROR = 'error';
 
 const labels = {
     [CONFIGURING]: NC_('Configuring'),
-    [IN_PROGRESS]: NC_('Set-up in progress'),
+    [CHANGING]: NC_('Changing'),
     [READY]: NC_('Ready'),
     [ERROR]: NC_('Error'),
 };
@@ -48,7 +48,7 @@ const label = (type) => _(labels[type]);
 
 export default {
     CONFIGURING,
-    IN_PROGRESS,
+    CHANGING,
     READY,
     ERROR,
     label

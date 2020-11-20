@@ -89,7 +89,7 @@ export function interfacesReducer(state, action) {
 
         return {
             ...state,
-            [iface.id]: { ...iface, status: interfaceStatus.IN_PROGRESS }
+            [iface.id]: { ...iface, status: interfaceStatus.CHANGING }
         };
     }
 
@@ -99,7 +99,7 @@ export function interfacesReducer(state, action) {
         const { error, ...updatedIface } = iface;
         return {
             ...state,
-            [iface.id]: { ...updatedIface, status: interfaceStatus.IN_PROGRESS }
+            [iface.id]: { ...updatedIface, status: interfaceStatus.CHANGING }
         };
     }
 
@@ -110,7 +110,7 @@ export function interfacesReducer(state, action) {
         if (!conn.virtual) {
             return {
                 ...state,
-                [iface.id]: { ...iface, status: interfaceStatus.IN_PROGRESS }
+                [iface.id]: { ...iface, status: interfaceStatus.CHANGING }
             };
         }
 

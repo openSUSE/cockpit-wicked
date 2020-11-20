@@ -142,7 +142,7 @@ async function deleteConnection(dispatch, connection) {
  * @return {Promise}
  */
 async function changeConnectionState(dispatch, connection, setUp) {
-    dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.IN_PROGRESS } });
+    dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.CHANGING } });
 
     let result;
     try {

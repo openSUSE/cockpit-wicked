@@ -104,7 +104,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                     isRequired
                     fieldId="essid"
                 >
-                    <WirelessEssidSelect essid={essid} setEssid={setEssid} name={iface.name} />
+                    <WirelessEssidSelect essid={essid} setEssid={setEssid} iface={iface} />
                 </FormGroup>
                 <FormGroup
                     label={_("Auth Mode")}

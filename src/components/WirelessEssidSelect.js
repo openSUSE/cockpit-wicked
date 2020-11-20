@@ -19,94 +19,71 @@
  * find current contact information at www.suse.com.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { fetchEssidList } from '../context/network';
 import {
-    Bullseye,
-    Button,
+    Dropdown,
+    DropdownItem,
+    DropdownPosition,
+    DropdownToggle,
     InputGroup,
-    Select,
-    SelectOption,
-    SelectVariant,
-    Spinner
+    Spinner,
+    TextInput
 } from '@patternfly/react-core';
+import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const WirelessEssidSelect = ({ essid, setEssid, name }) => {
+const WirelessEssidSelect = ({ essid, setEssid, iface }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [essidList, setEssidList] = useState([]);
-    const [scanning, setScanning] = useState(true);
+    const [essidList, setEssidList] = useState(undefined);
 
-    const refreshList = useCallback((name) => {
+    const refreshList = (name) => {
         fetchEssidList(name)
                 .then(result => {
-                    const list = [...new Set([...result, essid])];
+                    const list = [...new Set([...result])];
                     setEssidList(list.sort());
-                    setScanning(false);
                 })
                 .catch(console.error);
-    }, [essid]);
-
-    useEffect(() => {
-        refreshList(name);
-    }, [name, refreshList]);
-
-    const reScan = () => {
-        setScanning(true);
-        refreshList(name);
     };
 
-    const onToggle = isOpen => setIsOpen(isOpen);
+    const onToggle = isOpen => {
+        if (isOpen) {
+            setEssidList(undefined);
+            refreshList(iface.name);
+        }
 
-    const clearSelection = () => {
-        setEssid(undefined);
+        setIsOpen(isOpen);
+    };
+
+    const onSelect = (selection) => {
+        setEssid(selection);
         setIsOpen(false);
     };
 
-    const onCreateOption = (newValue) => {
-        setEssidList([...essidList, newValue]);
-    };
-
-    const onSelect = (event, selection, isPlaceholder) => {
-        if (isPlaceholder) clearSelection();
-        else {
-            setEssid(selection);
-            setIsOpen(false);
-            console.log('selected:', selection);
+    const renderOptions = () => {
+        if (!essidList) {
+            return [<DropdownItem key="spinner"><Spinner size="sm" />{_("Scanning...")}</DropdownItem>];
         }
+
+        return essidList.map(value => <DropdownItem key={value} onClick={() => onSelect(value)}>{value}</DropdownItem>);
     };
 
     return (
         <InputGroup>
-            { scanning ? (
-                <Bullseye><Spinner size="lg" /></Bullseye>
-            ) : (
-                <>
-                    <Select
-                          typeAheadAriaLabel={_("Select a essid")}
-                          placeholderText={_("Select an essid")}
-                          variant={SelectVariant.typeahead}
-                          value={essid}
-                          isOpen={isOpen}
-                          isCreatable
-                          onClear={clearSelection}
-                          selections={essid}
-                          onSelect={onSelect}
-                          onToggle={onToggle}
-                          onCreateOption={onCreateOption}
-                          id="essid"
-                    >
-                        {essidList.map((option, index) => (
-                            <SelectOption
-                                        key={index}
-                                        value={option} label={option}
-                            />
-                        ))}
-                    </Select>
-                    <Button variant="control" aria-label="scan essid network list" onClick={() => reScan()}>{_("Rescan")}</Button>
-                </>)}
+            <TextInput id="essid" value={essid} onChange={setEssid} type="text" aria-label="Essid" />
+            <Dropdown
+              position={DropdownPosition.right}
+              toggle={
+                  <DropdownToggle toggleIndicator={null} onToggle={onToggle} aria-label="Essid scanned list" id="essid_scanned_list">
+                      <SearchIcon />
+                  </DropdownToggle>
+              }
+              isOpen={isOpen}
+              isPlain
+              dropdownItems={renderOptions()}
+            />
         </InputGroup>
     );
 };

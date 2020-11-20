@@ -284,7 +284,7 @@ class WickedAdapter {
     reloadConnection(name) {
         return new Promise((resolve, reject) => {
             this.client.reloadConnection(name)
-                    .then((name) => resolve(name))
+                    .then(resolve)
                     .catch(error => {
                         if (EXCLUDED_ERROR_CODES.includes(error.exit_status)) {
                             resolve(name);

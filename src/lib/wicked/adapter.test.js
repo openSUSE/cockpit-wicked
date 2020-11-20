@@ -135,7 +135,7 @@ describe('#reloadConnection', () => {
         reloadConnectionMock.mockClear();
     });
 
-    it('returns the conneciton name if everything works', async () => {
+    it('returns the connection name if everything works', async () => {
         reloadConnectionMock.mockImplementation(name => Promise.resolve(name));
 
         const client = new Client();
@@ -158,7 +158,7 @@ describe('#reloadConnection', () => {
     });
 
     it('rejects if there is a not ignored error', async () => {
-        const error = { message: "This error should be ignored", exit_status: 157 };
+        const error = { message: "This error should not be ignored", exit_status: 157 };
 
         reloadConnectionMock.mockImplementation(name => Promise.reject(error));
 

@@ -44,11 +44,6 @@ import IPInput from './IPInput';
 
 const _ = cockpit.gettext;
 
-const FIELDS = {
-    local: { component: IPInput, props: { placeholder: _("Address"), "aria-label": _("Address") } },
-    label: { component: TextInput, props: { placeholder: _("Label"), "aria-label": _("Label") } }
-};
-
 /**
  * Component for managing a collection of {@link module/model~AddressConfig}
  *
@@ -82,29 +77,7 @@ const AddressesDataList = ({ addresses, updateAddresses, allowEmpty = true }) =>
         updateAddresses(nextAddresses);
     };
 
-    const renderAddress = ({ id, ...address }) => {
-        const cells = Object.keys(address).map((fieldKey) => {
-            const field = FIELDS[fieldKey];
-
-            if (!field) return null;
-
-            const FieldComponent = field.component;
-            const handleError = (value) => {
-                console.log("Invalid value", value, "for", fieldKey, "on address", id);
-            };
-
-            return (
-                <DataListCell key={`address-${id}-${fieldKey}`}>
-                    <FieldComponent
-                      defaultValue={address[fieldKey]}
-                      onChange={(value) => updateAddress(id, fieldKey, value)}
-                      onError={handleError}
-                      {...field.props}
-                    />
-                </DataListCell>
-            );
-        });
-
+    const renderAddress = ({ id, local, label }) => {
         const renderDeleteAction = () => {
             if (!allowEmpty && addresses.length === 1) return null;
 
@@ -116,6 +89,25 @@ const AddressesDataList = ({ addresses, updateAddresses, allowEmpty = true }) =>
                 </DataListAction>
             );
         };
+
+        const cells = [
+            <DataListCell key={`address-${id}-local`}>
+                <IPInput
+                  defaultValue={local}
+                  onChange={(value) => updateAddress(id, 'local', value)}
+                  placeholder={_("Address")}
+                  aria-label={_("Address")}
+                />
+            </DataListCell>,
+            <DataListCell key={`address-${id}-label`}>
+                <TextInput
+                  defaultValue={label}
+                  onChange={(value) => updateAddress(id, 'label', value)}
+                  placeholder={_("Label")}
+                  aria-label={_("Label")}
+                />
+            </DataListCell>
+        ];
 
         return (
             <DataListItem key={`address-${id}`}>

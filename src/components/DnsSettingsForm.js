@@ -151,7 +151,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
                     id="dns_nameserver_one"
                     onChange={setNameserver1}
                     placeholder={_("Nameserver IP")}
-                    value={nameserver1}
+                    defaultValue={nameserver1}
                     onError={handleError}
                 />
             </FormGroup>
@@ -160,7 +160,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
                 <IPInput
                     id="dns_nameserver_two"
                     placeholder={_("Nameserver IP")}
-                    value={nameserver2}
+                    defaultValue={nameserver2}
                     onChange={setNameserver2}
                     onError={handleError}
                 />
@@ -169,7 +169,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
                 <IPInput
                     id="dns_nameserver_three"
                     placeholder={_("Nameserver IP")}
-                    value={nameserver3}
+                    defaultValue={nameserver3}
                     onChange={setNameserver3}
                     onError={handleError}
                 />

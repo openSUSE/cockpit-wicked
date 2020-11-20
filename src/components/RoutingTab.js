@@ -19,7 +19,6 @@
  * find current contact information at www.suse.com.
  */
 
-import cockpit from 'cockpit';
 import React, { useEffect } from 'react';
 import { useNetworkDispatch, useNetworkState, fetchRoutes } from '../context/network';
 import { Card, CardBody, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';

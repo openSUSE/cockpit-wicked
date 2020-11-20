@@ -19,13 +19,10 @@
  * find current contact information at www.suse.com.
  */
 
-import cockpit from 'cockpit';
 import React, { useEffect } from 'react';
 import { useNetworkDispatch, useNetworkState, fetchDnsSettings } from '../context/network';
 import { Card, CardBody } from '@patternfly/react-core';
 import DnsSettings from './DnsSettings';
-
-const _ = cockpit.gettext;
 
 const DnsTab = () => {
     const { dns } = useNetworkState();

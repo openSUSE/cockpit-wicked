@@ -21,7 +21,7 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardTitle, CardBody, Spinner } from '@patternfly/react-core';
+import { Card, CardBody, Spinner } from '@patternfly/react-core';
 import {
     Table,
     TableBody,
@@ -160,9 +160,6 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle><h2>{_("Interfaces")}</h2></CardTitle>
-            </CardHeader>
             <CardBody>
                 <Table
                     aria-label="Networking interfaces"

@@ -66,6 +66,7 @@
     "deep-equal": "^2.0.4",
     "ipaddr.js": "^2.0.0",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "use-root-reducer": "^1.0.1"
   }
 }

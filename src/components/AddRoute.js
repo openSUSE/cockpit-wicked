@@ -31,7 +31,7 @@ const AddRoute = () => {
 
     return (
         <>
-            <Button variant="secondary" onClick={() => setFormOpen(true)}>{_("Add Route")}</Button>
+            <Button variant="control" onClick={() => setFormOpen(true)}>{_("Add Route")}</Button>
             { isFormOpen && <RouteForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
         </>
     );

@@ -37,7 +37,7 @@ const RoutingTab = () => {
         <>
             <Toolbar id="routing-toolbar">
                 <ToolbarContent>
-                    <ToolbarItem>
+                    <ToolbarItem alignment={{ default: 'alignRight' }}>
                         <AddRoute />
                     </ToolbarItem>
                 </ToolbarContent>

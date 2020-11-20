@@ -19,28 +19,54 @@
  * find current contact information at www.suse.com.
  */
 
+import { createConnection } from '../lib/model/connections';
 import { createInterface } from '../lib/model/interfaces';
+import { createRoute } from '../lib/model/routes';
 import interfaceStatus from '../lib/model/interfaceStatus';
+import actionTypes from './actionTypes';
 
-import {
-    SET_INTERFACES,
-    UPDATE_INTERFACE,
-    ADD_CONNECTION,
-    UPDATE_CONNECTION,
-    DELETE_CONNECTION,
-    CONNECTION_ERROR
-} from './actions';
+export function connectionsReducer(state, action) {
+    switch (action.type) {
+    case actionTypes.SET_CONNECTIONS: {
+        return action.payload.reduce((all, connData) => {
+            const conn = createConnection(connData);
+            return { ...all, [conn.id]: conn };
+        }, {});
+    }
+
+    case actionTypes.ADD_CONNECTION: {
+        const conn = action.payload;
+        return { ...state, [conn.id]: conn };
+    }
+
+    case actionTypes.UPDATE_CONNECTION: {
+        const conn = action.payload;
+        return { ...state, [conn.id]: conn };
+    }
+
+    case actionTypes.DELETE_CONNECTION: {
+        const conn = action.payload;
+        const { [conn.id]: _value, ...connections } = state;
+
+        return connections;
+    }
+
+    default: {
+        return state;
+    }
+    }
+}
 
 export function interfacesReducer(state, action) {
     switch (action.type) {
-    case SET_INTERFACES: {
+    case actionTypes.SET_INTERFACES: {
         return action.payload.reduce((all, ifaceData) => {
             const iface = createInterface(ifaceData);
             return { ...all, [iface.id]: iface };
         }, {});
     }
 
-    case UPDATE_INTERFACE: {
+    case actionTypes.UPDATE_INTERFACE: {
         const { name } = action.payload;
         const oldIface = Object.values(state).find(i => i.name === name);
         if (!oldIface) return state;
@@ -52,7 +78,7 @@ export function interfacesReducer(state, action) {
         };
     }
 
-    case ADD_CONNECTION: {
+    case actionTypes.ADD_CONNECTION: {
         const conn = action.payload;
 
         // Configuring an existing iface?
@@ -67,7 +93,7 @@ export function interfacesReducer(state, action) {
         };
     }
 
-    case UPDATE_CONNECTION: {
+    case actionTypes.UPDATE_CONNECTION: {
         const { name } = action.payload;
         const iface = Object.values(state).find(i => i.name === name);
         const { error, ...updatedIface } = iface;
@@ -77,7 +103,7 @@ export function interfacesReducer(state, action) {
         };
     }
 
-    case DELETE_CONNECTION: {
+    case actionTypes.DELETE_CONNECTION: {
         const conn = action.payload;
         const iface = Object.values(state).find(i => i.name === conn.name);
 
@@ -92,12 +118,39 @@ export function interfacesReducer(state, action) {
         return interfaces;
     }
 
-    case CONNECTION_ERROR: {
+    case actionTypes.CONNECTION_ERROR: {
         const { connection: { name }, error: { message } } = action.payload;
         const iface = Object.values(state).find(i => i.name === name);
         return {
             ...state, [iface.id]: { ...iface, error: message, status: interfaceStatus.ERROR }
         };
+    }
+
+    default: {
+        return state;
+    }
+    }
+}
+
+export function routesReducer(state, action) {
+    switch (action.type) {
+    case actionTypes.SET_ROUTES: {
+        return action.payload.reduce((all, routeData) => {
+            const route = createRoute(routeData);
+            return { ...all, [route.id]: route };
+        }, {});
+    }
+
+    default: {
+        return state;
+    }
+    }
+}
+
+export function dnsReducer(state, action) {
+    switch (action.type) {
+    case actionTypes.SET_DNS: {
+        return action.payload;
     }
 
     default: {

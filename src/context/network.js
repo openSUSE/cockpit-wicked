@@ -5,38 +5,12 @@ import { createRoute } from '../lib/model/routes';
 import interfaceStatus from '../lib/model/interfaceStatus';
 import NetworkClient from '../lib/NetworkClient';
 import useRootReducer from 'use-root-reducer';
+import actionTypes from './actionTypes';
 
-import { interfacesReducer } from './interfaces';
-import { connectionsReducer } from './connections';
-import { routesReducer } from './routes';
-import { dnsReducer } from './dns';
+import { interfacesReducer, connectionsReducer, routesReducer, dnsReducer } from './reducers';
 
 const NetworkStateContext = React.createContext();
 const NetworkDispatchContext = React.createContext();
-
-// TODO: document and test this context.
-
-const SET_INTERFACES = 'set_interfaces';
-const SET_CONNECTIONS = 'set_connections';
-const SET_ROUTES = 'set_routes';
-const SET_DNS = 'set_dns';
-const ADD_CONNECTION = 'add_connection';
-const DELETE_CONNECTION = 'delete_connection';
-const UPDATE_CONNECTION = 'update_connection';
-const UPDATE_INTERFACE = 'update_interface';
-const CONNECTION_ERROR = 'connection_error';
-
-const actionTypes = {
-    SET_INTERFACES,
-    SET_CONNECTIONS,
-    SET_DNS,
-    SET_ROUTES,
-    ADD_CONNECTION,
-    DELETE_CONNECTION,
-    UPDATE_CONNECTION,
-    UPDATE_INTERFACE,
-    CONNECTION_ERROR
-};
 
 function useNetworkState() {
     const context = React.useContext(NetworkStateContext);
@@ -88,8 +62,8 @@ const networkClient = () => {
 /**
  * Creates a connection using the NetworkClient
  *
- * It dispatches the ADD_CONNECTION action. Additionally, if it created the connection from a
- * default one (`exists: false`) the UPDATE_CONNECTION action will be dispatched too when the
+ * It dispatches the actionTypes.ADD_CONNECTION action. Additionally, if it created the connection from a
+ * default one (`exists: false`) the actionTypes.UPDATE_CONNECTION action will be dispatched too when the
  * NetworkClient finish its work.
  *
  * @todo Notify when something went wrong.
@@ -100,15 +74,15 @@ const networkClient = () => {
  */
 async function addConnection(dispatch, attrs) {
     const addedConn = createConnection(attrs);
-    dispatch({ type: UPDATE_INTERFACE, payload: { name: addedConn.name, status: interfaceStatus.CONFIGURING } });
+    dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: addedConn.name, status: interfaceStatus.CONFIGURING } });
 
     try {
         await networkClient().addConnection(addedConn);
-        dispatch({ type: ADD_CONNECTION, payload: { ...addedConn, exists: true } });
+        dispatch({ type: actionTypes.ADD_CONNECTION, payload: { ...addedConn, exists: true } });
         await networkClient().reloadConnection(addedConn.name);
-        dispatch({ type: UPDATE_INTERFACE, payload: { name: addedConn.name, status: interfaceStatus.READY } });
+        dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: addedConn.name, status: interfaceStatus.READY } });
     } catch (error) {
-        dispatch({ type: CONNECTION_ERROR, payload: { error, connection: addedConn } });
+        dispatch({ type: actionTypes.CONNECTION_ERROR, payload: { error, connection: addedConn } });
     }
 
     return addedConn;
@@ -117,7 +91,7 @@ async function addConnection(dispatch, attrs) {
 /**
  * Updates a connection using the NetworkClient
  *
- * If the update was successful, it dispatches the UPDATE_CONNECTION action.
+ * If the update was successful, it dispatches the actionTypes.UPDATE_CONNECTION action.
  *
  * @param {function} dispatch - Dispatch function
  * @param {Connection} connection - Connection to update
@@ -126,15 +100,15 @@ async function addConnection(dispatch, attrs) {
  */
 async function updateConnection(dispatch, connection, changes) {
     const updatedConn = mergeConnection(connection, changes);
-    dispatch({ type: UPDATE_INTERFACE, payload: { name: updatedConn.name, status: interfaceStatus.CONFIGURING } });
+    dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: updatedConn.name, status: interfaceStatus.CONFIGURING } });
 
     try {
         await networkClient().updateConnection(updatedConn);
-        dispatch({ type: UPDATE_CONNECTION, payload: updatedConn });
+        dispatch({ type: actionTypes.UPDATE_CONNECTION, payload: updatedConn });
         await networkClient().reloadConnection(updatedConn.name);
-        dispatch({ type: UPDATE_INTERFACE, payload: { name: updatedConn.name, status: interfaceStatus.READY } });
+        dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: updatedConn.name, status: interfaceStatus.READY } });
     } catch (error) {
-        dispatch({ type: CONNECTION_ERROR, payload: { error, connection: updatedConn } });
+        dispatch({ type: actionTypes.CONNECTION_ERROR, payload: { error, connection: updatedConn } });
     }
     return updatedConn;
 }
@@ -147,15 +121,15 @@ async function updateConnection(dispatch, connection, changes) {
  * @return {Promise}
  */
 async function deleteConnection(dispatch, connection) {
-    dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.CONFIGURING } });
+    dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.CONFIGURING } });
 
     try {
         await networkClient().deleteConnection(connection);
-        dispatch({ type: DELETE_CONNECTION, payload: connection });
+        dispatch({ type: actionTypes.DELETE_CONNECTION, payload: connection });
         await networkClient().setDownConnection(connection);
-        dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.READY } });
+        dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.READY } });
     } catch (error) {
-        dispatch({ type: CONNECTION_ERROR, payload: { error, connection } });
+        dispatch({ type: actionTypes.CONNECTION_ERROR, payload: { error, connection } });
     }
 }
 
@@ -168,7 +142,7 @@ async function deleteConnection(dispatch, connection) {
  * @return {Promise}
  */
 async function changeConnectionState(dispatch, connection, setUp) {
-    dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.IN_PROGRESS } });
+    dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.IN_PROGRESS } });
 
     let result;
     try {
@@ -178,10 +152,10 @@ async function changeConnectionState(dispatch, connection, setUp) {
             result = await networkClient().setDownConnection(connection);
         }
     } catch (error) {
-        dispatch({ type: CONNECTION_ERROR, payload: { error, connection } });
+        dispatch({ type: actionTypes.CONNECTION_ERROR, payload: { error, connection } });
     }
 
-    dispatch({ type: UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.READY } });
+    dispatch({ type: actionTypes.UPDATE_INTERFACE, payload: { name: connection.name, status: interfaceStatus.READY } });
     return result;
 }
 
@@ -189,7 +163,7 @@ async function changeConnectionState(dispatch, connection, setUp) {
 function deleteRoute(dispatch, routes, routeId) {
     const nextRoutes = routes.filter((r) => r.id !== routeId);
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: SET_ROUTES, payload: nextRoutes });
+    dispatch({ type: actionTypes.SET_ROUTES, payload: nextRoutes });
 }
 
 // FIXME
@@ -197,7 +171,7 @@ function updateRoute(dispatch, routes, routeId, changes) {
     const route = routes[routeId];
     const nextRoutes = { ...routes, [routeId]: { ...route, ...changes } };
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: SET_ROUTES, payload: nextRoutes });
+    dispatch({ type: actionTypes.SET_ROUTES, payload: nextRoutes });
 }
 
 // FIXME
@@ -205,7 +179,7 @@ function addRoute(dispatch, routes, attrs) {
     const route = createRoute(attrs);
     const nextRoutes = { ...routes, [route.id]: route };
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: SET_ROUTES, payload: nextRoutes });
+    dispatch({ type: actionTypes.SET_ROUTES, payload: nextRoutes });
 }
 
 /**
@@ -287,7 +261,7 @@ function listenToInterfacesChanges(dispatch) {
 }
 
 async function updateDnsSettings(dispatch, changes) {
-    dispatch({ type: SET_DNS, payload: changes });
+    dispatch({ type: actionTypes.SET_DNS, payload: changes });
     // FIXME: handle errors
     return await networkClient().updateDnsSettings(changes);
 }

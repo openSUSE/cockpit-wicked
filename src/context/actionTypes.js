@@ -19,23 +19,26 @@
  * find current contact information at www.suse.com.
  */
 
-import { createRoute } from '../lib/model/routes';
+const SET_INTERFACES = 'set_interfaces';
+const SET_CONNECTIONS = 'set_connections';
+const SET_ROUTES = 'set_routes';
+const SET_DNS = 'set_dns';
+const UPDATE_ROUTES = 'update_routes';
+const ADD_CONNECTION = 'add_connection';
+const DELETE_CONNECTION = 'delete_connection';
+const UPDATE_CONNECTION = 'update_connection';
+const UPDATE_INTERFACE = 'update_interface';
+const CONNECTION_ERROR = 'connection_error';
 
-import {
-    SET_ROUTES
-} from './actions';
-
-export function routesReducer(state, action) {
-    switch (action.type) {
-    case SET_ROUTES: {
-        return action.payload.reduce((all, routeData) => {
-            const route = createRoute(routeData);
-            return { ...all, [route.id]: route };
-        }, {});
-    }
-
-    default: {
-        return state;
-    }
-    }
-}
+export default {
+    SET_INTERFACES,
+    SET_CONNECTIONS,
+    SET_DNS,
+    SET_ROUTES,
+    UPDATE_ROUTES,
+    ADD_CONNECTION,
+    DELETE_CONNECTION,
+    UPDATE_CONNECTION,
+    UPDATE_INTERFACE,
+    CONNECTION_ERROR
+};

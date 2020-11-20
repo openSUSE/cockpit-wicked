@@ -143,14 +143,14 @@ describe('SysconfigFile', () => {
     const readFn = () => {
         return new Promise((resolve, reject) => {
             process.nextTick(() => {
-                resolve(fileContent);
+                resolve([...fileContent]);
             });
         });
     };
 
     const replaceFn = jest.fn();
 
-    const file = new SysconfigFile('/foo/bar');
+    const file = new SysconfigFile('/tmp/foo/bar');
 
     describe('get', () => {
         beforeAll(() => {
@@ -192,12 +192,14 @@ describe('SysconfigFile', () => {
             file.update({
                 NAME: 'eth0',
                 BOOTPROTO: undefined,
-                STARTMODE: 'ifplugd'
+                STARTMODE: 'ifplugd',
+                IPADDR: ''
             });
 
             expect(file.get('NAME')).toEqual('eth0');
             expect(file.get('BOOTPROTO')).toBeUndefined();
             expect(file.get('STARTMODE')).toEqual('ifplugd');
+            expect(file.get('IPADDR')).toEqual('');
         });
     });
 
@@ -207,14 +209,16 @@ describe('SysconfigFile', () => {
             file.update({
                 NAME: 'eth0',
                 BOOTPROTO: undefined,
-                STARTMODE: 'ifplugd'
+                STARTMODE: 'ifplugd',
+                IPADDR: ''
             });
             file.write();
 
             expect(replaceFn).toHaveBeenCalledWith([
                 { key: 'NAME', value: 'eth0', commented: false },
                 { key: 'BOOTPROTO', value: 'dhcp', commented: true },
-                { key: 'STARTMODE', value: 'ifplugd', commented: false }
+                { key: 'STARTMODE', value: 'ifplugd', commented: false },
+                { key: 'IPADDR', value: '', commented: false }
             ]);
         });
     });

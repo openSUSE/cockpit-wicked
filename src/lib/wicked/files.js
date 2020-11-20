@@ -256,14 +256,17 @@ class SysconfigFile {
      */
     set(key, value) {
         const line = this.data.find(l => l.key === key);
+        const someValue = (value !== undefined && value !== null);
 
-        if (!line && value) {
+        if (!line && someValue) {
             this.data.push({ key, value, commented: false });
-        } else if (line && value) {
-            line.value = value;
-            line.commented = false;
-        } else if (line && !value) {
-            line.commented = true;
+        } else if (line) {
+            if (someValue) {
+                line.value = value;
+                line.commented = false;
+            } else {
+                line.commented = true;
+            }
         }
     }
 

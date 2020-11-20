@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import { interfacesReducer, connectionsReducer } from './reducers';
+import { interfacesReducer, connectionsReducer, routesReducer, dnsReducer } from './reducers';
 import { createConnection } from '../lib/model/connections';
 import { createInterface } from '../lib/model/interfaces';
 import actionTypes from './actionTypes';
@@ -174,6 +174,34 @@ describe('interfacesReducer', () => {
             const { [eth0.id]: newIface } = newState;
             expect(newIface.status).toEqual(interfaceStatus.ERROR);
             expect(newIface.error).toEqual('some error');
+        });
+    });
+});
+
+describe('routesReducer', () => {
+    describe('SET_ROUTES', () => {
+        it('set the routes', () => {
+            const action = {
+                type: actionTypes.SET_ROUTES, payload: [
+                    { gateway: '192.168.1.1', isDefault: true }
+                ]
+            };
+            const newState = routesReducer({}, action);
+
+            expect(Object.values(newState)).toEqual([
+                expect.objectContaining({ gateway: '192.168.1.1', isDefault: true })
+            ]);
+        });
+    });
+});
+
+describe('dnsReducer', () => {
+    describe('SET_DNS', () => {
+        it('set the dns settings', () => {
+            const action = { type: actionTypes.SET_DNS, payload: { nameServers: ['1.2.3.4'] } };
+            const newState = dnsReducer({}, action);
+
+            expect(newState).toEqual({ nameServers: ['1.2.3.4'] });
         });
     });
 });

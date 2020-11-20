@@ -31,6 +31,7 @@ import {
     TextInput
 } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
+import ExclamationIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
@@ -64,7 +65,19 @@ const WirelessEssidSelect = ({ essid, setEssid, iface }) => {
 
     const renderOptions = () => {
         if (!essidList) {
-            return [<DropdownItem key="spinner"><Spinner size="sm" />{_("Scanning...")}</DropdownItem>];
+            return [
+                <DropdownItem isDisabled key="scanning" icon={<Spinner size="md" />}>
+                    {_("Scanning...")}
+                </DropdownItem>
+            ];
+        }
+
+        if (essidList.length === 0) {
+            return [
+                <DropdownItem isDisabled key="no-networks-found" icon={<ExclamationIcon />}>
+                    {_("No networks found")}
+                </DropdownItem>
+            ];
         }
 
         return essidList.map(value => <DropdownItem key={value} onClick={() => onSelect(value)}>{value}</DropdownItem>);
@@ -75,14 +88,13 @@ const WirelessEssidSelect = ({ essid, setEssid, iface }) => {
             <TextInput id="essid" value={essid} onChange={setEssid} type="text" aria-label="Essid" />
             <Dropdown
               position={DropdownPosition.right}
+              isOpen={isOpen}
+              dropdownItems={renderOptions()}
               toggle={
-                  <DropdownToggle toggleIndicator={null} onToggle={onToggle} aria-label="Essid scanned list" id="essid_scanned_list">
+                  <DropdownToggle id="essid-scanned-list" toggleIndicator={null} onToggle={onToggle} aria-label="Essid scanned list">
                       <SearchIcon />
                   </DropdownToggle>
               }
-              isOpen={isOpen}
-              isPlain
-              dropdownItems={renderOptions()}
             />
         </InputGroup>
     );

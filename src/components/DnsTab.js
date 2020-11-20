@@ -22,7 +22,7 @@
 import cockpit from 'cockpit';
 import React, { useEffect } from 'react';
 import { useNetworkDispatch, useNetworkState, fetchDnsSettings } from '../context/network';
-import { Card, CardBody, CardTitle } from '@patternfly/react-core';
+import { Card, CardBody } from '@patternfly/react-core';
 import DnsSettings from './DnsSettings';
 
 const _ = cockpit.gettext;
@@ -38,7 +38,6 @@ const DnsTab = () => {
     return (
         <>
             <Card>
-                <CardTitle>{_("DNS")}</CardTitle>
                 <CardBody>
                     <DnsSettings dns={dns} />
                 </CardBody>

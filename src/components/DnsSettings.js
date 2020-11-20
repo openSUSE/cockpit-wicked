@@ -41,7 +41,7 @@ const SearchListDetails = ({ onClick, dns }) => {
 
     return (
         <>
-            <dt>{_("SearchList")}</dt>
+            <dt>{_("Search list")}</dt>
             <dd><a href="#" onClick={onClick}>{searchList.join(" ")}</a></dd>
         </>
     );
@@ -52,7 +52,7 @@ const NameServersDetails = ({ onClick, dns }) => {
 
     return (
         <>
-            <dt>{_("NameServers")}</dt>
+            <dt>{_("Name servers")}</dt>
             <dd><a href="#" onClick={onClick}>{nameServers.join(" ")}</a></dd>
         </>
     );

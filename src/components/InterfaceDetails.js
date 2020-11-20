@@ -159,8 +159,6 @@ const InterfaceDetails = ({ iface, connection, changeConnectionState, deleteConn
             <Split hasGutter>
                 <SplitItem isFilled>
                     <dl className="details-list">
-                        <dt>{_("Type")}</dt>
-                        <dd>{interfaceTypeEnum.label(iface.type)}</dd>
                         { iface.mac && macAddress(iface) }
                         {startMode(connection)}
                         {renderFullDetails()}

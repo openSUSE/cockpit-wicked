@@ -114,7 +114,6 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
             title={_("DNS Settings")}
             isOpen={isOpen}
             onCancel={onClose}
-            onSubmitLabel={_("Update")}
             onSubmit={handleSubmit}
         >
             {renderErrors()}
@@ -144,8 +143,8 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
                 />
             </FormGroup>
             <FormGroup
-                label={_("Static Nameservers")}
-                helperText={_("Namserver IP address used for host-name lookup.")}
+                label={_("Static Name Servers")}
+                helperText={_("Name Server IP address used for host-name lookup.")}
             >
                 <IPInput
                     id="dns_nameserver_one"
@@ -159,7 +158,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
             <FormGroup>
                 <IPInput
                     id="dns_nameserver_two"
-                    placeholder={_("Nameserver IP")}
+                    placeholder={_("Name Server IP")}
                     defaultValue={nameserver2}
                     onChange={setNameserver2}
                     onError={handleError}
@@ -168,7 +167,7 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
             <FormGroup>
                 <IPInput
                     id="dns_nameserver_three"
-                    placeholder={_("Nameserver IP")}
+                    placeholder={_("Name Server IP")}
                     defaultValue={nameserver3}
                     onChange={setNameserver3}
                     onError={handleError}

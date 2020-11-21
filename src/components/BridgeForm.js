@@ -88,6 +88,7 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
             >
                 <TextInput
                     isRequired
+                    isDisabled={isEditing}
                     id="interface-name"
                     value={name}
                     onChange={setName}

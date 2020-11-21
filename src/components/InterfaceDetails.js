@@ -90,7 +90,7 @@ const wirelessDetails = (iface, connection) => {
 const ipV4Details = (connection) => {
     return (
         <>
-            <dt>{_("IPv4 settings")}</dt>
+            <dt>{_("IPv4")}</dt>
             <dd><IPSettingsLink connection={connection} /></dd>
         </>
     );
@@ -99,7 +99,7 @@ const ipV4Details = (connection) => {
 const ipV6Details = (connection) => {
     return (
         <>
-            <dt>{_("IPv6 settings")}</dt>
+            <dt>{_("IPv6")}</dt>
             <dd><IPSettingsLink connection={connection} ipVersion='ipv6' /></dd>
         </>
     );

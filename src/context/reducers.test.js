@@ -118,7 +118,7 @@ describe('interfacesReducer', () => {
             const newState = interfacesReducer(state, action);
 
             expect(newState).toEqual({
-                [eth0.id]: expect.objectContaining({ status: interfaceStatus.CHANGING })
+                [eth0.id]: expect.objectContaining({ status: interfaceStatus.CHANGING, error: null })
             });
         });
     });
@@ -133,7 +133,7 @@ describe('interfacesReducer', () => {
 
             const { [eth0.id]: newIface } = newState;
             expect(newIface.status).toEqual(interfaceStatus.CHANGING);
-            expect(newIface.error).toBeUndefined();
+            expect(newIface.error).toBeNull();
         });
     });
 
@@ -142,7 +142,7 @@ describe('interfacesReducer', () => {
             const conn = createConnection({ name: 'eth0' });
             const eth0 = createInterface({ name: 'eth0' });
             const state = { [eth0.id]: eth0 };
-            const action = { type: actionTypes.DELETE_CONNECTION, payload: conn };
+            const action = { type: actionTypes.DELETE_CONNECTION, payload: conn, error: null };
             const newState = interfacesReducer(state, action);
 
             const { [eth0.id]: newIface } = newState;

@@ -44,7 +44,7 @@ const BondForm = ({ isOpen, onClose, connection }) => {
     const isEditing = !!connection;
     const [name, setName] = useState(connection?.name || "");
     const [mode, setMode] = useState(bond?.mode || bondingModes.ACTIVE_BACKUP);
-    const [options, setOptions] = useState(bond?.options || "");
+    const [options, setOptions] = useState(bond?.options || "miimon=100");
     const [selectedInterfaces, setSelectedInterfaces] = useState(bond?.interfaces || []);
     const [candidateInterfaces, setCandidateInterfaces] = useState([]);
     const { interfaces } = useNetworkState();
@@ -52,7 +52,7 @@ const BondForm = ({ isOpen, onClose, connection }) => {
 
     useEffect(() => {
         if (isEditing) {
-            setCandidateInterfaces(Object.values(interfaces).filter(i => i.id !== connection.id));
+            setCandidateInterfaces(Object.values(interfaces).filter(i => i.name !== connection.name));
         } else {
             setCandidateInterfaces(Object.values(interfaces));
         }
@@ -106,6 +106,7 @@ const BondForm = ({ isOpen, onClose, connection }) => {
             >
                 <TextInput
                     isRequired
+                    isDisabled={isEditing}
                     id="interface-name"
                     value={name}
                     onChange={setName}

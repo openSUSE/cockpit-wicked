@@ -180,9 +180,10 @@ const propsByWirelessAuthMode = {
 
 const propsByConnectionType = {
     [interfaceType.BONDING]: ({ bond }) => {
-        // FIXME: wicked returns a 'miimon' element
-        const { slaves = [], mode = bondingMode.ACTIVE_BACKUP, options = "" } = bond;
-        return { bond: { interfaces: slaves, mode, options } };
+        const { slaves = [], mode = bondingMode.ACTIVE_BACKUP, options = "", miimon = { frequency: "100" } } = bond;
+        const interfaces = slaves.map(i => i.device);
+        const opts = [`miimon=${miimon.frequency}`, options].join(' ');
+        return { bond: { interfaces, mode, options: opts } };
     },
     [interfaceType.BRIDGE]: ({ bridge }) => {
         const { ports } = bridge;

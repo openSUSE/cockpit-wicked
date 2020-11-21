@@ -90,7 +90,7 @@ describe('#createConnection', () => {
             bond: {
                 mode: 'balance-rr',
                 miimon: { frequency: "100", "carrier-detect": "netif" },
-                slaves: ['eth0', 'eth1'],
+                slaves: [{ device: 'eth0' }, { device: 'eth1' }],
                 options: 'some-option'
             },
         };
@@ -100,7 +100,7 @@ describe('#createConnection', () => {
             expect(conn.bond).toEqual({
                 mode: bondingMode.BALANCE_RR,
                 interfaces: ['eth0', 'eth1'],
-                options: 'some-option'
+                options: 'miimon=100 some-option'
             });
         });
     });

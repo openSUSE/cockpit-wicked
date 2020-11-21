@@ -89,17 +89,16 @@ export function interfacesReducer(state, action) {
 
         return {
             ...state,
-            [iface.id]: { ...iface, status: interfaceStatus.CHANGING }
+            [iface.id]: { ...iface, status: interfaceStatus.CHANGING, error: null }
         };
     }
 
     case actionTypes.UPDATE_CONNECTION: {
         const { name } = action.payload;
         const iface = Object.values(state).find(i => i.name === name);
-        const { error, ...updatedIface } = iface;
         return {
             ...state,
-            [iface.id]: { ...updatedIface, status: interfaceStatus.CHANGING }
+            [iface.id]: { ...iface, status: interfaceStatus.CHANGING, error: null }
         };
     }
 
@@ -110,7 +109,7 @@ export function interfacesReducer(state, action) {
         if (!conn.virtual) {
             return {
                 ...state,
-                [iface.id]: { ...iface, status: interfaceStatus.CHANGING }
+                [iface.id]: { ...iface, status: interfaceStatus.CHANGING, error: null }
             };
         }
 

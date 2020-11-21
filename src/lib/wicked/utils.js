@@ -23,6 +23,7 @@ import interfaceType from '../model/interfaceType';
 
 const PROPERTY_TO_TYPE = {
     bond: interfaceType.BONDING,
+    bonding: interfaceType.BONDING,
     bridge: interfaceType.BRIDGE,
     vlan: interfaceType.VLAN,
     wireless: interfaceType.WIRELESS

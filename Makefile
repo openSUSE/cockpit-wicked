@@ -8,8 +8,8 @@ export TEST_OS
 TARFILE=cockpit-$(PACKAGE_NAME)-$(VERSION).tar.gz
 RPMFILE=$(shell rpmspec -D"VERSION $(VERSION)" -q cockpit-$(PACKAGE_NAME).spec.in).rpm
 VM_IMAGE=$(CURDIR)/test/images/$(TEST_OS)
-# stamp file to check if/when npm install ran
-NODE_MODULES_TEST=package-lock.json
+# directory to check if/when npm install ran
+NODE_MODULES_TEST=node_modules
 # one example file in dist/ from webpack to check if that already ran
 WEBPACK_TEST=dist/index.css
 
@@ -96,7 +96,7 @@ $(TARFILE): NODE_ENV=production
 $(TARFILE): $(WEBPACK_TEST) cockpit-$(PACKAGE_NAME).spec
 	if type appstream-util >/dev/null 2>&1; then appstream-util validate-relax --nonet *.metainfo.xml; fi
 	mv node_modules node_modules.release
-	touch -r package.json $(NODE_MODULES_TEST)
+	touch -r package.json package-json.lock
 	touch dist/*
 	tar czf cockpit-$(PACKAGE_NAME)-$(VERSION).tar.gz --transform 's,^,cockpit-$(PACKAGE_NAME)/,' \
 		--exclude cockpit-$(PACKAGE_NAME).spec.in \
@@ -166,9 +166,7 @@ src/lib/patternfly/_fonts.scss:
 	    git reset -- pkg/lib/patternfly'
 	mkdir -p src/lib && mv pkg/lib/patternfly src/lib/patternfly && rmdir -p pkg/lib
 
-$(NODE_MODULES_TEST): package.json
-	# if it exists already, npm install won't update it; force that so that we always get up-to-date packages
-	rm -f package-lock.json
+$(NODE_MODULES_TEST): package.json package-lock.json
 	# unset NODE_ENV, skips devDependencies otherwise
 	env -u NODE_ENV npm install
 	env -u NODE_ENV npm prune

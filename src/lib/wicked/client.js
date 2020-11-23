@@ -22,6 +22,26 @@
 import cockpit from 'cockpit';
 
 /**
+ * @constant
+ * @type {number[]}
+ *
+ * A collection of Wicked error codes that will be not reported to the user because they do not stop
+ * the interface/connection from working.
+ *
+ * @see runCommand
+ * @see https://github.com/openSUSE/wicked/blob/ab01fdf1eb1b17ce74bb41dd0bc8186e2aaa4880/include/wicked/constants.h#L274-L292
+ */
+const EXCLUDED_ERROR_CODES = [
+    159, /* no configuration found */
+    162, /* dev is up, but setup is incomplete */
+    163, /* up, config changed, reload advised */
+    164, /* dev is up and has masterdev */
+    165, /* ifcheck state lower than expected */
+    166, /* interface is in persistent mode */
+    167, /* user is allowed to configure the interface */
+];
+
+/**
  * Converts a HTML element to a plain object
  *
  * @function
@@ -185,36 +205,45 @@ class WickedClient {
     }
 
     /**
-     * Reloads a connection
+     * Runs given wicked command ignoring some error codes
      *
-     * TODO: better error handling
+     * @see EXCLUDED_ERROR_CODES
+     *
+     * @return {Promise} Result of the operation
+     */
+    async runCommand(command, ...args) {
+        try {
+            await cockpit.spawn(['/usr/sbin/wicked', command, ...args], { superuser: "require" });
+        } catch (error) {
+            if (!EXCLUDED_ERROR_CODES.includes(error.exit_status)) throw error;
+        }
+    }
+
+    /**
+     * Reloads a connection
      *
      * @return {Promise} Result of the operation
      */
     reloadConnection(name) {
-        return cockpit.spawn(['/usr/sbin/wicked', 'ifreload', name], { superuser: "require" });
+        return this.runCommand('ifreload', name);
     }
 
     /**
-     * Set Up a connection
-     *
-     * TODO: better error handling
+     * Set a connection up
      *
      * @return {Promise} Result of the operation
      */
     setUpConnection(name) {
-        return cockpit.spawn(['/usr/sbin/wicked', 'ifup', name], { superuser: "require" });
+        return this.runCommand('ifup', name);
     }
 
     /**
-     * Set Up a connection
-     *
-     * TODO: better error handling
+     * Set a connection down
      *
      * @return {Promise} Result of the operation
      */
     setDownConnection(name) {
-        return cockpit.spawn(['/usr/sbin/wicked', 'ifdown', name], { superuser: "require" });
+        return this.runCommand('ifdown', name);
     }
 
     /**

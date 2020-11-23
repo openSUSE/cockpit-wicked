@@ -6,7 +6,6 @@ node_modules/
 dist/
 /*.spec
 /.vagrant
-package-lock.json
 Test*FAIL*
 doc/
 bots/

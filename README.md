@@ -13,32 +13,55 @@ of basic uses cases:
 - Browse interfaces and configurations.
 - Configure basic IPv4/IPv6 settings.
 - Set up wireless devices (only WEP and WPA-PSK are supported by now).
-- Set up bridges, bond and VLAN devices.
+- Set up bridges, bonding and VLAN devices (experimental).
 - Manage routes (work in progress).
+- Set basic DNS settings (policy, static name servers and search list).
 
 However, many features are still missing:
 
 - Complete support for wireless devices.
 - Support for advanced devices, like TUN/TAP or Infiniband.
-- Handle IP forwarding settings.
-- Rename devices.
-- (Much) better error handling.
+- Handle IP forwarding configuration.
+- Devices renaming.
 - Other goodies like displaying Wicked's logs or device statistics, as the
   NetworkManager module already does.
+  
+# Installing
 
-## Architecture
+`make install` compiles and installs the package in `/usr/share/cockpit/`. The
+convenience targets `srpm` and `rpm` build the source and binary rpms,
+respectively. Both of these make use of the `dist-gzip` target, which is used
+to generate the distribution tarball. In `production` mode, source files are
+automatically minified and compressed. Set `NODE_ENV=production` if you want to
+duplicate this behavior.
 
-At this point, Wicked does not offer a D-Bus interface to query or configure the
-network. However, it features an XML-based nice command-line interface (CLI) and
-it uses the files under `/etc/sysconfig/network` as configuration sources.
+For development, you usually want to run your module straight out of the git
+tree. To do that, link that to the location were `cockpit-bridge` looks for packages:
 
-Thus, this module works as follows:
+```
+make devel-install
+```
 
-* Reads the network configuration using Wicked's CLI (`show-xml` and
-  `show-config` commands).
-* Writes the updated configuration to `/etc/sysconfig/network` and asks Wicked
-  to load it through the `ifreload` command.
-* Listens for events on Wicked's D-Bus interface.
+After changing the code and running `make` again, reload the Cockpit page in
+your browser.
+
+You can also use
+[watch mode](https://webpack.js.org/guides/development/#using-watch-mode) to
+automatically update the webpack on every code change with
+
+```
+npm run watch
+```
+or
+```
+make watch
+```
+
+## Developing
+
+If you are interested in contributing to the development, you might be
+interested in checking the [DEVELOPMENT.md file](./DEVELOPMENT.md). It contains
+some interesting information about the module is organized.
 
 ## Acknowledgments
 

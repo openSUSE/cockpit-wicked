@@ -93,7 +93,7 @@ describe('#runCommand', () => {
         const client = new Client();
 
         const promise = client.runCommand("ifup", "eth0");
-        expect(promise).resolves.toBeUndefined();
+        return expect(promise).resolves.toBeUndefined();
     });
 
     it('resolves with the error message if there is an expected error', () => {
@@ -103,9 +103,7 @@ describe('#runCommand', () => {
         expect.assertions(1);
 
         const client = new Client();
-        client.runCommand('ifup', 'eth1').then(result => {
-            expect(result).toEqual(error.message);
-        });
+        return expect(client.runCommand('ifup', 'eth1')).resolves.toEqual(error.message);
     });
 
     it('rejects if there is a not expected error', () => {
@@ -115,6 +113,6 @@ describe('#runCommand', () => {
         expect.assertions(1);
 
         const client = new Client();
-        client.runCommand('ifup', 'eth1').catch(e => expect(e).toEqual(error));
+        return expect(client.runCommand('ifup', 'eth1')).rejects.toEqual(error);
     });
 });

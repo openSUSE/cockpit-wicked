@@ -120,6 +120,98 @@ describe('#interfaces', () => {
     });
 });
 
+describe('#setDownConnection', () => {
+    const setDownConnectionMock = jest.fn();
+
+    beforeAll(() => {
+        Client.mockImplementation(() => {
+            return {
+                setDownConnection: setDownConnectionMock
+            };
+        });
+    });
+
+    afterAll(() => {
+        setDownConnectionMock.mockClear();
+    });
+
+    it('asks the wicked client to set up the given connection', async () => {
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        adapter.setDownConnection({ name:  'eth0' });
+
+        expect(setDownConnectionMock).toHaveBeenCalledWith('eth0');
+    });
+
+    it('returns undefined when action is performed successfully', async () => {
+        setDownConnectionMock.mockImplementation(name => Promise.resolve());
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        const result = await adapter.setDownConnection({ name: 'eth0' });
+        expect(result).toBeUndefined();
+    });
+
+    it('throws an error when something goes wrong', async () => {
+        const error = { message: 'Something goes wrong', exit_status: 157 };
+
+        setDownConnectionMock.mockImplementation(name => Promise.reject(error));
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        await expect(adapter.setDownConnection({ name: 'eth0' })).rejects.toEqual(error);
+    });
+});
+
+describe('#setUpConnection', () => {
+    const setUpConnectionMock = jest.fn();
+
+    beforeAll(() => {
+        Client.mockImplementation(() => {
+            return {
+                setUpConnection: setUpConnectionMock
+            };
+        });
+    });
+
+    afterAll(() => {
+        setUpConnectionMock.mockClear();
+    });
+
+    it('asks the wicked client to set up the given connection', async () => {
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        adapter.setUpConnection({ name:  'eth0' });
+
+        expect(setUpConnectionMock).toHaveBeenCalledWith('eth0');
+    });
+
+    it('returns undefined when action is performed successfully', async () => {
+        setUpConnectionMock.mockImplementation(name => Promise.resolve());
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        const result = await adapter.setUpConnection({ name: 'eth0' });
+        expect(result).toBeUndefined();
+    });
+
+    it('throws an error when something goes wrong', async () => {
+        const error = { message: 'Something goes wrong', exit_status: 157 };
+
+        setUpConnectionMock.mockImplementation(name => Promise.reject(error));
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        await expect(adapter.setUpConnection({ name: 'eth0' })).rejects.toEqual(error);
+    });
+});
+
 describe('#reloadConnection', () => {
     const reloadConnectionMock = jest.fn();
 
@@ -135,36 +227,33 @@ describe('#reloadConnection', () => {
         reloadConnectionMock.mockClear();
     });
 
-    it('returns the connection name if everything works', async () => {
-        reloadConnectionMock.mockImplementation(name => Promise.resolve(name));
+    it('asks the wicked client to reload the connection', async () => {
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        adapter.reloadConnection('eth0');
+
+        expect(reloadConnectionMock).toHaveBeenCalledWith('eth0');
+    });
+
+    it('returns undefined when action is performed successfully', async () => {
+        reloadConnectionMock.mockImplementation(name => Promise.resolve());
 
         const client = new Client();
         const adapter = new Adapter(client);
 
-        const name = await adapter.reloadConnection("eth0");
-        expect(name).toEqual("eth0");
+        const result = await adapter.reloadConnection('eth0');
+        expect(result).toBeUndefined();
     });
 
-    it('returns the connection name even if there is a known and ignored error', async () => {
-        const error = { message: "This error should be ignored", exit_status: 162 };
+    it('throws an error when something goes wrong', async () => {
+        const error = { message: 'Something goes wrong', exit_status: 157 };
 
         reloadConnectionMock.mockImplementation(name => Promise.reject(error));
 
         const client = new Client();
         const adapter = new Adapter(client);
 
-        const name = await adapter.reloadConnection("eth0");
-        expect(name).toEqual("eth0");
-    });
-
-    it('rejects if there is a not ignored error', async () => {
-        const error = { message: "This error should not be ignored", exit_status: 157 };
-
-        reloadConnectionMock.mockImplementation(name => Promise.reject(error));
-
-        const client = new Client();
-        const adapter = new Adapter(client);
-
-        await expect(adapter.reloadConnection("eth0")).rejects.toEqual(error);
+        await expect(adapter.reloadConnection('eth0')).rejects.toEqual(error);
     });
 });

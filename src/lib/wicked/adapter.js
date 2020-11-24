@@ -26,22 +26,6 @@ import model from '../model';
 import { SysconfigFile, IfcfgFile, IfrouteFile } from './files';
 
 /**
- * A collection of Wicked error codes that will be not reported to the user because they do not stop
- * the interface/connection from working.
- *
- * @see https://github.com/openSUSE/wicked/blob/ab01fdf1eb1b17ce74bb41dd0bc8186e2aaa4880/include/wicked/constants.h#L274-L292
- */
-const EXCLUDED_ERROR_CODES = [
-    159, /* no configuration found */
-    162, /* dev is up, but setup is incomplete */
-    163, /* up, config changed, reload advised */
-    164, /* dev is up and has masterdev */
-    165, /* ifcheck state lower than expected */
-    166, /* interface is in persistent mode */
-    167, /* user is allowed to configure the interface */
-];
-
-/**
  * This class is responsible for retrieving and updating wicked's configuration.
  *
  * It relies on WickedClient to get the needed information from Wicked. However,
@@ -203,7 +187,7 @@ class WickedAdapter {
     /**
      * Set Up a connection
      *
-     * @return {Promise} Result of the operation
+     * @throws will throw an error if something goes wrong
      */
     setUpConnection(connection) {
         return this.client.setUpConnection(connection.name);
@@ -212,10 +196,19 @@ class WickedAdapter {
     /**
      * Set Up a connection
      *
-     * @return {Promise} Result of the operation
+     * @throws will throw an error if something goes wrong
      */
     setDownConnection(connection) {
         return this.client.setDownConnection(connection.name);
+    }
+
+    /**
+     * Reload a connection
+     *
+     * @throws will throw an error if something goes wrong
+     */
+    async reloadConnection(name) {
+        return this.client.reloadConnection(name);
     }
 
     /**
@@ -276,25 +269,6 @@ class WickedAdapter {
         const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
         const file = new IfcfgFile(filePath);
         return file.remove();
-    }
-
-    /**
-     * Reload a connection
-     *
-     * @return {Promise} Result of the operation
-     */
-    reloadConnection(name) {
-        return new Promise((resolve, reject) => {
-            this.client.reloadConnection(name)
-                    .then(resolve)
-                    .catch(error => {
-                        if (EXCLUDED_ERROR_CODES.includes(error.exit_status)) {
-                            resolve(name);
-                        } else {
-                            reject(error);
-                        }
-                    });
-        });
     }
 }
 

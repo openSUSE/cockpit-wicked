@@ -19,6 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
+import cockpit from 'cockpit';
 import Client from './client';
 
 const client = new Client();
@@ -73,5 +74,45 @@ describe('#getInterfaceByPath', () => {
 
         const iface = await client.getInterfaceByPath('/org/opensuse/Network/Interface/99');
         expect(iface).toBeUndefined();
+    });
+});
+
+// FIXME: We should be testing reloadConnection, setUpConnection and setDownConnection instead.
+describe('#runCommand', () => {
+    beforeAll(() => {
+        cockpit.spawn = jest.fn();
+    });
+
+    afterAll(() => {
+        cockpit.spawn.mockRestore();
+    });
+
+    it('resolves with commands output', () => {
+        cockpit.spawn.mockImplementation(() => Promise.resolve());
+
+        const client = new Client();
+
+        const promise = client.runCommand("ifup", "eth0");
+        return expect(promise).resolves.toBeUndefined();
+    });
+
+    it('resolves with the error message if there is an expected error', () => {
+        const error = { message: "This error should be ignored", exit_status: 163 };
+
+        cockpit.spawn.mockImplementation(() => Promise.reject(error));
+        expect.assertions(1);
+
+        const client = new Client();
+        return expect(client.runCommand('ifup', 'eth1')).resolves.toEqual(error.message);
+    });
+
+    it('rejects if there is a not expected error', () => {
+        const error = { message: "This error should not be ignored", exit_status: 157 };
+
+        cockpit.spawn.mockImplementation(() => Promise.reject(error));
+        expect.assertions(1);
+
+        const client = new Client();
+        return expect(client.runCommand('ifup', 'eth1')).rejects.toEqual(error);
     });
 });

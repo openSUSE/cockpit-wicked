@@ -215,9 +215,10 @@ class WickedClient {
      */
     async runCommand(command, ...options) {
         try {
-            await cockpit.spawn(['/usr/sbin/wicked', command, ...options], { superuser: "require" });
+            return await cockpit.spawn(['/usr/sbin/wicked', command, ...options], { superuser: "require" });
         } catch (error) {
             if (!EXCLUDED_ERROR_CODES.includes(error.exit_status)) throw error;
+            return error.message;
         }
     }
 

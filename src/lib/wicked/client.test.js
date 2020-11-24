@@ -77,50 +77,44 @@ describe('#getInterfaceByPath', () => {
     });
 });
 
+// FIXME: We should be testing reloadConnection, setUpConnection and setDownConnection instead.
 describe('#runCommand', () => {
-    const spawnMock = jest.fn();
-
     beforeAll(() => {
-        cockpit.mockImplementation(() => {
-            return {
-                spawn: spawnMock
-            };
-        });
+        cockpit.spawn = jest.fn();
     });
 
     afterAll(() => {
-        spawnMock.mockClear();
+        cockpit.spawn.mockRestore();
     });
 
-    it.only('returns the connection name if everything works', async () => {
-        spawnMock.mockImplementation(name => Promise.resolve());
+    it('resolves with commands output', () => {
+        cockpit.spawn.mockImplementation(() => Promise.resolve());
 
         const client = new Client();
 
-        const promise = await client.runCommand("ifup", "eth0");
+        const promise = client.runCommand("ifup", "eth0");
         expect(promise).resolves.toBeUndefined();
     });
 
-    it('returns the connection name even if there is a known and ignored error', async () => {
-        const error = { message: "This error should be ignored", exit_status: 162 };
+    it('resolves with the error message if there is an expected error', () => {
+        const error = { message: "This error should be ignored", exit_status: 163 };
 
-        spawnMock.mockImplementation(name => Promise.reject(error));
+        cockpit.spawn.mockImplementation(() => Promise.reject(error));
+        expect.assertions(1);
 
         const client = new Client();
-        const adapter = new Adapter(client);
-
-        const name = await adapter.reloadConnection("eth0");
-        expect(name).toEqual("eth0");
+        client.runCommand('ifup', 'eth1').then(result => {
+            expect(result).toEqual(error.message);
+        });
     });
 
-    it('rejects if there is a not ignored error', async () => {
+    it('rejects if there is a not expected error', () => {
         const error = { message: "This error should not be ignored", exit_status: 157 };
 
-        spawnMock.mockImplementation(name => Promise.reject(error));
+        cockpit.spawn.mockImplementation(() => Promise.reject(error));
+        expect.assertions(1);
 
         const client = new Client();
-        const adapter = new Adapter(client);
-
-        await expect(adapter.reloadConnection("eth0")).rejects.toEqual(error);
+        client.runCommand('ifup', 'eth1').catch(e => expect(e).toEqual(error));
     });
 });

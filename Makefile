@@ -98,9 +98,6 @@ $(TARFILE): $(WEBPACK_TEST) cockpit-$(PACKAGE_NAME).spec
 	mv node_modules node_modules.release
 	touch -r package.json package-lock.json ${NODE_MODULES_TEST}
 	touch dist/*
-	echo tar czf cockpit-$(PACKAGE_NAME)-$(VERSION).tar.gz --transform 's,^,cockpit-$(PACKAGE_NAME)/,' \
-		--exclude cockpit-$(PACKAGE_NAME).spec.in \
-		$$(git ls-files) src/lib/patternfly/*.scss package-lock.json cockpit-$(PACKAGE_NAME).spec dist/
 	tar czf cockpit-$(PACKAGE_NAME)-$(VERSION).tar.gz --transform 's,^,cockpit-$(PACKAGE_NAME)/,' \
 		--exclude cockpit-$(PACKAGE_NAME).spec.in \
 		$$(git ls-files) src/lib/patternfly/*.scss package-lock.json cockpit-$(PACKAGE_NAME).spec dist/

@@ -57,7 +57,7 @@ or
 make watch
 ```
 
-## Developing
+## Development
 
 If you are interested in contributing to the development, you might be
 interested in checking the [DEVELOPMENT.md file](./DEVELOPMENT.md). It contains

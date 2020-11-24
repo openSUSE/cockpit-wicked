@@ -187,7 +187,7 @@ class WickedAdapter {
     /**
      * Set Up a connection
      *
-     * @return {Promise} Result of the operation
+     * @throws will throw an error if something goes wrong
      */
     setUpConnection(connection) {
         return this.client.setUpConnection(connection.name);
@@ -196,10 +196,19 @@ class WickedAdapter {
     /**
      * Set Up a connection
      *
-     * @return {Promise} Result of the operation
+     * @throws will throw an error if something goes wrong
      */
     setDownConnection(connection) {
         return this.client.setDownConnection(connection.name);
+    }
+
+    /**
+     * Reload a connection
+     *
+     * @throws will throw an error if something goes wrong
+     */
+    async reloadConnection(name) {
+        return this.client.reloadConnection(name);
     }
 
     /**
@@ -260,15 +269,6 @@ class WickedAdapter {
         const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
         const file = new IfcfgFile(filePath);
         return file.remove();
-    }
-
-    /**
-     * Reload a connection
-     *
-     * @return {Promise} Result of the operation
-     */
-    async reloadConnection(name) {
-        return this.client.reloadConnection(name);
     }
 }
 

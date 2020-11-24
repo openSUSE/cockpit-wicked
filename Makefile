@@ -96,7 +96,7 @@ $(TARFILE): NODE_ENV=production
 $(TARFILE): $(WEBPACK_TEST) cockpit-$(PACKAGE_NAME).spec
 	if type appstream-util >/dev/null 2>&1; then appstream-util validate-relax --nonet *.metainfo.xml; fi
 	mv node_modules node_modules.release
-	touch -r package.json package-json.lock
+	touch -r package.json package-lock.json
 	touch dist/*
 	tar czf cockpit-$(PACKAGE_NAME)-$(VERSION).tar.gz --transform 's,^,cockpit-$(PACKAGE_NAME)/,' \
 		--exclude cockpit-$(PACKAGE_NAME).spec.in \

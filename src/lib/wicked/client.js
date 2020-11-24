@@ -208,11 +208,14 @@ class WickedClient {
      *
      * @see EXCLUDED_ERROR_CODES
      *
-     * @return {Promise} Result of the operation
+     * @param {string} command - wicked command to be executed
+     * @param {string[]} options - command options
+     *
+     * @throws will re-throw a wicked error if any and it is not excluded
      */
-    async runCommand(command, ...args) {
+    async runCommand(command, ...options) {
         try {
-            await cockpit.spawn(['/usr/sbin/wicked', command, ...args], { superuser: "require" });
+            await cockpit.spawn(['/usr/sbin/wicked', command, ...options], { superuser: "require" });
         } catch (error) {
             if (!EXCLUDED_ERROR_CODES.includes(error.exit_status)) throw error;
         }

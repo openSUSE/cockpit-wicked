@@ -33,7 +33,6 @@ import cockpit from 'cockpit';
  */
 const EXCLUDED_ERROR_CODES = [
     159, /* no configuration found */
-    162, /* dev is up, but setup is incomplete */
     163, /* up, config changed, reload advised */
     164, /* dev is up and has masterdev */
     165, /* ifcheck state lower than expected */

@@ -19,6 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
+import cockpit from 'cockpit';
 import Client from './client';
 
 const client = new Client();
@@ -73,5 +74,53 @@ describe('#getInterfaceByPath', () => {
 
         const iface = await client.getInterfaceByPath('/org/opensuse/Network/Interface/99');
         expect(iface).toBeUndefined();
+    });
+});
+
+describe('#runCommand', () => {
+    const spawnMock = jest.fn();
+
+    beforeAll(() => {
+        cockpit.mockImplementation(() => {
+            return {
+                spawn: spawnMock
+            };
+        });
+    });
+
+    afterAll(() => {
+        spawnMock.mockClear();
+    });
+
+    it.only('returns the connection name if everything works', async () => {
+        spawnMock.mockImplementation(name => Promise.resolve());
+
+        const client = new Client();
+
+        const promise = await client.runCommand("ifup", "eth0");
+        expect(promise).resolves.toBeUndefined();
+    });
+
+    it('returns the connection name even if there is a known and ignored error', async () => {
+        const error = { message: "This error should be ignored", exit_status: 162 };
+
+        spawnMock.mockImplementation(name => Promise.reject(error));
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        const name = await adapter.reloadConnection("eth0");
+        expect(name).toEqual("eth0");
+    });
+
+    it('rejects if there is a not ignored error', async () => {
+        const error = { message: "This error should not be ignored", exit_status: 157 };
+
+        spawnMock.mockImplementation(name => Promise.reject(error));
+
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        await expect(adapter.reloadConnection("eth0")).rejects.toEqual(error);
     });
 });

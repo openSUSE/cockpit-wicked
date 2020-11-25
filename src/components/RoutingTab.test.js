@@ -24,7 +24,6 @@ import { act, screen, getByLabelText } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import { resetClient } from '../context/network';
-import { createInterface } from '../lib/model/interfaces';
 import { createRoute } from '../lib/model/routes';
 import RoutingTab from './RoutingTab';
 import { customRender } from '../tests';

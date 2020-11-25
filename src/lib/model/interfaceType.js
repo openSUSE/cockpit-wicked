@@ -28,7 +28,11 @@ const ETHERNET = "eth";
 const WIRELESS = "wlan";
 const BONDING = "bond";
 const BRIDGE = "br";
+const DUMMY = "dummy";
 const VLAN = "vlan";
+const VXLAN = "vxlan";
+const GRE = "gre";
+const SIT = "sit";
 const TUN = "tun";
 const TAP = "tap";
 
@@ -37,7 +41,11 @@ const values = [
     WIRELESS,
     BONDING,
     BRIDGE,
+    DUMMY,
     VLAN,
+    VXLAN,
+    GRE,
+    SIT,
     TUN,
     TAP,
 ];
@@ -47,14 +55,18 @@ const labels = {
     [WIRELESS]: NC_("Wireless"),
     [BONDING]: NC_("Bonding"),
     [BRIDGE]: NC_("Bridge"),
+    [DUMMY]: NC_("Dummy"),
     [VLAN]: NC_("VLAN"),
+    [VXLAN]: NC_("VXLAN"),
+    [GRE]: NC_("GRE"),
+    [SIT]: NC_("SIT"),
     [TUN]: NC_("TUN"),
     [TAP]: NC_("TAP"),
 };
 
 const label = (type) => _(labels[type]);
 
-const virtualTypes = [BONDING, BRIDGE, TUN, TAP, VLAN];
+const virtualTypes = [BONDING, BRIDGE, DUMMY, GRE, SIT, TUN, TAP, VXLAN, VLAN];
 const isVirtual = (type) => virtualTypes.includes(type);
 
 export default {
@@ -62,7 +74,11 @@ export default {
     WIRELESS,
     BONDING,
     BRIDGE,
+    DUMMY,
     VLAN,
+    VXLAN,
+    GRE,
+    SIT,
     TUN,
     TAP,
     values,

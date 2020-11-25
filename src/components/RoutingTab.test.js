@@ -70,6 +70,22 @@ describe('RoutingTab', () => {
         expect(await screen.findByText('192.168.1.1')).toBeInTheDocument();
     });
 
+    test('modify a route', async() => {
+        act(() => {
+            customRender(<RoutingTab />, { value: { routes: [] } });
+        });
+
+        expect(await screen.findByText('192.168.2.1')).toBeInTheDocument();
+        userEvent.click(screen.getByRole('button', { name: 'Actions' }));
+        userEvent.click(screen.getByRole('button', { name: 'Edit' }));
+
+        expect(await screen.findByRole('dialog')).toBeInTheDocument();
+        const dialog = screen.getByRole('dialog');
+        userEvent.type(getByLabelText(dialog, /gateway/i), '{backspace}2');
+        userEvent.click(screen.getByRole('button', { name: 'Change' }));
+        expect(await screen.findByText('192.168.2.2')).toBeInTheDocument();
+    });
+
     test('removes a route', async() => {
         act(() => {
             customRender(<RoutingTab />, { value: { routes: [] } });

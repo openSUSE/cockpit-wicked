@@ -134,7 +134,10 @@ export function interfacesReducer(state, action) {
 export function routesReducer(state, action) {
     switch (action.type) {
     case actionTypes.SET_ROUTES: {
-        return action.payload.reduce((all, routeData) => {
+        // Ensure we're going to work with an array
+        const routes = Object.values(action.payload);
+
+        return routes.reduce((all, routeData) => {
             const route = createRoute(routeData);
             return { ...all, [route.id]: route };
         }, {});

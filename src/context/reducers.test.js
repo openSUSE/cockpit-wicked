@@ -180,17 +180,33 @@ describe('interfacesReducer', () => {
 
 describe('routesReducer', () => {
     describe('SET_ROUTES', () => {
-        it('set the routes', () => {
-            const action = {
-                type: actionTypes.SET_ROUTES, payload: [
-                    { gateway: '192.168.1.1', isDefault: true }
-                ]
-            };
-            const newState = routesReducer({}, action);
+        let payload;
+        const type = actionTypes.SET_ROUTES;
 
-            expect(Object.values(newState)).toEqual([
-                expect.objectContaining({ gateway: '192.168.1.1', isDefault: true })
-            ]);
+        describe('when payload is an array holding routes', () => {
+            payload = [{ gateway: '192.168.1.1', isDefault: true }];
+
+            it('set the routes', () => {
+                const action = { type, payload };
+                const newState = routesReducer({}, action);
+
+                expect(Object.values(newState)).toEqual([
+                    expect.objectContaining({ gateway: '192.168.1.1', isDefault: true })
+                ]);
+            });
+        });
+
+        describe('when payload is an object holding routes', () => {
+            payload = { 0: { id: 0, gateway: '192.168.1.1', isDefault: true } };
+
+            it('set the routes', () => {
+                const action = { type, payload };
+                const newState = routesReducer({}, action);
+
+                expect(Object.values(newState)).toEqual([
+                    expect.objectContaining({ gateway: '192.168.1.1', isDefault: true })
+                ]);
+            });
         });
     });
 });

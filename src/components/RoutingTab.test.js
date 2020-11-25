@@ -33,8 +33,8 @@ import NetworkClient from '../lib/NetworkClient';
 jest.mock('../lib/NetworkClient');
 
 describe('RoutingTab', () => {
-    const defaultRoute = createRoute({ destination: '192.168.2.0/24', gateway: '192.168.2.1' });
-    const getRoutesMock = jest.fn(() => Promise.resolve([defaultRoute]));
+    const route0 = createRoute({ destination: '192.168.2.0/24', gateway: '192.168.2.1' });
+    const getRoutesMock = jest.fn(() => Promise.resolve([route0]));
 
     beforeAll(() => {
         resetClient();
@@ -54,7 +54,7 @@ describe('RoutingTab', () => {
         expect(await screen.findByRole('row', { name: '192.168.2.0/24 192.168.2.1' })).toBeInTheDocument();
     });
 
-    test('add a default route', async() => {
+    test('add a route', async() => {
         act(() => {
             customRender(<RoutingTab />, { value: { routes: [] } });
         });
@@ -63,11 +63,21 @@ describe('RoutingTab', () => {
         userEvent.click(screen.getByRole('button', { name: 'Add Route' }));
 
         expect(await screen.findByRole('dialog')).toBeInTheDocument();
-
         const dialog = screen.getByRole('dialog');
         userEvent.type(getByLabelText(dialog, /gateway/i), '192.168.1.1');
         userEvent.type(getByLabelText(dialog, /destination/i), '192.168.1.0/24');
         userEvent.click(screen.getByRole('button', { name: 'Add' }));
         expect(await screen.findByText('192.168.1.1')).toBeInTheDocument();
+    });
+
+    test('removes a route', async() => {
+        act(() => {
+            customRender(<RoutingTab />, { value: { routes: [] } });
+        });
+
+        expect(await screen.findByText('192.168.2.1')).toBeInTheDocument();
+        userEvent.click(screen.getByRole('button', { name: 'Actions' }));
+        userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+        expect(screen.queryByText('192.168.2.1')).toBeNull();
     });
 });

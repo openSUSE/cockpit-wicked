@@ -26,7 +26,9 @@ const PROPERTY_TO_TYPE = {
     bonding: interfaceType.BONDING,
     bridge: interfaceType.BRIDGE,
     vlan: interfaceType.VLAN,
-    wireless: interfaceType.WIRELESS
+    wireless: interfaceType.WIRELESS,
+    tun: interfaceType.TUN,
+    tap: interfaceType.TAP,
 };
 
 /**

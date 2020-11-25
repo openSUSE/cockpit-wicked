@@ -21,11 +21,15 @@
 
 import React, { useEffect } from 'react';
 import InterfacesList from './InterfacesList';
+import UnmanagedInterfacesList from './UnmanagedInterfacesList';
 import AddConnectionMenu from './AddConnectionMenu';
+import cockpit from 'cockpit';
 import {
     useNetworkDispatch, useNetworkState, fetchInterfaces, fetchConnections, listenToInterfacesChanges
 } from '../context/network';
-import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Card, CardActions, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
+
+const _ = cockpit.gettext;
 
 const InterfacesTab = () => {
     const dispatch = useNetworkDispatch();
@@ -37,19 +41,32 @@ const InterfacesTab = () => {
         listenToInterfacesChanges(dispatch);
     }, [dispatch]);
 
-    const interfacesList = interfaces ? Object.values(interfaces) : [];
+    const managedInterfacesList = interfaces ? Object.values(interfaces).filter((i) => i.managed || !i.virtual) : [];
+    const unmanagedInterfacesList = interfaces ? Object.values(interfaces).filter((i) => !managedInterfacesList.includes(i)) : [];
     const connectionsList = connections ? Object.values(connections) : [];
 
     return (
         <>
-            <Toolbar id="interfaces-toolbar">
-                <ToolbarContent>
-                    <ToolbarItem alignment={{ default: 'alignRight' }}>
+            <Card>
+                <CardHeader>
+                    <CardTitle>{_("Interfaces")}</CardTitle>
+                    <CardActions>
                         <AddConnectionMenu />
-                    </ToolbarItem>
-                </ToolbarContent>
-            </Toolbar>
-            <InterfacesList interfaces={interfacesList} connections={connectionsList} />
+                    </CardActions>
+                </CardHeader>
+                <CardBody>
+                    <InterfacesList interfaces={managedInterfacesList} connections={connectionsList} />
+                </CardBody>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>{_("Unmanaged Interfaces")}</CardTitle>
+                </CardHeader>
+                <CardBody>
+                    <UnmanagedInterfacesList interfaces={unmanagedInterfacesList} />
+                </CardBody>
+            </Card>
+
         </>
     );
 };

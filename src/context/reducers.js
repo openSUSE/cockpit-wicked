@@ -140,6 +140,10 @@ export function routesReducer(state, action) {
         }, {});
     }
 
+    case actionTypes.UPDATE_ROUTES: {
+        return { ...action.payload };
+    }
+
     default: {
         return state;
     }

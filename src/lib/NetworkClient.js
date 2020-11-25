@@ -149,13 +149,30 @@ class NetworkClient {
      * @returns {Promise<Array<String>|Error>}
      */
     async getEssidList(iface) {
+        const essidLabel = 'ESSID';
         const link_up = `ip link set ${iface} up`;
         const scan = `iwlist ${iface} scan`;
-        const grep_and_cut_essid = "/usr/bin/grep ESSID | /usr/bin/cut -d':' -f2 | /usr/bin/cut -d'\"' -f2";
         const output = await cockpit.spawn(
-            ["bash", "-c", `${link_up} && ${scan} | ${grep_and_cut_essid}`], { superuser: true }
+            ["bash", "-c", `${link_up} && ${scan}`], { superuser: true }
         );
-        return output.trim().split("\n");
+
+        const extractValue = function(labelValuePair) {
+            const quotedValue = labelValuePair
+                    .split(':')
+                    .slice(1)
+                    .join(':');
+            const unquotedValue = quotedValue
+                    .split('"')
+                    .slice(1, -1)
+                    .join('"');
+            return unquotedValue;
+        };
+
+        const trimmedOutputLines = output.split('\n').map(s => s.trim());
+        const essidEntriesArrayWithLabel = trimmedOutputLines.filter(s => s.startsWith(essidLabel));
+        const essidValuesArray = essidEntriesArrayWithLabel.map(s => extractValue(s));
+
+        return essidValuesArray;
     }
 
     /**

@@ -332,14 +332,9 @@ class IfrouteParser {
 
             // Remove dashes by undefined
             const columns = line.split(/\s/).map(column => column !== "-" ? column : undefined);
-
-            routes.push({
-                destination: columns[0],
-                gateway:     columns[1],
-                netmask:     columns[2],
-                device:      columns[3],
-                options:     columns[4],
-            });
+            let [destination, gateway, netmask, device, ...options] = columns;
+            options = (options || []).join(" ");
+            routes.push({ destination, gateway, netmask, device, options });
 
             return routes;
         }, []);

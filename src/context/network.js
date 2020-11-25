@@ -163,7 +163,7 @@ async function changeConnectionState(dispatch, connection, setUp) {
 function deleteRoute(dispatch, routes, routeId) {
     const nextRoutes = routes.filter((r) => r.id !== routeId);
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: actionTypes.SET_ROUTES, payload: nextRoutes });
+    dispatch({ type: actionTypes.UPDATE_ROUTES, payload: nextRoutes });
 }
 
 // FIXME
@@ -171,7 +171,7 @@ function updateRoute(dispatch, routes, routeId, changes) {
     const route = routes[routeId];
     const nextRoutes = { ...routes, [routeId]: { ...route, ...changes } };
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: actionTypes.SET_ROUTES, payload: nextRoutes });
+    dispatch({ type: actionTypes.UPDATE_ROUTES, payload: nextRoutes });
 }
 
 // FIXME
@@ -179,7 +179,7 @@ function addRoute(dispatch, routes, attrs) {
     const route = createRoute(attrs);
     const nextRoutes = { ...routes, [route.id]: route };
     networkClient().updateRoutes(nextRoutes);
-    dispatch({ type: actionTypes.SET_ROUTES, payload: nextRoutes });
+    dispatch({ type: actionTypes.UPDATE_ROUTES, payload: nextRoutes });
 }
 
 /**

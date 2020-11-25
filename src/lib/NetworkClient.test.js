@@ -20,6 +20,10 @@
  */
 
 import NetworkClient from '../lib/NetworkClient';
+import cockpit from 'cockpit';
+
+const fs = require('fs');
+const path = require('path');
 
 const client = new NetworkClient();
 
@@ -66,6 +70,18 @@ describe("NetworkClient", () => {
                     link: false
                 }));
             });
+        });
+    });
+
+    describe("#getEssidList", () => {
+        const iwlist = fs.readFileSync(
+            path.join(__dirname, '..', '..', 'test', 'fixtures', 'iwlist.txt')
+        ).toString();
+
+        it("returns the list of ESSIDs", async () => {
+            cockpit.spawn = jest.fn(() => Promise.resolve(iwlist));
+            const essidList = await client.getEssidList('wlo1');
+            expect(essidList).toEqual(["MyWifi-01", "MyWifi-02"]);
         });
     });
 });

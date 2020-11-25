@@ -35,7 +35,7 @@ import interfaceStatus from '../lib/model/interfaceStatus';
 
 const _ = cockpit.gettext;
 
-const UnmanagedInterfacesList = ({ interfaces = [], connections = [] }) => {
+const UnmanagedInterfacesList = ({ interfaces = [] }) => {
     const [rows, setRows] = useState([]);
 
     const columns = [

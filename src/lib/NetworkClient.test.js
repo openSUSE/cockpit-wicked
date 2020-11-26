@@ -20,29 +20,29 @@
  */
 
 import NetworkClient from '../lib/NetworkClient';
+import { createConnection } from '../lib/model/connections';
+import { createInterface } from '../lib/model/interfaces';
 import cockpit from 'cockpit';
-
 import { fixtureFile } from '../../test/helpers';
 
-const client = new NetworkClient();
-
 describe("NetworkClient", () => {
-    const spawnResponses = {
-        '/usr/sbin/wicked show-xml': fixtureFile('show-xml.xml'),
-        '/usr/sbin/wicked show-config': fixtureFile('show-config.xml')
+    const conn = createConnection({
+        name: 'eth0'
+    });
+
+    const eth0 = createInterface({
+        name: 'eth0',
+        driver: 'virtio_net',
+    });
+
+    const lo = createInterface({ name: 'lo' });
+
+    const adapter = {
+        connections: jest.fn(() => Promise.all([conn])),
+        interfaces: jest.fn(() => Promise.all([lo, eth0]))
     };
 
-    beforeAll(() => {
-        cockpit.spawn = jest.fn(args => {
-            return new Promise((resolve, reject) => {
-                process.nextTick(() => {
-                    const cmd = args.join(' ');
-                    const response = spawnResponses[cmd];
-                    resolve(response);
-                });
-            });
-        });
-    });
+    const client = new NetworkClient(adapter);
 
     describe("#getConnections", () => {
         it("returns the list of connections", () => {
@@ -57,35 +57,13 @@ describe("NetworkClient", () => {
     });
 
     describe("#getInterfaces", () => {
-        it("returns the list of interfaces", () => {
-            expect.assertions(2);
-            return client.getInterfaces().then(data => {
-                expect(data).toHaveLength(6);
-
-                const eth0 = data.find(i => i.name == 'eth0');
-                expect(eth0).toEqual(expect.objectContaining({
-                    id: 1,
-                    name: 'eth0',
-                    description: '',
-                    driver: 'virtio_net',
-                    mac: '52:54:00:ab:66:d3',
-                    type: 'eth',
-                    virtual: false,
-                    link: true,
-                }));
-            });
-        });
-
-        it("includes virtual but disconnected interfaces", () => {
-            expect.assertions(1);
-            return client.getInterfaces().then(data => {
-                const bond0 = data.find(i => i.name == 'br0');
-                expect(bond0).toEqual(expect.objectContaining({
-                    name: 'br0',
-                    virtual: true,
-                    link: false
-                }));
-            });
+        it("returns the list of interfaces excluding the 'loopback' one", async () => {
+            const interfaces = await client.getInterfaces();
+            expect(interfaces).toHaveLength(1);
+            expect(interfaces[0]).toEqual(expect.objectContaining({
+                name: 'eth0',
+                driver: 'virtio_net'
+            }));
         });
     });
 

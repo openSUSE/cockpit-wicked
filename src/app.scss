@@ -84,8 +84,19 @@ p {
 }
 
 .network {
-    .pf-c-tab-content {
-        padding-top: var(--pf-global--spacer--md);
+    /** Make tabs looks like a navigation component */
+    .pf-c-tabs {
+        margin:
+           calc(var(--pf-c-page__main-section--PaddingTop) * -1)
+           calc(var(--pf-c-page__main-section--PaddingRight) * -1)
+           var(--pf-c-page__main-section--PaddingTop)
+           calc(var(--pf-c-page__main-section--PaddingLeft) * -1);
+        padding:
+           var(--pf-c-page__main-section--PaddingTop)
+           var(--pf-c-page__main-section--PaddingRight)
+           var(--pf-c-page__main-section--PaddingBottom)
+           var(--pf-c-page__main-section--PaddingLeft);
+         background: var(	--pf-global--Color--light-100);
     }
 
     .pf-c-card {

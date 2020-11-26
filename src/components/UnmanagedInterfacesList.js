@@ -21,7 +21,6 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardBody } from '@patternfly/react-core';
 import {
     Table,
     TableBody,
@@ -87,20 +86,16 @@ const UnmanagedInterfacesList = ({ interfaces = [] }) => {
     }, [buildRows]);
 
     return (
-        <Card>
-            <CardBody>
-                <Table
-                    aria-label="Networking interfaces"
-                    variant={TableVariant.compact}
-                    className="interfaces-list"
-                    cells={columns}
-                    rows={rows}
-                >
-                    <TableHeader />
-                    <TableBody />
-                </Table>
-            </CardBody>
-        </Card>
+        <Table
+            aria-label="Networking interfaces"
+            variant={TableVariant.compact}
+            className="interfaces-list"
+            cells={columns}
+            rows={rows}
+        >
+            <TableHeader />
+            <TableBody />
+        </Table>
     );
 };
 

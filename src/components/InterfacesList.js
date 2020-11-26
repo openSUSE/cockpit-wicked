@@ -21,8 +21,8 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardBody, Spinner } from '@patternfly/react-core';
 import {
+    Spinner,
     Table,
     TableBody,
     TableHeader,
@@ -159,21 +159,17 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
     }, [buildRows]);
 
     return (
-        <Card>
-            <CardBody>
-                <Table
-                    aria-label="Networking interfaces"
-                    variant={TableVariant.compact}
-                    onCollapse={onCollapseFn()}
-                    className="interfaces-list"
-                    cells={columns}
-                    rows={rows}
-                >
-                    <TableHeader />
-                    <TableBody />
-                </Table>
-            </CardBody>
-        </Card>
+        <Table
+            aria-label="Networking interfaces"
+            variant={TableVariant.compact}
+            onCollapse={onCollapseFn()}
+            className="interfaces-list"
+            cells={columns}
+            rows={rows}
+        >
+            <TableHeader />
+            <TableBody />
+        </Table>
     );
 };
 

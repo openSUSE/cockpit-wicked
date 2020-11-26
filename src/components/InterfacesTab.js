@@ -27,7 +27,7 @@ import cockpit from 'cockpit';
 import {
     useNetworkDispatch, useNetworkState, fetchInterfaces, fetchConnections, listenToInterfacesChanges
 } from '../context/network';
-import { Card, CardActions, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
+import { Card, CardActions, CardBody, CardHeader, CardTitle, Text, TextVariants } from '@patternfly/react-core';
 
 const _ = cockpit.gettext;
 
@@ -49,24 +49,29 @@ const InterfacesTab = () => {
         <>
             <Card>
                 <CardHeader>
-                    <CardTitle>{_("Interfaces")}</CardTitle>
                     <CardActions>
                         <AddConnectionMenu />
                     </CardActions>
+                    <CardTitle>
+                        <Text component={TextVariants.h2}>{_("Interfaces")}</Text>
+                    </CardTitle>
                 </CardHeader>
                 <CardBody>
                     <InterfacesList interfaces={managedInterfacesList} connections={connectionsList} />
                 </CardBody>
             </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>{_("Unmanaged Interfaces")}</CardTitle>
-                </CardHeader>
-                <CardBody>
-                    <UnmanagedInterfacesList interfaces={unmanagedInterfacesList} />
-                </CardBody>
-            </Card>
-
+            { (unmanagedInterfacesList.length > 0) &&
+                <Card>
+                    <CardHeader>
+                        <CardActions />
+                        <CardTitle>
+                            <Text component={TextVariants.h2}>{_("Unmanaged Interfaces")}</Text>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                        <UnmanagedInterfacesList interfaces={unmanagedInterfacesList} />
+                    </CardBody>
+                </Card>}
         </>
     );
 };

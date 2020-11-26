@@ -26,7 +26,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { resetClient } from '../context/network';
 import { createInterface } from '../lib/model/interfaces';
 import { createConnection } from '../lib/model/connections';
-import { customRender } from '../tests';
+import { customRender } from '../../test/helpers';
 import InterfacesTab from './InterfacesTab';
 
 import NetworkClient from '../lib/NetworkClient';

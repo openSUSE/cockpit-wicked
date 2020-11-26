@@ -26,7 +26,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { resetClient } from '../context/network';
 import { createRoute } from '../lib/model/routes';
 import RoutingTab from './RoutingTab';
-import { customRender } from '../tests';
+import { customRender } from '../../test/helpers';
 
 import NetworkClient from '../lib/NetworkClient';
 

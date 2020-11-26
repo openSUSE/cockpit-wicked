@@ -20,12 +20,19 @@
  */
 
 import React from 'react';
-import { render } from "@testing-library/react";
-import { NetworkProvider } from './context/network';
+import { render } from '@testing-library/react';
+import { NetworkProvider } from '../src/context/network';
+
+const fs = require('fs');
+const path = require('path');
 
 export const customRender = (ui, { providerProps, ...renderOptions }) => {
     return render(
         <NetworkProvider {...providerProps}>{ui}</NetworkProvider>,
         renderOptions
     );
+};
+
+export const fixtureFile = (name) => {
+    return fs.readFileSync(path.join(__dirname, 'fixtures', name)).toString();
 };

@@ -19,29 +19,10 @@
  * find current contact information at www.suse.com.
  */
 
-const fs = require('fs');
-const path = require('path');
-
-const wickedShowXml = fs.readFileSync(path.join(__dirname, 'show-xml.xml')).toString();
-const wickedShowConfig = fs.readFileSync(path.join(__dirname, 'show-config.xml')).toString();
-
-const spawnResponses = {
-    '/usr/sbin/wicked show-xml': wickedShowXml,
-    '/usr/sbin/wicked show-config': wickedShowConfig
-};
-
 const cockpit = {
     gettext: (text) => text,
     noop: (args) => args,
-    spawn: (args) => {
-        return new Promise((resolve, reject) => {
-            process.nextTick(() => {
-                const cmd = args.join(' ');
-                const response = spawnResponses[cmd];
-                resolve(response);
-            });
-        });
-    },
+    spawn: (args) => args,
     file: () => ({}),
     dbus: () => ({ subscribe: () => ({}) }),
     format: (args) => args,

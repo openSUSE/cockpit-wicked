@@ -22,7 +22,6 @@
 import cockpit from "cockpit";
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-    Spinner,
     Table,
     TableBody,
     TableHeader,
@@ -31,6 +30,7 @@ import {
     expandable,
     truncate
 } from '@patternfly/react-table';
+import { Spinner } from '@patternfly/react-core';
 import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import InterfaceDetails from "./InterfaceDetails";
 import interfaceType from '../lib/model/interfaceType';

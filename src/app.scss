@@ -92,7 +92,7 @@ p {
            calc(var(--pf-c-page__main-section--PaddingLeft) * -1);
         padding: var(--pf-c-page__main-section--PaddingTop)
            var(--pf-c-page__main-section--PaddingRight)
-           var(--pf-c-page__main-section--PaddingBottom)
+           0
            var(--pf-c-page__main-section--PaddingLeft);
         background: var(--pf-global--Color--light-100);
     }

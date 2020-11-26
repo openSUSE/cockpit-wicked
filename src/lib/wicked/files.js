@@ -300,6 +300,16 @@ class SysconfigFile {
         const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
         return file.replace(this.data);
     }
+
+    /**
+     * Removes the file
+     *
+     * @return {Promise}
+     */
+    remove() {
+        const file = cockpit.file(this.path, { superuser: "require" });
+        return file.replace(null);
+    }
 }
 
 /**
@@ -323,11 +333,6 @@ class IfcfgFile extends SysconfigFile {
         });
 
         super.update(connectionToSysconfig(connection));
-    }
-
-    remove() {
-        const file = cockpit.file(this.path, { superuser: "require" });
-        return file.replace(null);
     }
 }
 

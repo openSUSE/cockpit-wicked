@@ -22,12 +22,28 @@
 import NetworkClient from '../lib/NetworkClient';
 import cockpit from 'cockpit';
 
-const fs = require('fs');
-const path = require('path');
+import { fixtureFile } from '../../test/helpers';
 
 const client = new NetworkClient();
 
 describe("NetworkClient", () => {
+    const spawnResponses = {
+        '/usr/sbin/wicked show-xml': fixtureFile('show-xml.xml'),
+        '/usr/sbin/wicked show-config': fixtureFile('show-config.xml')
+    };
+
+    beforeAll(() => {
+        cockpit.spawn = jest.fn(args => {
+            return new Promise((resolve, reject) => {
+                process.nextTick(() => {
+                    const cmd = args.join(' ');
+                    const response = spawnResponses[cmd];
+                    resolve(response);
+                });
+            });
+        });
+    });
+
     describe("#getConnections", () => {
         it("returns the list of connections", () => {
             expect.assertions(1);
@@ -74,9 +90,7 @@ describe("NetworkClient", () => {
     });
 
     describe("#getEssidList", () => {
-        const iwlist = fs.readFileSync(
-            path.join(__dirname, '..', '..', 'test', 'fixtures', 'iwlist.txt')
-        ).toString();
+        const iwlist = fixtureFile('iwlist.txt');
 
         it("returns the list of ESSIDs", async () => {
             cockpit.spawn = jest.fn(() => Promise.resolve(iwlist));

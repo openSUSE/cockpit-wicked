@@ -91,6 +91,10 @@ p {
     .pf-c-card {
         margin-bottom: var(--pf-global--spacer--md);
     }
+
+    .pf-c-card__title h2 {
+        font-size: var(--pf-global--FontSize--2xl);
+    }
 }
 
 .interfaces-list {

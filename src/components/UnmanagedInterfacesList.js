@@ -87,7 +87,7 @@ const UnmanagedInterfacesList = ({ interfaces = [] }) => {
 
     return (
         <Table
-            aria-label="Networking interfaces"
+            aria-label="Unmanaged networking interfaces"
             variant={TableVariant.compact}
             className="interfaces-list"
             cells={columns}

@@ -45,6 +45,24 @@ const InterfacesTab = () => {
     const unmanagedInterfacesList = interfaces ? Object.values(interfaces).filter((i) => !managedInterfacesList.includes(i)) : [];
     const connectionsList = connections ? Object.values(connections) : [];
 
+    const renderUnmanagedInterfaces = () => {
+        if (unmanagedInterfacesList.length === 0) return;
+
+        return (
+            <Card>
+                <CardHeader>
+                    <CardActions />
+                    <CardTitle>
+                        <Text component={TextVariants.h2}>{_("Unmanaged Interfaces")}</Text>
+                    </CardTitle>
+                </CardHeader>
+                <CardBody>
+                    <UnmanagedInterfacesList interfaces={unmanagedInterfacesList} />
+                </CardBody>
+            </Card>
+        );
+    };
+
     return (
         <>
             <Card>
@@ -60,18 +78,7 @@ const InterfacesTab = () => {
                     <InterfacesList interfaces={managedInterfacesList} connections={connectionsList} />
                 </CardBody>
             </Card>
-            { (unmanagedInterfacesList.length > 0) &&
-                <Card>
-                    <CardHeader>
-                        <CardActions />
-                        <CardTitle>
-                            <Text component={TextVariants.h2}>{_("Unmanaged Interfaces")}</Text>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                        <UnmanagedInterfacesList interfaces={unmanagedInterfacesList} />
-                    </CardBody>
-                </Card>}
+            { renderUnmanagedInterfaces() }
         </>
     );
 };

@@ -74,6 +74,44 @@ describe('IfcfgFile', () => {
             });
         });
 
+        describe('when there is some content', () => {
+            const readFn = () => {
+                return new Promise((resolve, reject) => {
+                    process.nextTick(() => {
+                        resolve([...fileContent]);
+                    });
+                });
+            };
+
+            beforeAll(() => {
+                cockpit.file = jest.fn(() => {
+                    return { read: readFn, replace: replaceFn };
+                });
+            });
+
+            const conn = model.createConnection({
+                name: 'eth0', type: interfaceType.ETHERNET
+            });
+
+            const fileContent = [
+                { key: 'NAME', value: 'eth0', commented: true },
+                { key: 'BOOTPROTO', value: 'dhcp', commented: false },
+                { key: 'IPADDR_MYIP', value: '192.168.1.99/24' },
+                { key: 'LABEL_MYIP', value: 'MYIP' },
+                { key: 'UNKOWN', value: 'some value' }
+            ];
+
+            it('keeps the original values except the IP related ones', async () => {
+                await ifcfg.read();
+                ifcfg.update(conn);
+
+                expect(ifcfg.get('NAME')).toEqual('eth0');
+                expect(ifcfg.get('UNKOWN')).toEqual('some value');
+                expect(ifcfg.get('IPADDR_MYIP')).toBeUndefined();
+                expect(ifcfg.get('LABEL_MYIP')).toBeUndefined();
+            });
+        });
+
         describe('when it is a bridge device', () => {
             const conn = model.createConnection({
                 name: 'br0', type: interfaceType.BRIDGE, bridge: { ports: ['eth0', 'eth1'] }
@@ -114,6 +152,13 @@ describe('SysconfigParser', () => {
     describe('#stringify', () => {
         it('returns a string in sysconfig place', () => {
             expect(parser.stringify(lines)).toEqual(
+                "BOOTPROTO=\"dhcp\"\n# Infer the name from the file name\n# NAME=\"eth0\""
+            );
+        });
+
+        it('includes a newline when the last line was added', () => {
+            lines[lines.length - 1].added = true;
+            expect(parser.stringify(lines)).toEqual(
                 "BOOTPROTO=\"dhcp\"\n# Infer the name from the file name\n# NAME=\"eth0\"\n"
             );
         });
@@ -133,14 +178,14 @@ describe('SysconfigParser', () => {
 
         it('returns an array containing one object for each line', () => {
             expect(parser.parse(content)).toEqual([
-                { comment: '## Type: boolean' },
-                { comment: '## Default: "no"' },
-                { comment: '' },
-                { key: 'DEBUG', value: 'yes', commented: false },
-                { key: 'LOG_LEVEL', value: 'info', commented: true },
-                { key: 'MTU', value: '1500', commented: false },
-                { key: 'LINK_REQUIRED', value: '', commented: false },
-                { key: 'ZONE', value: '', commented: false }
+                { comment: '## Type: boolean', added: false },
+                { comment: '## Default: "no"', added: false },
+                { comment: '', added: false },
+                { key: 'DEBUG', value: 'yes', added: false, commented: false },
+                { key: 'LOG_LEVEL', value: 'info', added: false, commented: true },
+                { key: 'MTU', value: '1500', added: false, commented: false },
+                { key: 'LINK_REQUIRED', value: '', added: false, commented: false },
+                { key: 'ZONE', value: '', added: false, commented: false }
             ]);
         });
     });
@@ -227,10 +272,10 @@ describe('SysconfigFile', () => {
             file.write();
 
             expect(replaceFn).toHaveBeenCalledWith([
-                { key: 'NAME', value: 'eth0', commented: false },
-                { key: 'BOOTPROTO', value: 'dhcp', commented: true },
-                { key: 'STARTMODE', value: 'ifplugd', commented: false },
-                { key: 'IPADDR', value: '', commented: false }
+                { key: 'NAME', value: 'eth0', commented: false, removed: false },
+                { key: 'BOOTPROTO', value: 'dhcp', commented: true, removed: false },
+                { key: 'STARTMODE', value: 'ifplugd', added: true, commented: false, removed: false },
+                { key: 'IPADDR', value: '', added: true, commented: false, removed: false }
             ]);
         });
     });

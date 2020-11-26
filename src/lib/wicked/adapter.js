@@ -252,9 +252,10 @@ class WickedAdapter {
      * @param {Connection} connection - Connection to update
      * @return {Promise<Connection,Error>} Promise that resolve to the added connection
      */
-    updateConnectionConfig(connection) {
+    async updateConnectionConfig(connection) {
         const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
         const file = new IfcfgFile(filePath);
+        await file.read();
         file.update(connection);
         return file.write();
     }

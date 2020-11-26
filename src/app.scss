@@ -104,6 +104,10 @@ p {
     .pf-c-card__title h2 {
         font-size: var(--pf-global--FontSize--2xl);
     }
+
+    .pf-c-tab-content:focus {
+        outline: none;
+    }
 }
 
 .interfaces-list {

@@ -54,7 +54,8 @@ export const createInterface = ({
     mac,
     type = "eth",
     link = true,
-    addresses = []
+    addresses = [],
+    managed = false
 }) => {
     const virtual = interfaceType.isVirtual(type);
     return {
@@ -66,6 +67,7 @@ export const createInterface = ({
         type,
         virtual,
         link,
-        addresses
+        addresses,
+        managed
     };
 };

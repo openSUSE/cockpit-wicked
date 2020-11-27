@@ -83,6 +83,33 @@ p {
     }
 }
 
+.network {
+    /** Make tabs looks like a navigation component */
+    .pf-c-tabs {
+        margin: calc(var(--pf-c-page__main-section--PaddingTop) * -1)
+           calc(var(--pf-c-page__main-section--PaddingRight) * -1)
+           var(--pf-c-page__main-section--PaddingTop)
+           calc(var(--pf-c-page__main-section--PaddingLeft) * -1);
+        padding: var(--pf-c-page__main-section--PaddingTop)
+           var(--pf-c-page__main-section--PaddingRight)
+           0
+           var(--pf-c-page__main-section--PaddingLeft);
+        background: var(--pf-global--Color--light-100);
+    }
+
+    .pf-c-card {
+        margin-bottom: var(--pf-global--spacer--md);
+    }
+
+    .pf-c-card__title h2 {
+        font-size: var(--pf-global--FontSize--2xl);
+    }
+
+    .pf-c-tab-content:focus {
+        outline: none;
+    }
+}
+
 .interfaces-list {
     .pf-c-table__toggle .pf-c-button {
         padding-left: var(--pf-global--spacer--xs);

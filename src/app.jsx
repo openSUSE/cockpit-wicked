@@ -24,7 +24,6 @@ import cockpit from 'cockpit';
 import {
     Page,
     PageSection,
-    PageSectionVariants,
     Tab,
     TabTitleText,
     Tabs,
@@ -79,10 +78,9 @@ export const Application = () => {
 
     return (
         <NetworkProvider>
-            <Page>
+            <Page className="network">
                 { checkingService && <StatusBar showSpinner>{_("Checking if service is active...")}</StatusBar> }
-
-                <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light}>
+                <PageSection>
                     { renderContent() }
                 </PageSection>
             </Page>

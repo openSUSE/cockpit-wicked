@@ -26,7 +26,7 @@ import { NetworkProvider } from '../src/context/network';
 const fs = require('fs');
 const path = require('path');
 
-export const customRender = (ui, { providerProps, ...renderOptions }) => {
+export const customRender = (ui, { providerProps, ...renderOptions } = {}) => {
     return render(
         <NetworkProvider {...providerProps}>{ui}</NetworkProvider>,
         renderOptions

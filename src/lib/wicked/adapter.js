@@ -71,7 +71,7 @@ class WickedAdapter {
         conns.forEach(c => {
             if (!names.includes(c.name)) {
                 const virtualInterface = model.createInterface({
-                    name: c.name, type: c.type, virtual: true, link: false
+                    name: c.name, type: c.type, virtual: true, link: false, managed: true
                 });
                 ifaces.push(virtualInterface);
             }

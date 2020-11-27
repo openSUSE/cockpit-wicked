@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { act, screen } from "@testing-library/react";
+import { act, screen, getByText } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import { resetClient } from '../context/network';
@@ -55,7 +55,7 @@ describe('InterfacesTab', () => {
 
     test('configure an unconfigured interface', async () => {
         act(() => {
-            customRender(<InterfacesTab />, { value: { interfaces: {}, connections: {} } });
+            customRender(<InterfacesTab />);
         });
 
         expect(await screen.findByText('eth0')).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe('InterfacesTab', () => {
         reloadConnectionMock.mockImplementation(() => Promise.reject(error));
 
         act(() => {
-            customRender(<InterfacesTab />, { value: { interfaces: {}, connections: {} } });
+            customRender(<InterfacesTab />);
         });
 
         expect(await screen.findByText('eth0')).toBeInTheDocument();
@@ -92,5 +92,28 @@ describe('InterfacesTab', () => {
 
         // notify the user about the problem
         expect(await screen.findByText(/Something went wrong/i)).toBeInTheDocument();
+    });
+
+    test('the unmanaged interfaces list is not shown when it is empty', async () => {
+        act(() => {
+            customRender(<InterfacesTab />);
+        });
+
+        expect(await screen.findByText('eth0')).toBeInTheDocument();
+        const table = screen.queryByRole('grid', { name: /unmanaged/i });
+        expect(table).toBeNull();
+    });
+
+    test('not managed interfaces are shown in the unmanaged list', async () => {
+        const virbr0 = createInterface({ name: 'virbr0', link: true, managed: false, virtual: true, type: 'br' });
+        getInterfacesMock.mockImplementation(() => Promise.resolve([eth0, virbr0]));
+
+        act(() => {
+            customRender(<InterfacesTab />);
+        });
+
+        expect(await screen.findByText('eth0')).toBeInTheDocument();
+        const table = screen.getByRole('grid', { name: /unmanaged/i });
+        expect(getByText(table, 'virbr0')).toBeInTheDocument();
     });
 });

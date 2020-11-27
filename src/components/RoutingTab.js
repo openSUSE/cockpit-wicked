@@ -21,7 +21,7 @@
 
 import React, { useEffect } from 'react';
 import { useNetworkDispatch, useNetworkState, fetchRoutes } from '../context/network';
-import { Card, CardBody, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Card, CardActions, CardBody, CardHeader } from '@patternfly/react-core';
 import RoutesList from './RoutesList';
 import AddRoute from './AddRoute';
 
@@ -34,20 +34,16 @@ const RoutingTab = () => {
     const routesList = routes ? Object.values(routes) : [];
 
     return (
-        <>
-            <Toolbar id="routing-toolbar">
-                <ToolbarContent>
-                    <ToolbarItem alignment={{ default: 'alignRight' }}>
-                        <AddRoute />
-                    </ToolbarItem>
-                </ToolbarContent>
-            </Toolbar>
-            <Card>
-                <CardBody>
-                    <RoutesList routes={routesList} />
-                </CardBody>
-            </Card>
-        </>
+        <Card>
+            <CardHeader>
+                <CardActions>
+                    <AddRoute />
+                </CardActions>
+            </CardHeader>
+            <CardBody>
+                <RoutesList routes={routesList} />
+            </CardBody>
+        </Card>
     );
 };
 

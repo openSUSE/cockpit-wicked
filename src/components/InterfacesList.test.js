@@ -20,11 +20,11 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
+import { screen } from "@testing-library/react";
 import '@testing-library/jest-dom/extend-expect';
-import { NetworkProvider } from '../context/network';
 import InterfacesList from "./InterfacesList";
+import { customRender } from "../../test/helpers";
 import { createInterface } from '../lib/model/interfaces';
 import { createConnection } from '../lib/model/connections';
 import { createAddressConfig } from '../lib/model/address';
@@ -43,18 +43,10 @@ const connections = [
     createConnection({ id: 1, name: 'eth0' })
 ];
 
-const customRender = (ui, { providerProps, ...renderOptions }) => {
-    return render(
-        <NetworkProvider {...providerProps}>{ui}</NetworkProvider>,
-        renderOptions
-    );
-};
-
 describe('InterfacesList', () => {
     test('shows the interfaces names and IPs', () => {
         customRender(
-            <InterfacesList interfaces={interfaces} connections={connections} />,
-            { value: { connections, interfaces } }
+            <InterfacesList interfaces={interfaces} connections={connections} />
         );
 
         expect(screen.getByText('eth0')).toBeInTheDocument();
@@ -63,8 +55,7 @@ describe('InterfacesList', () => {
 
     test('display details', () => {
         customRender(
-            <InterfacesList interfaces={interfaces} connections={connections} />,
-            { value: { connections, interfaces } }
+            <InterfacesList interfaces={interfaces} connections={connections} />
         );
 
         expect(screen.getByText('00:d8:23:93:14:cc')).not.toBeVisible();
@@ -78,8 +69,7 @@ describe('InterfacesList', () => {
 
     test('when the connection is not configured', () => {
         customRender(
-            <InterfacesList interfaces={interfaces} connections={[]} />,
-            { value: { connections, interfaces } }
+            <InterfacesList interfaces={interfaces} connections={[]} />
         );
 
         expect(screen.getByText('eth0')).toBeInTheDocument();

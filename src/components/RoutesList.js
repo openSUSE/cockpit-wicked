@@ -21,7 +21,6 @@
 
 import cockpit from "cockpit";
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, TableVariant } from '@patternfly/react-table';
 import { useNetworkDispatch, deleteRoute } from '../context/network';
 import RouteForm from './RouteForm';
@@ -75,20 +74,16 @@ const RoutesList = ({ routes }) => {
     return (
         <>
             { isFormOpen && <RouteForm isOpen={isFormOpen} route={route} onClose={() => setFormOpen(false)} /> }
-            <Card>
-                <CardBody>
-                    <Table
-                    aria-label="Default Routing Table"
-                    variant={TableVariant.compact}
-                    cells={columns}
-                    rows={rows}
-                    actions={actions}
-                    >
-                        <TableHeader />
-                        <TableBody />
-                    </Table>
-                </CardBody>
-            </Card>
+            <Table
+            aria-label="Default Routing Table"
+            variant={TableVariant.compact}
+            cells={columns}
+            rows={rows}
+            actions={actions}
+            >
+                <TableHeader />
+                <TableBody />
+            </Table>
         </>
     );
 };

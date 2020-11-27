@@ -128,25 +128,21 @@ const InterfaceDetails = ({ iface, connection, changeConnectionState, deleteConn
     };
 
     const renderActions = () => {
-        if (!connection.exists) return;
-
         return (
             <Toolbar>
                 <ToolbarContent>
-                    <ToolbarItem>
-                        <DeleteConnection connection={connection} deleteConnection={deleteConnection} />
-                    </ToolbarItem>
-
-                    {
-                        iface &&
+                    { connection.exists &&
                         <ToolbarItem>
-                            <Switch
-                              id={`status_${iface.name}}`}
-                              isChecked={iface.link}
-                              onChange={() => changeConnectionState(connection, !iface.link)}
-                            />
-                        </ToolbarItem>
-                    }
+                            <DeleteConnection connection={connection} deleteConnection={deleteConnection} />
+                        </ToolbarItem>}
+
+                    <ToolbarItem>
+                        <Switch
+                          id={`status_${iface.name}}`}
+                          isChecked={iface.link}
+                          onChange={() => changeConnectionState(connection, !iface.link)}
+                        />
+                    </ToolbarItem>
                 </ToolbarContent>
             </Toolbar>
         );

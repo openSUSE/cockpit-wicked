@@ -248,7 +248,7 @@ class SysconfigFile {
      * @param {*} [defaultValue] - Default value in case of not found value
      * @return {string|*} - Variable value or defaultValue if not found
      */
-    get(key, defaultValue) {
+    getKey(key, defaultValue) {
         const line = this.data.find(l => l.key === key);
         return (line && !line.commented && !line.removed) ? line.value : defaultValue;
     }
@@ -264,7 +264,7 @@ class SysconfigFile {
      * @param {string} key - Variable name
      * @param {string,undefined} value - Value to assign to the variable
      */
-    set(key, value) {
+    setKey(key, value) {
         const line = this.data.find(l => l.key === key);
         const someValue = (value !== undefined && value !== null);
 
@@ -288,7 +288,7 @@ class SysconfigFile {
      *   Values are indexed by its variable name.
      */
     update(values) {
-        Object.entries(values).forEach(([k, v]) => this.set(k, v));
+        Object.entries(values).forEach(([k, v]) => this.setKey(k, v));
     }
 
     /**

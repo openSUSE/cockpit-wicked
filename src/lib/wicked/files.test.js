@@ -42,9 +42,9 @@ describe('IfcfgFile', () => {
 
         it('updates file content', () => {
             ifcfg.update(conn);
-            expect(ifcfg.get('BOOTPROTO')).toEqual('dhcp');
-            expect(ifcfg.get('NAME')).toEqual('eth0');
-            expect(ifcfg.get('STARTMODE')).toEqual('auto');
+            expect(ifcfg.getKey('BOOTPROTO')).toEqual('dhcp');
+            expect(ifcfg.getKey('NAME')).toEqual('eth0');
+            expect(ifcfg.getKey('STARTMODE')).toEqual('auto');
         });
 
         describe('when it contains multiple addresses', () => {
@@ -65,12 +65,12 @@ describe('IfcfgFile', () => {
 
             it('includes all the addresses and their labels', () => {
                 ifcfg.update(conn);
-                expect(ifcfg.get('BOOTPROTO')).toEqual('dhcp');
-                expect(ifcfg.get('IPADDR')).toEqual('192.168.1.100/24');
-                expect(ifcfg.get('IPADDR_1')).toEqual('10.0.0.1/10');
-                expect(ifcfg.get('LABEL_1')).toEqual('private');
-                expect(ifcfg.get('IPADDR_2')).toEqual('10.0.0.2/10');
-                expect(ifcfg.get('IPADDR_3')).toEqual('2001:0db4:95b3:0000:0000:8a2e:0370:9335');
+                expect(ifcfg.getKey('BOOTPROTO')).toEqual('dhcp');
+                expect(ifcfg.getKey('IPADDR')).toEqual('192.168.1.100/24');
+                expect(ifcfg.getKey('IPADDR_1')).toEqual('10.0.0.1/10');
+                expect(ifcfg.getKey('LABEL_1')).toEqual('private');
+                expect(ifcfg.getKey('IPADDR_2')).toEqual('10.0.0.2/10');
+                expect(ifcfg.getKey('IPADDR_3')).toEqual('2001:0db4:95b3:0000:0000:8a2e:0370:9335');
             });
         });
 
@@ -105,10 +105,10 @@ describe('IfcfgFile', () => {
                 await ifcfg.read();
                 ifcfg.update(conn);
 
-                expect(ifcfg.get('NAME')).toEqual('eth0');
-                expect(ifcfg.get('UNKOWN')).toEqual('some value');
-                expect(ifcfg.get('IPADDR_MYIP')).toBeUndefined();
-                expect(ifcfg.get('LABEL_MYIP')).toBeUndefined();
+                expect(ifcfg.getKey('NAME')).toEqual('eth0');
+                expect(ifcfg.getKey('UNKOWN')).toEqual('some value');
+                expect(ifcfg.getKey('IPADDR_MYIP')).toBeUndefined();
+                expect(ifcfg.getKey('LABEL_MYIP')).toBeUndefined();
             });
         });
 
@@ -119,8 +119,8 @@ describe('IfcfgFile', () => {
 
             it('includes bridge settings', () => {
                 ifcfg.update(conn);
-                expect(ifcfg.get('BRIDGE')).toEqual('yes');
-                expect(ifcfg.get('BRIDGE_PORTS')).toEqual('eth0 eth1');
+                expect(ifcfg.getKey('BRIDGE')).toEqual('yes');
+                expect(ifcfg.getKey('BRIDGE_PORTS')).toEqual('eth0 eth1');
             });
         });
 
@@ -132,10 +132,10 @@ describe('IfcfgFile', () => {
 
             it('includes bonding settings', () => {
                 ifcfg.update(conn);
-                expect(ifcfg.get('BONDING_MASTER')).toEqual('yes');
-                expect(ifcfg.get('BONDING_SLAVE_0')).toEqual('eth0');
-                expect(ifcfg.get('BONDING_SLAVE_1')).toEqual('eth1');
-                expect(ifcfg.get('BONDING_MODULE_OPTS')).toEqual('mode=active-backup some-option');
+                expect(ifcfg.getKey('BONDING_MASTER')).toEqual('yes');
+                expect(ifcfg.getKey('BONDING_SLAVE_0')).toEqual('eth0');
+                expect(ifcfg.getKey('BONDING_SLAVE_1')).toEqual('eth1');
+                expect(ifcfg.getKey('BONDING_MODULE_OPTS')).toEqual('mode=active-backup some-option');
             });
         });
     });
@@ -209,7 +209,7 @@ describe('SysconfigFile', () => {
 
     const file = new SysconfigFile('/tmp/foo/bar');
 
-    describe('get', () => {
+    describe('getKey', () => {
         beforeAll(() => {
             cockpit.file = jest.fn(() => {
                 return { read: readFn, replace: replaceFn };
@@ -218,13 +218,13 @@ describe('SysconfigFile', () => {
 
         it('returns the value for the given key', async () => {
             await file.read();
-            expect(file.get('NAME')).toBeUndefined();
-            expect(file.get('BOOTPROTO')).toEqual('dhcp');
-            expect(file.get('STARTMODE')).toBeUndefined();
+            expect(file.getKey('NAME')).toBeUndefined();
+            expect(file.getKey('BOOTPROTO')).toEqual('dhcp');
+            expect(file.getKey('STARTMODE')).toBeUndefined();
         });
     });
 
-    describe('set', () => {
+    describe('setKey', () => {
         beforeAll(() => {
             cockpit.file = jest.fn(() => {
                 return { read: readFn, replace: replaceFn };
@@ -233,13 +233,13 @@ describe('SysconfigFile', () => {
 
         it('sets the value for a given key', async () => {
             await file.read();
-            file.set('NAME', 'eth0');
-            file.set('BOOTPROTO', undefined);
-            file.set('STARTMODE', 'ifplugd');
+            file.setKey('NAME', 'eth0');
+            file.setKey('BOOTPROTO', undefined);
+            file.setKey('STARTMODE', 'ifplugd');
 
-            expect(file.get('NAME')).toEqual('eth0');
-            expect(file.get('BOOTPROTO')).toBeUndefined();
-            expect(file.get('STARTMODE')).toEqual('ifplugd');
+            expect(file.getKey('NAME')).toEqual('eth0');
+            expect(file.getKey('BOOTPROTO')).toBeUndefined();
+            expect(file.getKey('STARTMODE')).toEqual('ifplugd');
         });
     });
 
@@ -253,10 +253,10 @@ describe('SysconfigFile', () => {
                 IPADDR: ''
             });
 
-            expect(file.get('NAME')).toEqual('eth0');
-            expect(file.get('BOOTPROTO')).toBeUndefined();
-            expect(file.get('STARTMODE')).toEqual('ifplugd');
-            expect(file.get('IPADDR')).toEqual('');
+            expect(file.getKey('NAME')).toEqual('eth0');
+            expect(file.getKey('BOOTPROTO')).toBeUndefined();
+            expect(file.getKey('STARTMODE')).toEqual('ifplugd');
+            expect(file.getKey('IPADDR')).toEqual('');
         });
     });
 

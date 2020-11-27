@@ -118,11 +118,12 @@ class WickedAdapter {
      */
     async dnsSettings() {
         const filePath = `/etc/sysconfig/network/config`;
-        const file = await new SysconfigFile(filePath).read();
-        const policy = file.get("NETCONFIG_DNS_POLICY", "");
-        const nameServers = file.get("NETCONFIG_DNS_STATIC_SERVERS", "").split(" ")
+        const file = new SysconfigFile(filePath);
+        await file.read();
+        const policy = file.getKey("NETCONFIG_DNS_POLICY", "");
+        const nameServers = file.getKey("NETCONFIG_DNS_STATIC_SERVERS", "").split(" ")
                 .filter(Boolean);
-        const searchList = file.get("NETCONFIG_DNS_STATIC_SEARCHLIST", "").split(" ")
+        const searchList = file.getKey("NETCONFIG_DNS_STATIC_SEARCHLIST", "").split(" ")
                 .filter(Boolean);
 
         return model.createDnsSettings({ policy, nameServers, searchList });
@@ -135,10 +136,11 @@ class WickedAdapter {
      */
     async updateDnsSettings({ policy, nameServers, searchList }) {
         const filePath = `/etc/sysconfig/network/config`;
-        const file = await new SysconfigFile(filePath).read();
-        file.set("NETCONFIG_DNS_POLICY", policy);
-        file.set("NETCONFIG_DNS_STATIC_SERVERS", nameServers.join(" "));
-        file.set("NETCONFIG_DNS_STATIC_SEARCHLIST", searchList.join(" "));
+        const file = new SysconfigFile(filePath);
+        await file.read();
+        file.setKey("NETCONFIG_DNS_POLICY", policy);
+        file.setKey("NETCONFIG_DNS_STATIC_SERVERS", nameServers.join(" "));
+        file.setKey("NETCONFIG_DNS_STATIC_SEARCHLIST", searchList.join(" "));
         return file.write();
     }
 
@@ -252,9 +254,10 @@ class WickedAdapter {
      * @param {Connection} connection - Connection to update
      * @return {Promise<Connection,Error>} Promise that resolve to the added connection
      */
-    updateConnectionConfig(connection) {
+    async updateConnectionConfig(connection) {
         const filePath = `/etc/sysconfig/network/ifcfg-${connection.name}`;
         const file = new IfcfgFile(filePath);
+        await file.read();
         file.update(connection);
         return file.write();
     }

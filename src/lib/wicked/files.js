@@ -165,7 +165,9 @@ class SysconfigParser {
      */
     stringify(lines) {
         const textLines = lines.reduce((all, line) => {
-            if (line.comment !== undefined) {
+            if (line.removed) {
+                return all;
+            } else if (line.comment !== undefined) {
                 return [...all, line.comment];
             } else {
                 const { key, value, commented } = line;
@@ -173,7 +175,10 @@ class SysconfigParser {
                 return [...all, commented ? `# ${newLine}` : newLine];
             }
         }, []);
-        return textLines.join("\n").concat("\n");
+        // make sure to have a newline at the end of the file
+        if (lines.length !== 0 && lines[lines.length - 1].added) textLines.push('');
+
+        return textLines.join("\n");
     }
 
     /**
@@ -199,10 +204,10 @@ class SysconfigParser {
         return lines.reduce((content, line) => {
             const matches = line.match(keyValueLine);
             if (matches === null) {
-                return [...content, { comment: line }];
+                return [...content, { comment: line, added: false }];
             } else {
                 return [...content, {
-                    key: matches[2], value: matches[3], commented: (matches[1] === '#')
+                    key: matches[2], value: matches[3], commented: (matches[1] === '#'), added: false
                 }];
             }
         }, []);
@@ -229,7 +234,7 @@ class SysconfigFile {
         return new Promise((resolve, reject) => {
             file.read()
                     .then(content => {
-                        this.data = content;
+                        if (content) this.data = content;
                         resolve(this);
                     })
                     .catch(reject);
@@ -243,24 +248,30 @@ class SysconfigFile {
      * @param {*} [defaultValue] - Default value in case of not found value
      * @return {string|*} - Variable value or defaultValue if not found
      */
-    get(key, defaultValue) {
+    getKey(key, defaultValue) {
         const line = this.data.find(l => l.key === key);
-        return (line && !line.commented) ? line.value : defaultValue;
+        return (line && !line.commented && !line.removed) ? line.value : defaultValue;
+    }
+
+    removeKey(key) {
+        const line = this.data.find(l => l.key === key);
+        if (line) line.removed = true;
     }
 
     /**
      * Set the value for a given variable
      *
      * @param {string} key - Variable name
-     * @param {string} value - Value to assign to the variable
+     * @param {string,undefined} value - Value to assign to the variable
      */
-    set(key, value) {
+    setKey(key, value) {
         const line = this.data.find(l => l.key === key);
         const someValue = (value !== undefined && value !== null);
 
         if (!line && someValue) {
-            this.data.push({ key, value, commented: false });
+            this.data.push({ key, value, commented: false, removed: false, added: true });
         } else if (line) {
+            line.removed = false;
             if (someValue) {
                 line.value = value;
                 line.commented = false;
@@ -277,7 +288,7 @@ class SysconfigFile {
      *   Values are indexed by its variable name.
      */
     update(values) {
-        Object.entries(values).forEach(([k, v]) => this.set(k, v));
+        Object.entries(values).forEach(([k, v]) => this.setKey(k, v));
     }
 
     /**
@@ -288,6 +299,16 @@ class SysconfigFile {
     write() {
         const file = cockpit.file(this.path, { syntax: new SysconfigParser(), superuser: "require" });
         return file.replace(this.data);
+    }
+
+    /**
+     * Removes the file
+     *
+     * @return {Promise}
+     */
+    remove() {
+        const file = cockpit.file(this.path, { superuser: "require" });
+        return file.replace(null);
     }
 }
 
@@ -302,12 +323,16 @@ class IfcfgFile extends SysconfigFile {
      * @return {Promise<string,object>} Promise from the cockpit.file `replace()` function
      */
     update(connection) {
-        super.update(connectionToSysconfig(connection));
-    }
+        const keysToRemove = /^(IPADDR|LABEL|NETMASK|PREFIXLEN|BROADCAST)/;
 
-    remove() {
-        const file = cockpit.file(this.path, { superuser: "require" });
-        return file.replace(null);
+        this.data.forEach(line => {
+            const { key } = line;
+            if (key && key.match(keysToRemove)) {
+                this.removeKey(key);
+            }
+        });
+
+        super.update(connectionToSysconfig(connection));
     }
 }
 

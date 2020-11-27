@@ -222,6 +222,11 @@ describe('SysconfigFile', () => {
             expect(file.getKey('BOOTPROTO')).toEqual('dhcp');
             expect(file.getKey('STARTMODE')).toBeUndefined();
         });
+
+        it('returns the default value if the key is not found', async () => {
+            await file.read();
+            expect(file.getKey('UNKNOWN', 'Some value')).toEqual('Some value');
+        });
     });
 
     describe('setKey', () => {

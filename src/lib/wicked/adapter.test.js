@@ -21,8 +21,11 @@
 
 import Adapter from './adapter';
 import Client from './client';
+import { SysconfigFile } from './files';
 
 jest.mock('./client');
+jest.mock('./files');
+
 
 const eth0_conn = { name: 'eth0' };
 const br1_conn = { name: 'br0', bridge: { ports: ['eth0'] } };
@@ -30,6 +33,7 @@ const eth0_iface = { interface: { name: 'eth0' } };
 
 const configurations = [eth0_conn, br1_conn];
 const interfaces = [eth0_iface];
+
 
 const resolveTo = (result) => () => {
     return new Promise((resolve) => {
@@ -255,5 +259,61 @@ describe('#reloadConnection', () => {
         const adapter = new Adapter(client);
 
         await expect(adapter.reloadConnection('eth0')).rejects.toEqual(error);
+    });
+
+    describe('#dnsSettings', () => {
+        const client = new Client();
+        const adapter = new Adapter(client);
+
+        const dnsSettings = {
+            NETCONFIG_DNS_POLICY: 'auto',
+            NETCONFIG_DNS_STATIC_SERVERS: '8.8.8.8',
+            NETCONFIG_DNS_STATIC_SEARCHLIST: 'suse.com'
+        };
+
+        const setMock = jest.fn();
+
+        beforeAll(() => {
+            SysconfigFile.mockImplementation(() => {
+                return {
+                    read: () => Promise.resolve(),
+                    write: () => Promise.resolve(),
+                    get: (key) => {
+                        return dnsSettings[key];
+                    },
+                    set: setMock
+                }
+            });
+        });
+
+        afterEach(() => {
+            SysconfigFile.mockClear();
+        })
+
+        it('returns the DNS settings', async () => {
+            expect(await adapter.dnsSettings()).toEqual({
+                policy: 'auto',
+                nameServers: ['8.8.8.8'],
+                searchList: ['suse.com']
+            });
+        });
+
+        it('writes the DNS settings', async () => {
+            await adapter.updateDnsSettings({
+                policy: 'auto',
+                nameServers: ['8.8.8.8', '1.1.1.1'],
+                searchList: ['suse.com', 'suse.de']
+            });
+
+            expect(setMock).toHaveBeenCalledWith(
+                'NETCONFIG_DNS_POLICY', 'auto'
+            );
+            expect(setMock).toHaveBeenCalledWith(
+                'NETCONFIG_DNS_STATIC_SERVERS', '8.8.8.8 1.1.1.1')
+            ;
+            expect(setMock).toHaveBeenCalledWith(
+                'NETCONFIG_DNS_STATIC_SEARCHLIST', 'suse.com suse.de'
+            );
+        })
     });
 });

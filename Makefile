@@ -26,7 +26,7 @@ po/POTFILES.js.in:
 	find src/ -name '*.js' -o -name '*.jsx' > $@
 
 po/$(PACKAGE_NAME).js.pot: po/POTFILES.js.in
-	xgettext --default-domain=cockpit --output=$@ --language=C --keyword= \
+	xgettext --default-domain=cockpit --output=$@ --language=JavaScript --keyword= \
 		--keyword=_:1,1t --keyword=_:1c,2,1t --keyword=C_:1c,2 \
 		--keyword=N_ --keyword=NC_:1c,2 \
 		--keyword=gettext:1,1t --keyword=gettext:1c,2,2t \

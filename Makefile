@@ -50,7 +50,7 @@ po/$(PACKAGE_NAME).pot: po/$(PACKAGE_NAME).html.pot po/$(PACKAGE_NAME).js.pot po
 # Update translations against current PO template
 update-po: po/$(PACKAGE_NAME).pot
 	for lang in $(LINGUAS); do \
-		msgmerge --output-file=po/$$lang.po po/$$lang.po $<; \
+		msgmerge --previous --output-file=po/$$lang.po po/$$lang.po $<; \
 	done
 
 dist/po.%.js: po/%.po $(NODE_MODULES_TEST)

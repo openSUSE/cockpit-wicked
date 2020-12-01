@@ -23,7 +23,10 @@ Summary:        Cockpit user interface for Wicked
 License:        GPL-2.0-only
 URL:            https://github.com/openSUSE/cockpit-wicked
 Source:         https://github.com/openSUSE/cockpit-wicked/archive/refs/tags/%{version}.tar.gz#/cockpit-wicked-%{version}.tar.gz
+%include %_sourcedir/node_modules_spec.inc
 BuildArch:      noarch
+BuildRequires:  nodejs-devel-default
+BuildRequires:  nodejs-rpm-macros
 BuildRequires:  appstream-glib
 
 Requires:       cockpit-bridge
@@ -39,6 +42,10 @@ Cockpit component for managing network configuration through Wicked
 
 %prep
 %setup -q -n %name
+cp %{_sourcedir}/package-lock.json .
+%prepare_node_modules %{_sourcedir}/node_modules.loc
+# FIXME: workaround a permission problems in the tarball
+chmod ug+x %{_builddir}/cockpit-wicked/node_modules/char-regex
 
 %build
 # Nothing to build

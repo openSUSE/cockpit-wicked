@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "https://github.com/dgdavid/cockpit-wicked",
   "author": "",
-  "license": "LGPL-2.1",
+  "license": "GPL-2.0",
   "scripts": {
     "watch": "webpack --watch",
     "build": "webpack",

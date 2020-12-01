@@ -85,7 +85,7 @@ export function interfacesReducer(state, action) {
         let iface = Object.values(state).find((i) => i.name === conn.name);
 
         // or just adding a new one?
-        iface ||= createInterface({ name: conn.name, type: conn.type });
+        iface ||= createInterface({ name: conn.name, type: conn.type, managed: true });
 
         return {
             ...state,

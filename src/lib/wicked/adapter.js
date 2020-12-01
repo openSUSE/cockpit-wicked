@@ -96,7 +96,10 @@ class WickedAdapter {
     onInterfaceChange(fn) {
         this.client.onInterfaceChange((signal, iface) => {
             const data = (signal === 'deviceDelete') ? { ...iface, link: false } : iface;
-            fn(signal, createInterface(data));
+            // Do not trust in the calculated managed value. When changing an interface
+            // status the `client_state` element might be missing.
+            const { managed, ...newIface } = createInterface(data);
+            fn(signal, newIface);
         });
     }
 

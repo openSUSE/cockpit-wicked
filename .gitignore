@@ -12,6 +12,6 @@ bots/
 test/common/
 test/images/
 src/lib/patternfly/
-*.pot
+po/wicked.*.pot
 POTFILES*
 coverage/

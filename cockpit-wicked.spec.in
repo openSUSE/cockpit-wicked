@@ -20,7 +20,7 @@ Name:           cockpit-wicked
 Version:        %{VERSION}
 Release:        0
 Summary:        Cockpit user interface for Wicked
-License:        LGPL-2.1-or-later
+License:        GPL-2.0-only
 URL:            https://github.com/openSUSE/cockpit-wicked
 Source:         https://github.com/openSUSE/cockpit-wicked/releases/download/%{version}/cockpit-wicked-%{version}.tar.gz
 BuildArch:      noarch

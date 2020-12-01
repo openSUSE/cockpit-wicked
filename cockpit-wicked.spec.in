@@ -48,9 +48,16 @@ cp %{_sourcedir}/package-lock.json .
 chmod ug+x %{_builddir}/cockpit-wicked/node_modules/char-regex
 
 %build
-# Nothing to build
+NPM_BIN_DIR=%{_builddir}/cockpit-wicked/node_modules/.bin
+test -d $NPM_BIN_DIR || mkdir $NPM_BIN_DIR
+ln -s ../webpack/bin/webpack.js ${NPM_BIN_DIR}/webpack
+ln -s ../jest/bin/jest.js ${NPM_BIN_DIR}/jest
+chmod +x node_modules/.bin/*
+npm test
+make clean
 
 %install
+NODE_ENV="production"
 %make_install
 appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/metainfo/*
 

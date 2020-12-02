@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-01 10:10+0000\n"
-"PO-Revision-Date: 2020-12-02 01:25+0000\n"
+"PO-Revision-Date: 2020-12-02 14:26+0000\n"
 "Last-Translator: Luís Tiago Favas <al62006@utad.eu>\n"
 "Language-Team: Portuguese (Portugal) <https://l10n.opensuse.org/projects/"
 "cockpit-wicked/master/pt_PT/>\n"
@@ -60,356 +60,367 @@ msgid ""
 "At least one address must be provided when using the \"$bootProto\" boot "
 "protocol"
 msgstr ""
+"Pelo menos um endereço deve ser providenciado na utilização do protocolo de "
+"inicialização \"$bootProto\""
 
 #: src/components/WirelessForm.js:110
 msgid "Auth Mode"
-msgstr ""
+msgstr "Modo de Autenticação"
 
 #: src/components/InterfaceDetails.js:57 src/components/AddConnectionMenu.js:53
 msgid "Bond"
-msgstr ""
+msgstr "Ligação"
 
 #: src/components/InterfaceDetails.js:66 src/components/AddConnectionMenu.js:56
 msgid "Bridge"
-msgstr ""
+msgstr "Ponte"
 
 #: src/components/ModalConfirm.js:61 src/components/WirelessForm.js:85
 #: src/components/ModalForm.js:63
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: src/components/BridgeForm.js:80 src/components/WirelessForm.js:82
 #: src/components/BondForm.js:99 src/components/RouteForm.js:153
 #: src/components/VlanForm.js:89
 msgid "Change"
-msgstr ""
+msgstr "Alterar"
 
 #: src/app.jsx:82
 msgid "Checking if service is active..."
-msgstr ""
+msgstr "A verificar se o serviço está ativo..."
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
-msgstr ""
+msgstr "Cockpit Wicked"
 
 #: src/components/BondDetails.js:33 src/components/VlanDetails.js:50
 #: src/components/WirelessDetails.js:48 src/components/BridgeDetails.js:48
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #: src/components/ModalConfirm.js:59
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #: src/app.jsx:58
 msgid "DNS"
-msgstr ""
+msgstr "DNS"
 
 #: src/components/DnsSettingsForm.js:114
 msgid "DNS Settings"
-msgstr ""
+msgstr "Definições de DNS"
 
 #: src/components/IPSettingsForm.js:209 src/components/DnsSettingsForm.js:103
 msgid "Data is not valid, please check it"
-msgstr ""
+msgstr "Os dados não são válidos, por favor verifique-os"
 
 #: src/components/RouteForm.js:159
 msgid "Default route"
-msgstr ""
+msgstr "Rota padrão"
 
 #: src/components/DnsSettingsForm.js:123
 msgid "Defines the DNS merge policy as documented in netconfig(8) manual page."
 msgstr ""
+"Define a política de fusão DNS tal como documentado no manual e página "
+"netconfig(8)."
 
 #: src/components/DeleteConnection.js:39 src/components/RoutesList.js:65
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
 #: src/components/DeleteConnection.js:46
 msgid "Delete '$0' configuration"
-msgstr ""
+msgstr "Eliminar a configuração '$0'"
 
 #: src/components/RouteForm.js:133 src/components/RouteForm.js:135
 #: src/components/RoutesList.js:31
 msgid "Destination"
-msgstr ""
+msgstr "Destino"
 
 #: src/components/RouteForm.js:61
 msgid "Destination is not valid."
-msgstr ""
+msgstr "O destino não é válido."
 
 #: src/components/RouteForm.js:185 src/components/RoutesList.js:33
 msgid "Device"
-msgstr ""
+msgstr "Dispositivo"
 
 #: src/components/DnsSettings.js:34
 msgid "Disabled"
-msgstr ""
+msgstr "Desativado"
 
 #: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:81
 msgid "Down"
-msgstr ""
+msgstr "Em baixo"
 
 #: src/components/WirelessForm.js:103
 msgid "ESSID"
-msgstr ""
+msgstr "ESSID"
 
 #: src/components/RoutesList.js:61
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: src/components/BondForm.js:94
 msgid "Edit Bond"
-msgstr ""
+msgstr "Editar laço"
 
 #: src/components/BridgeForm.js:76
 msgid "Edit Bridge"
-msgstr ""
+msgstr "Editar ponte"
 
 #: src/components/RouteForm.js:149
 msgid "Edit Route"
-msgstr ""
+msgstr "Editar Rota"
 
 #: src/components/VlanForm.js:85
 msgid "Edit VLAN"
-msgstr ""
+msgstr "Editar VLAN"
 
 #: src/components/WirelessForm.js:77
 msgid "Edit WiFi settings"
-msgstr ""
+msgstr "Editar definições de WiFi"
 
 #: src/components/DnsSettings.js:45 src/components/DnsSettings.js:56
 msgid "Empty"
-msgstr ""
+msgstr "Vazio"
 
 #: src/components/InactiveServicePage.js:73
 msgid "For more help, please check the documentation linked below."
-msgstr ""
+msgstr "Para mais ajuda, leia a documentação referenciada abaixo."
 
 #: src/components/RouteForm.js:173 src/components/RoutesList.js:32
 msgid "Gateway"
-msgstr ""
+msgstr "Gateway"
 
 #: src/components/RouteForm.js:68
 msgid "Gateway is not valid."
-msgstr ""
+msgstr "O Gateway não é válido."
 
 #: src/components/IPInput.js:35
 msgid "IP Address"
-msgstr ""
+msgstr "Endereço IP"
 
 #: src/components/InterfaceDetails.js:93
 msgid "IPv4"
-msgstr ""
+msgstr "IPv4"
 
 #: src/components/InterfaceDetails.js:102
 msgid "IPv6"
-msgstr ""
+msgstr "IPv6"
 
 #: src/components/VlanDetails.js:40
 msgid "Id:"
-msgstr ""
+msgstr "Id:"
 
 #: src/components/BondForm.js:117 src/components/InterfacesTab.js:74
 #: src/app.jsx:52
 msgid "Interfaces"
-msgstr ""
+msgstr "Interfaces"
 
 #: src/components/InterfaceDetails.js:48
 msgid "MAC"
-msgstr ""
+msgstr "MAC"
 
 #: src/components/WirelessForm.js:91 src/components/BondForm.js:131
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 #: src/components/BridgeForm.js:84 src/components/UnmanagedInterfacesList.js:41
 #: src/components/InterfacesList.js:50 src/components/BondForm.js:102
 #: src/components/VlanForm.js:121
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: src/components/DnsSettingsForm.js:161 src/components/DnsSettingsForm.js:170
 msgid "Name Server IP"
-msgstr ""
+msgstr "Servidor de nomes IP"
 
 #: src/components/DnsSettingsForm.js:147
 msgid "Name Server IP address used for host-name lookup."
 msgstr ""
+"Endereço IP do servidor de nomes utilizado para fazer pesquisa de host-name."
 
 #: src/components/DnsSettings.js:55
 msgid "Name servers"
-msgstr ""
+msgstr "Servidores de nomes"
 
 #: src/components/DnsSettingsForm.js:152
 msgid "Nameserver IP"
-msgstr ""
+msgstr "IP do servidor de nome"
 
 #: src/manifest.json
 msgid "Networking"
-msgstr ""
+msgstr "Ligação de rede"
 
 #: src/components/WirelessEssidSelect.js:78
 msgid "No networks found"
-msgstr ""
+msgstr "Nenhuma rede encontrada"
 
 #: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
 msgid "Not configured"
-msgstr ""
+msgstr "Por configurar"
 
 #: src/components/BondForm.js:143 src/components/RouteForm.js:196
 #: src/components/RoutesList.js:34
 msgid "Options"
-msgstr ""
+msgstr "Opções"
 
 #: src/components/VlanForm.js:93
 msgid "Parent"
-msgstr ""
+msgstr "Parente"
 
 #: src/components/VlanDetails.js:37
 msgid "Parent:"
-msgstr ""
+msgstr "Parente:"
 
 #: src/components/WirelessForm.js:122
 msgid "Password"
-msgstr ""
+msgstr "Palavra-passe"
 
 #: src/components/DeleteConnection.js:51
 msgid ""
 "Please, confirm that you really want to the delete the interface "
 "configuration."
 msgstr ""
+"Por favor, confirme se realmente deseja apagar a configuração da interface."
 
 #: src/components/VlanForm.js:109
 msgid "Please, provide the VLAN ID (e.g., 10)"
-msgstr ""
+msgstr "Por favor, providencie o ID da VLAN (ex: 10)"
 
 #: src/components/BondForm.js:105
 msgid "Please, provide the interface name (e.g., bond0)"
-msgstr ""
+msgstr "Por favor, providencie o nome da interface (ex: bond0)"
 
 #: src/components/BridgeForm.js:87
 msgid "Please, provide the interface name (e.g., br0)"
-msgstr ""
+msgstr "Por favor, providencie o nome da interface (ex: br0)"
 
 #: src/components/VlanForm.js:124
 msgid "Please, provide the interface name (e.g., vlan10)"
-msgstr ""
+msgstr "Por favor, providencie o nome da interface (ex: vlan10)"
 
 #: src/components/DnsSettings.js:33 src/components/DnsSettingsForm.js:121
 msgid "Policy"
-msgstr ""
+msgstr "Política"
 
 #: src/components/BridgeForm.js:99
 msgid "Ports"
-msgstr ""
+msgstr "Portos"
 
 #: src/components/BridgeDetails.js:37
 msgid "Ports:"
-msgstr ""
+msgstr "Portos:"
 
 #: src/components/DeleteConnection.js:39
 msgid "Reset"
-msgstr ""
+msgstr "Repor"
 
 #: src/components/RouteForm.js:117
 msgid "Route is not valid, please check it."
-msgstr ""
+msgstr "Rota inválida, por favor verifique."
 
 #: src/app.jsx:55
 msgid "Routing"
-msgstr ""
+msgstr "Encaminhamento"
 
 #: src/components/WirelessEssidSelect.js:70
 msgid "Scanning..."
-msgstr ""
+msgstr "A pesquisar..."
 
 #: src/components/DnsSettingsForm.js:133
 msgid "Search List"
-msgstr ""
+msgstr "Lista de pesquisa"
 
 #: src/components/DnsSettings.js:44
 msgid "Search list"
-msgstr ""
+msgstr "Lista de pesquisa"
 
 #: src/components/InactiveServicePage.js:69
 msgid ""
 "Seems that wicked service is not active. It could be either, the service is\n"
 "                    not running or wicked is not installed."
 msgstr ""
+"Aparentemente o serviço wicked está desativado. Das duas uma, o serviço\n"
+"                    não está a correr ou o wicked não se encontra instalado."
 
 #: src/components/DnsSettingsForm.js:136
 msgid "Space separated list of DNS domain names used for host-name lookup"
 msgstr ""
+"Lista de nomes de domínio DNS separados por espaço para pesquisa de host-name"
 
 #: src/components/InterfaceDetails.js:39
 msgid "Start"
-msgstr ""
+msgstr "Início"
 
 #: src/components/StartMode.js:66
 msgid "Start Mode"
-msgstr ""
+msgstr "Modo de iniciar"
 
 #: src/components/DnsSettingsForm.js:146
 msgid "Static Name Servers"
-msgstr ""
+msgstr "Servidores de nome estáticos"
 
 #: src/components/UnmanagedInterfacesList.js:43
 #: src/components/InterfacesList.js:52
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: src/components/IPSettingsForm.js:145
 msgid "There are invalid IPs"
-msgstr ""
+msgstr "Existem IPs inválidos"
 
 #: src/components/DnsSettingsForm.js:56
 msgid "There are invalid domains in the search list."
-msgstr ""
+msgstr "Existem domínios inválidos na lista de pesquisa."
 
 #: src/components/DnsSettingsForm.js:65
 msgid "There are invalid name servers."
-msgstr ""
+msgstr "Existem servidores de nome inválidos."
 
 #: src/components/IPSettingsForm.js:153
 msgid "There are repeated labels"
-msgstr ""
+msgstr "Existem etiquetas repetidas"
 
 #: src/components/UnmanagedInterfacesList.js:42
 #: src/components/InterfacesList.js:51
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: src/components/InterfacesTab.js:56
 msgid "Unmanaged Interfaces"
-msgstr ""
+msgstr "Interfaces não geridas"
 
 #: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:81
 msgid "Up"
-msgstr ""
+msgstr "Em cima"
 
 #: src/components/BondForm.js:145
 msgid "Use this field to provide more options using the key=value format"
 msgstr ""
+"Utilize este campo para providenciar mais opções com a utilização do formato "
+"key=value"
 
 #: src/components/InterfaceDetails.js:75 src/components/AddConnectionMenu.js:59
 msgid "VLAN"
-msgstr ""
+msgstr "VLAN"
 
 #: src/components/VlanForm.js:106
 msgid "VLAN ID"
-msgstr ""
+msgstr "ID VLAN"
 
 #: src/components/InterfaceDetails.js:84
 msgid "WiFi"
-msgstr ""
+msgstr "WiFi"
 
 #: src/components/InactiveServicePage.js:65
 msgid "Wicked service is not active"
-msgstr ""
+msgstr "O serviço Wicked não está ativo"
 
 #: src/components/DnsSettingsForm.js:140
 msgid "example.com another.com"
-msgstr ""
+msgstr "exemplo.pt outro.pt"

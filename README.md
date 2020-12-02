@@ -25,7 +25,7 @@ However, many features are still missing:
 - Devices renaming.
 - Other goodies like displaying Wicked's logs or device statistics, as the
   NetworkManager module already does.
-  
+
 # Installing
 
 `make install` compiles and installs the package in `/usr/share/cockpit/`. The

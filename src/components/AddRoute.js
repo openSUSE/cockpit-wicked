@@ -26,13 +26,13 @@ import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const AddRoute = () => {
+const AddRoute = ({ variant = 'control' }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (
         <>
-            <Button variant="control" onClick={() => setFormOpen(true)}>{_("Add Route")}</Button>
             { isFormOpen && <RouteForm isOpen={isFormOpen} onClose={() => setFormOpen(false)} /> }
+            <Button variant={variant} onClick={() => setFormOpen(true)}>{_("Add Route")}</Button>
         </>
     );
 };

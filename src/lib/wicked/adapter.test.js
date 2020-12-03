@@ -21,7 +21,8 @@
 
 import Adapter from './adapter';
 import Client from './client';
-import { SysconfigFile } from './files';
+import { SysconfigFile, IfrouteFile } from './files';
+import { createRoute } from '../model/routes';
 
 jest.mock('./client');
 jest.mock('./files');
@@ -313,5 +314,83 @@ describe('#dnsSettings', () => {
         expect(setKeyMock).toHaveBeenCalledWith(
             'NETCONFIG_DNS_STATIC_SEARCHLIST', 'suse.com suse.de'
         );
+    });
+});
+
+describe('#updateRoutes', () => {
+    let routes = {};
+    const updateMock = jest.fn();
+
+    beforeAll(() => {
+        IfrouteFile.mockImplementation(() => {
+            return {
+                update: updateMock
+            };
+        });
+
+        Client.mockImplementation(() => {
+            return {
+                getConfigurations: resolveTo(undefined),
+                getInterfaces: resolveTo(interfaces)
+            };
+        });
+    });
+
+    describe('when called with an empty collection', () => {
+        it('update ifroute files for all known interfaces', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith('eth0');
+            expect(updateMock).toHaveBeenCalledWith([]);
+        });
+
+        it('update routes file', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith(undefined);
+            expect(updateMock).toHaveBeenCalledWith([]);
+        });
+    });
+
+    describe('when called with a non-empty collection', () => {
+        const route = createRoute({ device: 'eth1', destination: '192.168.1.1' });
+
+        routes = { [route.id]: route };
+
+        it('update ifroute files for all known interfaces', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith('eth0');
+            expect(updateMock).toHaveBeenCalledWith([]);
+        });
+
+        it('update ifroute files for all given interfaces', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith('eth1');
+            expect(updateMock).toHaveBeenCalledWith([route]);
+        });
+
+        it('update routes file', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith(undefined);
+            expect(updateMock).toHaveBeenCalledWith([]);
+        });
     });
 });

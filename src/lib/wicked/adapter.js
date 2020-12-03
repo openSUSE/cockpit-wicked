@@ -219,13 +219,13 @@ class WickedAdapter {
     /**
      * Update route files
      *
-     * @param {Array} routes - routes to update
+     * @param {Object.<string|number, module/model/routes~Route} routes - routes to update
      * @return {Promise<Connection,Error>} Promise that resolve to the added connection
      */
     async updateRoutes(routes) {
         const NO_DEVICE_KEY = "none";
 
-        // Include all knows interface to ensure successful deletions
+        // Include all known interfaces to ensure successful deletions
         const ifaces = await this.interfaces();
         const routesByDevice = ifaces.reduce((result, iface) => {
             result[iface.name] = [];

@@ -136,7 +136,7 @@ class NetworkClient {
     /**
      * Update routes
      *
-     * @param {Array<Object>} connections - List of routes to update
+     * @param {Array<Object>} routes - List of routes to update
      * @returns {Promise<Array|Error>} Resolves to an array of connection objects in case of success
      */
     async updateRoutes(routes) {

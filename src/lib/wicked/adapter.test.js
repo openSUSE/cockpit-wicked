@@ -21,7 +21,8 @@
 
 import Adapter from './adapter';
 import Client from './client';
-import { SysconfigFile } from './files';
+import { SysconfigFile, IfrouteFile } from './files';
+import { createRoute } from '../model/routes';
 
 jest.mock('./client');
 jest.mock('./files');
@@ -93,12 +94,6 @@ describe('#interfaces', () => {
 
     const configurations = [eth0_conn, br1_conn];
     const interfaces = [eth0_iface];
-
-    const resolveTo = (result) => () => {
-        return new Promise((resolve) => {
-            process.nextTick(() => resolve(result));
-        });
-    };
 
     beforeAll(() => {
         Client.mockImplementation(() => {
@@ -258,60 +253,138 @@ describe('#reloadConnection', () => {
 
         await expect(adapter.reloadConnection('eth0')).rejects.toEqual(error);
     });
+});
 
-    describe('#dnsSettings', () => {
-        const client = new Client();
-        const adapter = new Adapter(client);
+describe('#dnsSettings', () => {
+    const client = new Client();
+    const adapter = new Adapter(client);
 
-        const dnsSettings = {
-            NETCONFIG_DNS_POLICY: 'auto',
-            NETCONFIG_DNS_STATIC_SERVERS: '8.8.8.8',
-            NETCONFIG_DNS_STATIC_SEARCHLIST: 'suse.com'
-        };
+    const dnsSettings = {
+        NETCONFIG_DNS_POLICY: 'auto',
+        NETCONFIG_DNS_STATIC_SERVERS: '8.8.8.8',
+        NETCONFIG_DNS_STATIC_SEARCHLIST: 'suse.com'
+    };
 
-        const setKeyMock = jest.fn();
+    const setKeyMock = jest.fn();
 
-        beforeAll(() => {
-            SysconfigFile.mockImplementation(() => {
-                return {
-                    read: () => Promise.resolve(),
-                    write: () => Promise.resolve(),
-                    getKey: (key) => {
-                        return dnsSettings[key];
-                    },
-                    setKey: setKeyMock
-                };
-            });
+    beforeAll(() => {
+        SysconfigFile.mockImplementation(() => {
+            return {
+                read: () => Promise.resolve(),
+                write: () => Promise.resolve(),
+                getKey: (key) => {
+                    return dnsSettings[key];
+                },
+                setKey: setKeyMock
+            };
+        });
+    });
+
+    afterEach(() => {
+        SysconfigFile.mockClear();
+    });
+
+    it('returns the DNS settings', async () => {
+        expect(await adapter.dnsSettings()).toEqual({
+            policy: 'auto',
+            nameServers: ['8.8.8.8'],
+            searchList: ['suse.com']
+        });
+    });
+
+    it('writes the DNS settings', async () => {
+        await adapter.updateDnsSettings({
+            policy: 'auto',
+            nameServers: ['8.8.8.8', '1.1.1.1'],
+            searchList: ['suse.com', 'suse.de']
         });
 
-        afterEach(() => {
-            SysconfigFile.mockClear();
+        expect(setKeyMock).toHaveBeenCalledWith(
+            'NETCONFIG_DNS_POLICY', 'auto'
+        );
+        expect(setKeyMock).toHaveBeenCalledWith(
+            'NETCONFIG_DNS_STATIC_SERVERS', '8.8.8.8 1.1.1.1')
+        ;
+        expect(setKeyMock).toHaveBeenCalledWith(
+            'NETCONFIG_DNS_STATIC_SEARCHLIST', 'suse.com suse.de'
+        );
+    });
+});
+
+describe('#updateRoutes', () => {
+    let routes = {};
+    const updateMock = jest.fn();
+
+    beforeAll(() => {
+        IfrouteFile.mockImplementation(() => {
+            return {
+                update: updateMock
+            };
         });
 
-        it('returns the DNS settings', async () => {
-            expect(await adapter.dnsSettings()).toEqual({
-                policy: 'auto',
-                nameServers: ['8.8.8.8'],
-                searchList: ['suse.com']
-            });
+        Client.mockImplementation(() => {
+            return {
+                getConfigurations: resolveTo(undefined),
+                getInterfaces: resolveTo(interfaces)
+            };
+        });
+    });
+
+    describe('when called with an empty collection', () => {
+        it('update ifroute files for all known interfaces', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith('eth0');
+            expect(updateMock).toHaveBeenCalledWith([]);
         });
 
-        it('writes the DNS settings', async () => {
-            await adapter.updateDnsSettings({
-                policy: 'auto',
-                nameServers: ['8.8.8.8', '1.1.1.1'],
-                searchList: ['suse.com', 'suse.de']
-            });
+        it('update routes file', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
 
-            expect(setKeyMock).toHaveBeenCalledWith(
-                'NETCONFIG_DNS_POLICY', 'auto'
-            );
-            expect(setKeyMock).toHaveBeenCalledWith(
-                'NETCONFIG_DNS_STATIC_SERVERS', '8.8.8.8 1.1.1.1')
-            ;
-            expect(setKeyMock).toHaveBeenCalledWith(
-                'NETCONFIG_DNS_STATIC_SEARCHLIST', 'suse.com suse.de'
-            );
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith(undefined);
+            expect(updateMock).toHaveBeenCalledWith([]);
+        });
+    });
+
+    describe('when called with a non-empty collection', () => {
+        const route = createRoute({ device: 'eth1', destination: '192.168.1.1' });
+
+        routes = { [route.id]: route };
+
+        it('update ifroute files for all known interfaces', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith('eth0');
+            expect(updateMock).toHaveBeenCalledWith([]);
+        });
+
+        it('update ifroute files for all given interfaces', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith('eth1');
+            expect(updateMock).toHaveBeenCalledWith([route]);
+        });
+
+        it('update routes file', async () => {
+            const client = new Client();
+            const adapter = new Adapter(client);
+
+            await adapter.updateRoutes(routes);
+
+            expect(IfrouteFile).toHaveBeenCalledWith(undefined);
+            expect(updateMock).toHaveBeenCalledWith([]);
         });
     });
 });

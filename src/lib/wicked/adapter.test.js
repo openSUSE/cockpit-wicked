@@ -95,12 +95,6 @@ describe('#interfaces', () => {
     const configurations = [eth0_conn, br1_conn];
     const interfaces = [eth0_iface];
 
-    const resolveTo = (result) => () => {
-        return new Promise((resolve) => {
-            process.nextTick(() => resolve(result));
-        });
-    };
-
     beforeAll(() => {
         Client.mockImplementation(() => {
             return {

@@ -258,60 +258,60 @@ describe('#reloadConnection', () => {
 
         await expect(adapter.reloadConnection('eth0')).rejects.toEqual(error);
     });
+});
 
-    describe('#dnsSettings', () => {
-        const client = new Client();
-        const adapter = new Adapter(client);
+describe('#dnsSettings', () => {
+    const client = new Client();
+    const adapter = new Adapter(client);
 
-        const dnsSettings = {
-            NETCONFIG_DNS_POLICY: 'auto',
-            NETCONFIG_DNS_STATIC_SERVERS: '8.8.8.8',
-            NETCONFIG_DNS_STATIC_SEARCHLIST: 'suse.com'
-        };
+    const dnsSettings = {
+        NETCONFIG_DNS_POLICY: 'auto',
+        NETCONFIG_DNS_STATIC_SERVERS: '8.8.8.8',
+        NETCONFIG_DNS_STATIC_SEARCHLIST: 'suse.com'
+    };
 
-        const setKeyMock = jest.fn();
+    const setKeyMock = jest.fn();
 
-        beforeAll(() => {
-            SysconfigFile.mockImplementation(() => {
-                return {
-                    read: () => Promise.resolve(),
-                    write: () => Promise.resolve(),
-                    getKey: (key) => {
-                        return dnsSettings[key];
-                    },
-                    setKey: setKeyMock
-                };
-            });
+    beforeAll(() => {
+        SysconfigFile.mockImplementation(() => {
+            return {
+                read: () => Promise.resolve(),
+                write: () => Promise.resolve(),
+                getKey: (key) => {
+                    return dnsSettings[key];
+                },
+                setKey: setKeyMock
+            };
+        });
+    });
+
+    afterEach(() => {
+        SysconfigFile.mockClear();
+    });
+
+    it('returns the DNS settings', async () => {
+        expect(await adapter.dnsSettings()).toEqual({
+            policy: 'auto',
+            nameServers: ['8.8.8.8'],
+            searchList: ['suse.com']
+        });
+    });
+
+    it('writes the DNS settings', async () => {
+        await adapter.updateDnsSettings({
+            policy: 'auto',
+            nameServers: ['8.8.8.8', '1.1.1.1'],
+            searchList: ['suse.com', 'suse.de']
         });
 
-        afterEach(() => {
-            SysconfigFile.mockClear();
-        });
-
-        it('returns the DNS settings', async () => {
-            expect(await adapter.dnsSettings()).toEqual({
-                policy: 'auto',
-                nameServers: ['8.8.8.8'],
-                searchList: ['suse.com']
-            });
-        });
-
-        it('writes the DNS settings', async () => {
-            await adapter.updateDnsSettings({
-                policy: 'auto',
-                nameServers: ['8.8.8.8', '1.1.1.1'],
-                searchList: ['suse.com', 'suse.de']
-            });
-
-            expect(setKeyMock).toHaveBeenCalledWith(
-                'NETCONFIG_DNS_POLICY', 'auto'
-            );
-            expect(setKeyMock).toHaveBeenCalledWith(
-                'NETCONFIG_DNS_STATIC_SERVERS', '8.8.8.8 1.1.1.1')
-            ;
-            expect(setKeyMock).toHaveBeenCalledWith(
-                'NETCONFIG_DNS_STATIC_SEARCHLIST', 'suse.com suse.de'
-            );
-        });
+        expect(setKeyMock).toHaveBeenCalledWith(
+            'NETCONFIG_DNS_POLICY', 'auto'
+        );
+        expect(setKeyMock).toHaveBeenCalledWith(
+            'NETCONFIG_DNS_STATIC_SERVERS', '8.8.8.8 1.1.1.1')
+        ;
+        expect(setKeyMock).toHaveBeenCalledWith(
+            'NETCONFIG_DNS_STATIC_SEARCHLIST', 'suse.com suse.de'
+        );
     });
 });

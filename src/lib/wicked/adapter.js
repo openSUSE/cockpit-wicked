@@ -227,23 +227,23 @@ class WickedAdapter {
 
         // Include all known interfaces to ensure successful deletions
         const ifaces = await this.interfaces();
-        const routesByDevice = ifaces.reduce((result, iface) => {
-            result[iface.name] = [];
-            return result;
-        }, {});
+        const ifacesNames = ifaces.map(i => i.name);
+        const keys = [NO_DEVICE_KEY, ...ifacesNames];
+        const routesByDevice = Object.fromEntries(keys.map(k => [k, []]));
 
         // Collect routes by device
         Object.values(routes).forEach((route) => {
-            const key = route.device || NO_DEVICE_KEY;
-            routesByDevice[key] ||= [];
-            routesByDevice[key].push(route);
+            const device = route.device || NO_DEVICE_KEY;
+            // It could be possible to receive routes for an unknown interface
+            routesByDevice[device] ||= [];
+            routesByDevice[device].push(route);
         });
 
         // Write route files
         const promises = [];
         Object.keys(routesByDevice)
                 .forEach(k => {
-                    const device = k !== NO_DEVICE_KEY ? k : undefined;
+                    const device = k === NO_DEVICE_KEY ? undefined : k;
                     const promise = new IfrouteFile(device).update(routesByDevice[k]);
                     promises.push(promise);
                 });

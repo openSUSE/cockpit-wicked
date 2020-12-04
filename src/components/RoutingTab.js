@@ -19,11 +19,23 @@
  * find current contact information at www.suse.com.
  */
 
+import cockpit from 'cockpit';
 import React, { useEffect } from 'react';
 import { useNetworkDispatch, useNetworkState, fetchRoutes } from '../context/network';
-import { Card, CardActions, CardBody, CardHeader } from '@patternfly/react-core';
+import {
+    Card,
+    CardActions,
+    CardBody,
+    CardHeader,
+    EmptyState,
+    EmptyStateIcon,
+    Title
+} from '@patternfly/react-core';
+import InfoCircleIcon from '@patternfly/react-icons/dist/js/icons/info-circle-icon';
 import RoutesList from './RoutesList';
 import AddRoute from './AddRoute';
+
+const _ = cockpit.gettext;
 
 const RoutingTab = () => {
     const dispatch = useNetworkDispatch();
@@ -32,6 +44,20 @@ const RoutingTab = () => {
     useEffect(() => { fetchRoutes(dispatch) }, [dispatch]);
 
     const routesList = routes ? Object.values(routes) : [];
+
+    const routesNotFound = () => (
+        <EmptyState>
+            <EmptyStateIcon icon={InfoCircleIcon} />
+            <Title headingLevel="h4" size="lg">
+                {_('No routes found.')}
+            </Title>
+            <AddRoute variant="primary" />
+        </EmptyState>
+    );
+
+    if (routesList.length === 0) {
+        return routesNotFound();
+    }
 
     return (
         <Card>

@@ -53,7 +53,7 @@ describe('RoutingTab', () => {
         test('display a message', async() => {
             act(() => { customRender(<RoutingTab />) });
 
-            const result = await screen.findByText(/No routes were found/i);
+            const result = await screen.findByText(/No routes found/i);
             expect(result).toBeInTheDocument();
         });
 

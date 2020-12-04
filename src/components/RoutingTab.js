@@ -49,7 +49,7 @@ const RoutingTab = () => {
         <EmptyState>
             <EmptyStateIcon icon={InfoCircleIcon} />
             <Title headingLevel="h4" size="lg">
-                {_('No routes were found.')}
+                {_('No routes found.')}
             </Title>
             <AddRoute variant="primary" />
         </EmptyState>

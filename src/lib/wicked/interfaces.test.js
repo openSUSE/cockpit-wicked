@@ -28,7 +28,10 @@ describe('#createInterface', () => {
             addresses: [
                 { local: '192.168.1.101/24', broadcast: '192.168.1.155' },
                 { local: 'fe80::3091:4019:f740:9b97/64' }
-            ]
+            ],
+            client_state: {
+                config: { origin: 'suse:compat:/etc/sysconfig/network/ifcfg-eth0' }
+            }
         },
         ethtool: {
             driver_info: { driver: 'virtio_net' },
@@ -48,8 +51,38 @@ describe('#createInterface', () => {
             description: '',
             type: 'eth',
             virtual: false,
-            link: false
+            link: false,
+            managed: true
         }));
+    });
+
+    describe('when no origin is reported', () => {
+        const wickedInterface = {
+            interface: {
+                name: 'eth0',
+                client_state: {
+                    config: { origin: '' }
+                }
+            }
+        };
+
+        it('sets "managed" to false', () => {
+            const iface = createInterface(wickedInterface);
+            expect(iface.managed).toEqual(false);
+        });
+    });
+
+    describe('when no client state is reported', () => {
+        const wickedInterface = {
+            interface: {
+                name: 'eth0',
+            }
+        };
+
+        it('sets "managed" to false', () => {
+            const iface = createInterface(wickedInterface);
+            expect(iface.managed).toEqual(false);
+        });
     });
 
     it('includes the assigned addresses', () => {

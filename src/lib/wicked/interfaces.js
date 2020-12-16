@@ -51,7 +51,7 @@ const createInterface = (iface) => {
 
     const addresses = (assignedAddresses || []).map(model.createAddressConfig);
 
-    const managed = !!client_state?.config;
+    const managed = !!client_state?.config?.origin;
 
     return model.createInterface({
         name, description, type, driver, mac, virtual: false, link, addresses, managed

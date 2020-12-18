@@ -9,20 +9,22 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-01 10:10+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-12-18 22:26+0000\n"
+"Last-Translator: Marina Latini <marina.latini@suse.com>\n"
+"Language-Team: Italian <https://l10n.opensuse.org/projects/cockpit-wicked/"
+"master/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Cockpit manifest2po\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.6.1\n"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/WirelessForm.js:82 src/components/BondForm.js:99
 #: src/components/RouteForm.js:153 src/components/VlanForm.js:89
 msgid "Add"
-msgstr ""
+msgstr "Aggiungi"
 
 #: src/components/BondForm.js:94
 msgid "Add Bond"
@@ -38,20 +40,20 @@ msgstr ""
 
 #: src/components/VlanForm.js:85
 msgid "Add VLAN"
-msgstr ""
+msgstr "Aggiungi VLAN"
 
 #: src/components/WirelessForm.js:77
 msgid "Add WiFi settings"
-msgstr ""
+msgstr "Aggiungi configurazione WiFi"
 
 #: src/components/UnmanagedInterfacesList.js:44
 #: src/components/InterfacesList.js:53
 msgid "Addresses"
-msgstr ""
+msgstr "Indirizzi"
 
 #: src/components/ModalForm.js:61
 msgid "Apply"
-msgstr ""
+msgstr "Applica"
 
 #: src/components/IPSettingsForm.js:135
 msgid ""

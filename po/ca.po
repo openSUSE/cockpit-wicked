@@ -9,140 +9,146 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-01 10:10+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-12-18 22:26+0000\n"
+"Last-Translator: David Medina <medipas@gmail.com>\n"
+"Language-Team: Catalan <https://l10n.opensuse.org/projects/cockpit-wicked/"
+"master/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Cockpit manifest2po\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.6.1\n"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/WirelessForm.js:82 src/components/BondForm.js:99
 #: src/components/RouteForm.js:153 src/components/VlanForm.js:89
 msgid "Add"
-msgstr ""
+msgstr "Afegeix"
 
 #: src/components/BondForm.js:94
 msgid "Add Bond"
-msgstr ""
+msgstr "Afegeix vincle"
 
 #: src/components/BridgeForm.js:76
 msgid "Add Bridge"
-msgstr ""
+msgstr "Afegeix pont"
 
 #: src/components/AddRoute.js:34 src/components/RouteForm.js:149
 msgid "Add Route"
-msgstr ""
+msgstr "Afegeix ruta"
 
 #: src/components/VlanForm.js:85
 msgid "Add VLAN"
-msgstr ""
+msgstr "Afegeix VLAN"
 
 #: src/components/WirelessForm.js:77
 msgid "Add WiFi settings"
-msgstr ""
+msgstr "Afegeix paràmetres de WiFi"
 
 #: src/components/UnmanagedInterfacesList.js:44
 #: src/components/InterfacesList.js:53
 msgid "Addresses"
-msgstr ""
+msgstr "Adreces"
 
 #: src/components/ModalForm.js:61
 msgid "Apply"
-msgstr ""
+msgstr "Aplica"
 
 #: src/components/IPSettingsForm.js:135
 msgid ""
 "At least one address must be provided when using the \"$bootProto\" boot "
 "protocol"
 msgstr ""
+"Com a mínim cal proporcionar una adreça quan s'usi el protocol d'arrencada "
+"$bootProto."
 
 #: src/components/WirelessForm.js:110
 msgid "Auth Mode"
-msgstr ""
+msgstr "Mode d'autenticació"
 
 #: src/components/InterfaceDetails.js:57 src/components/AddConnectionMenu.js:53
 msgid "Bond"
-msgstr ""
+msgstr "Vincle"
 
 #: src/components/InterfaceDetails.js:66 src/components/AddConnectionMenu.js:56
 msgid "Bridge"
-msgstr ""
+msgstr "Pont"
 
 #: src/components/ModalConfirm.js:61 src/components/WirelessForm.js:85
 #: src/components/ModalForm.js:63
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel·la"
 
 #: src/components/BridgeForm.js:80 src/components/WirelessForm.js:82
 #: src/components/BondForm.js:99 src/components/RouteForm.js:153
 #: src/components/VlanForm.js:89
 msgid "Change"
-msgstr ""
+msgstr "Canvia"
 
 #: src/app.jsx:82
 msgid "Checking if service is active..."
-msgstr ""
+msgstr "Comprovant si el servei està actiu..."
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
-msgstr ""
+msgstr "Cabina Wicked"
 
 #: src/components/BondDetails.js:33 src/components/VlanDetails.js:50
 #: src/components/WirelessDetails.js:48 src/components/BridgeDetails.js:48
 msgid "Configure"
-msgstr ""
+msgstr "Configura"
 
 #: src/components/ModalConfirm.js:59
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmeu-ho"
 
 #: src/app.jsx:58
 msgid "DNS"
-msgstr ""
+msgstr "DNS"
 
 #: src/components/DnsSettingsForm.js:114
 msgid "DNS Settings"
-msgstr ""
+msgstr "Paràmetres de DNS"
 
 #: src/components/IPSettingsForm.js:209 src/components/DnsSettingsForm.js:103
 msgid "Data is not valid, please check it"
-msgstr ""
+msgstr "Les dades no són vàlides, comproveu-ho."
 
 #: src/components/RouteForm.js:159
 msgid "Default route"
-msgstr ""
+msgstr "Ruta per defecte"
 
 #: src/components/DnsSettingsForm.js:123
 msgid "Defines the DNS merge policy as documented in netconfig(8) manual page."
 msgstr ""
+"Defineix la política de combinació de DNS tal com es documenta a la pàgina "
+"del manual de netconfig (8)."
 
 #: src/components/DeleteConnection.js:39 src/components/RoutesList.js:65
 msgid "Delete"
-msgstr ""
+msgstr "Suprimeix"
 
 #: src/components/DeleteConnection.js:46
 msgid "Delete '$0' configuration"
-msgstr ""
+msgstr "Suprimeix la configuració $0"
 
 #: src/components/RouteForm.js:133 src/components/RouteForm.js:135
 #: src/components/RoutesList.js:31
 msgid "Destination"
-msgstr ""
+msgstr "Destinació"
 
 #: src/components/RouteForm.js:61
 msgid "Destination is not valid."
-msgstr ""
+msgstr "La destinació no és vàlida."
 
 #: src/components/RouteForm.js:185 src/components/RoutesList.js:33
 msgid "Device"
-msgstr ""
+msgstr "Dispositiu"
 
 #: src/components/DnsSettings.js:34
 msgid "Disabled"
-msgstr ""
+msgstr "Inhabilitat"
 
 #: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:81

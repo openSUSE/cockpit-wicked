@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-01 10:10+0000\n"
-"PO-Revision-Date: 2020-12-18 22:26+0000\n"
+"PO-Revision-Date: 2020-12-19 14:26+0000\n"
 "Last-Translator: Marina Latini <marina.latini@suse.com>\n"
 "Language-Team: Italian <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/it/>\n"
@@ -60,6 +60,8 @@ msgid ""
 "At least one address must be provided when using the \"$bootProto\" boot "
 "protocol"
 msgstr ""
+"È necessario fornire almeno un indirizzo quando si utilizza il protocollo di "
+"avvio \"$bootProto\""
 
 #: src/components/WirelessForm.js:110
 msgid "Auth Mode"
@@ -76,17 +78,17 @@ msgstr ""
 #: src/components/ModalConfirm.js:61 src/components/WirelessForm.js:85
 #: src/components/ModalForm.js:63
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: src/components/BridgeForm.js:80 src/components/WirelessForm.js:82
 #: src/components/BondForm.js:99 src/components/RouteForm.js:153
 #: src/components/VlanForm.js:89
 msgid "Change"
-msgstr ""
+msgstr "Modifica"
 
 #: src/app.jsx:82
 msgid "Checking if service is active..."
-msgstr ""
+msgstr "Controllo se il servizio è attivo..."
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
@@ -95,19 +97,19 @@ msgstr ""
 #: src/components/BondDetails.js:33 src/components/VlanDetails.js:50
 #: src/components/WirelessDetails.js:48 src/components/BridgeDetails.js:48
 msgid "Configure"
-msgstr ""
+msgstr "Configura"
 
 #: src/components/ModalConfirm.js:59
 msgid "Confirm"
-msgstr ""
+msgstr "Conferma"
 
 #: src/app.jsx:58
 msgid "DNS"
-msgstr ""
+msgstr "DNS"
 
 #: src/components/DnsSettingsForm.js:114
 msgid "DNS Settings"
-msgstr ""
+msgstr "Impostazioni DNS"
 
 #: src/components/IPSettingsForm.js:209 src/components/DnsSettingsForm.js:103
 msgid "Data is not valid, please check it"
@@ -115,7 +117,7 @@ msgstr ""
 
 #: src/components/RouteForm.js:159
 msgid "Default route"
-msgstr ""
+msgstr "Rotta predefinita"
 
 #: src/components/DnsSettingsForm.js:123
 msgid "Defines the DNS merge policy as documented in netconfig(8) manual page."
@@ -123,7 +125,7 @@ msgstr ""
 
 #: src/components/DeleteConnection.js:39 src/components/RoutesList.js:65
 msgid "Delete"
-msgstr ""
+msgstr "Cancella"
 
 #: src/components/DeleteConnection.js:46
 msgid "Delete '$0' configuration"

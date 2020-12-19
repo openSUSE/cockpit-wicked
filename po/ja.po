@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-01 10:10+0000\n"
-"PO-Revision-Date: 2020-12-18 22:26+0000\n"
+"PO-Revision-Date: 2020-12-19 08:26+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
 "Language-Team: Japanese <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/ja/>\n"
@@ -228,188 +228,190 @@ msgstr "モード"
 #: src/components/InterfacesList.js:50 src/components/BondForm.js:102
 #: src/components/VlanForm.js:121
 msgid "Name"
-msgstr ""
+msgstr "名前"
 
 #: src/components/DnsSettingsForm.js:161 src/components/DnsSettingsForm.js:170
 msgid "Name Server IP"
-msgstr ""
+msgstr "ネームサーバ IP"
 
 #: src/components/DnsSettingsForm.js:147
 msgid "Name Server IP address used for host-name lookup."
-msgstr ""
+msgstr "ネームサーバ IP は、ホスト名の参照に使用します。"
 
 #: src/components/DnsSettings.js:55
 msgid "Name servers"
-msgstr ""
+msgstr "ネームサーバ"
 
 #: src/components/DnsSettingsForm.js:152
 msgid "Nameserver IP"
-msgstr ""
+msgstr "ネームサーバ IP"
 
 #: src/manifest.json
 msgid "Networking"
-msgstr ""
+msgstr "ネットワーキング"
 
 #: src/components/WirelessEssidSelect.js:78
 msgid "No networks found"
-msgstr ""
+msgstr "ネットワークが見つかりません"
 
 #: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
 msgid "Not configured"
-msgstr ""
+msgstr "未設定"
 
 #: src/components/BondForm.js:143 src/components/RouteForm.js:196
 #: src/components/RoutesList.js:34
 msgid "Options"
-msgstr ""
+msgstr "オプション"
 
 #: src/components/VlanForm.js:93
 msgid "Parent"
-msgstr ""
+msgstr "親"
 
 #: src/components/VlanDetails.js:37
 msgid "Parent:"
-msgstr ""
+msgstr "親:"
 
 #: src/components/WirelessForm.js:122
 msgid "Password"
-msgstr ""
+msgstr "パスワード"
 
 #: src/components/DeleteConnection.js:51
 msgid ""
 "Please, confirm that you really want to the delete the interface "
 "configuration."
-msgstr ""
+msgstr "インターフェイスの設定を削除して問題ないかどうか、ご確認ください。"
 
 #: src/components/VlanForm.js:109
 msgid "Please, provide the VLAN ID (e.g., 10)"
-msgstr ""
+msgstr "VLAN ID (例: 10) を指定してください"
 
 #: src/components/BondForm.js:105
 msgid "Please, provide the interface name (e.g., bond0)"
-msgstr ""
+msgstr "インターフェイス名 (例: bond0) を指定してください"
 
 #: src/components/BridgeForm.js:87
 msgid "Please, provide the interface name (e.g., br0)"
-msgstr ""
+msgstr "インターフェイス名 (例: br0) を指定してください"
 
 #: src/components/VlanForm.js:124
 msgid "Please, provide the interface name (e.g., vlan10)"
-msgstr ""
+msgstr "インターフェイス名 (例: vlan10) を指定してください"
 
 #: src/components/DnsSettings.js:33 src/components/DnsSettingsForm.js:121
 msgid "Policy"
-msgstr ""
+msgstr "ポリシー"
 
 #: src/components/BridgeForm.js:99
 msgid "Ports"
-msgstr ""
+msgstr "ポート"
 
 #: src/components/BridgeDetails.js:37
 msgid "Ports:"
-msgstr ""
+msgstr "ポート:"
 
 #: src/components/DeleteConnection.js:39
 msgid "Reset"
-msgstr ""
+msgstr "リセット"
 
 #: src/components/RouteForm.js:117
 msgid "Route is not valid, please check it."
-msgstr ""
+msgstr "ルートが正しくありません。ご確認ください。"
 
 #: src/app.jsx:55
 msgid "Routing"
-msgstr ""
+msgstr "ルーティング"
 
 #: src/components/WirelessEssidSelect.js:70
 msgid "Scanning..."
-msgstr ""
+msgstr "検出しています..."
 
 #: src/components/DnsSettingsForm.js:133
 msgid "Search List"
-msgstr ""
+msgstr "検索リスト"
 
 #: src/components/DnsSettings.js:44
 msgid "Search list"
-msgstr ""
+msgstr "検索リスト"
 
 #: src/components/InactiveServicePage.js:69
 msgid ""
 "Seems that wicked service is not active. It could be either, the service is\n"
 "                    not running or wicked is not installed."
 msgstr ""
+"wicked サービスが有効化されていないものと思われます。サービスが動作していないか、\n"
+"                    そもそもインストールされていないことが考えられます。"
 
 #: src/components/DnsSettingsForm.js:136
 msgid "Space separated list of DNS domain names used for host-name lookup"
-msgstr ""
+msgstr "ホスト名の参照時に使用する、 DNS ドメイン名の一覧 (スペース区切り)"
 
 #: src/components/InterfaceDetails.js:39
 msgid "Start"
-msgstr ""
+msgstr "起動"
 
 #: src/components/StartMode.js:66
 msgid "Start Mode"
-msgstr ""
+msgstr "起動モード"
 
 #: src/components/DnsSettingsForm.js:146
 msgid "Static Name Servers"
-msgstr ""
+msgstr "固定のネームサーバ"
 
 #: src/components/UnmanagedInterfacesList.js:43
 #: src/components/InterfacesList.js:52
 msgid "Status"
-msgstr ""
+msgstr "状態"
 
 #: src/components/IPSettingsForm.js:145
 msgid "There are invalid IPs"
-msgstr ""
+msgstr "正しくない IP があります"
 
 #: src/components/DnsSettingsForm.js:56
 msgid "There are invalid domains in the search list."
-msgstr ""
+msgstr "検索リスト内に正しくないドメインがあります。"
 
 #: src/components/DnsSettingsForm.js:65
 msgid "There are invalid name servers."
-msgstr ""
+msgstr "正しくないネームサーバがあります。"
 
 #: src/components/IPSettingsForm.js:153
 msgid "There are repeated labels"
-msgstr ""
+msgstr "ラベルが重複しています"
 
 #: src/components/UnmanagedInterfacesList.js:42
 #: src/components/InterfacesList.js:51
 msgid "Type"
-msgstr ""
+msgstr "種類"
 
 #: src/components/InterfacesTab.js:56
 msgid "Unmanaged Interfaces"
-msgstr ""
+msgstr "管理対象外のインターフェイス"
 
 #: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:81
 msgid "Up"
-msgstr ""
+msgstr "上へ"
 
 #: src/components/BondForm.js:145
 msgid "Use this field to provide more options using the key=value format"
-msgstr ""
+msgstr "この項目では、キー=値の形式で追加のオプションを設定することができます"
 
 #: src/components/InterfaceDetails.js:75 src/components/AddConnectionMenu.js:59
 msgid "VLAN"
-msgstr ""
+msgstr "VLAN"
 
 #: src/components/VlanForm.js:106
 msgid "VLAN ID"
-msgstr ""
+msgstr "VLAN ID"
 
 #: src/components/InterfaceDetails.js:84
 msgid "WiFi"
-msgstr ""
+msgstr "WiFi"
 
 #: src/components/InactiveServicePage.js:65
 msgid "Wicked service is not active"
-msgstr ""
+msgstr "wicked サービスが有効化されていません"
 
 #: src/components/DnsSettingsForm.js:140
 msgid "example.com another.com"
-msgstr ""
+msgstr "example.com another.com"

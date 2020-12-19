@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-01 10:10+0000\n"
-"PO-Revision-Date: 2020-12-18 22:26+0000\n"
-"Last-Translator: Victor hck <correohck@gmail.com>\n"
+"PO-Revision-Date: 2020-12-20 02:26+0000\n"
+"Last-Translator: Javier Llorente <javier@opensuse.org>\n"
 "Language-Team: Spanish <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/es/>\n"
 "Language: es\n"
@@ -92,7 +92,7 @@ msgstr "Comprobando si el servicio está activo..."
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
-msgstr ""
+msgstr "Cockpit Wicked"
 
 #: src/components/BondDetails.js:33 src/components/VlanDetails.js:50
 #: src/components/WirelessDetails.js:48 src/components/BridgeDetails.js:48
@@ -238,19 +238,19 @@ msgstr "Nombre"
 
 #: src/components/DnsSettingsForm.js:161 src/components/DnsSettingsForm.js:170
 msgid "Name Server IP"
-msgstr ""
+msgstr "IP del servidor de DNS"
 
 #: src/components/DnsSettingsForm.js:147
 msgid "Name Server IP address used for host-name lookup."
-msgstr ""
+msgstr "Dirección IP del servidor de DNS para resolución de dominios."
 
 #: src/components/DnsSettings.js:55
 msgid "Name servers"
-msgstr ""
+msgstr "Servidores de DNS"
 
 #: src/components/DnsSettingsForm.js:152
 msgid "Nameserver IP"
-msgstr ""
+msgstr "IP del servidor de DNS"
 
 #: src/manifest.json
 msgid "Networking"
@@ -271,11 +271,11 @@ msgstr "Opciones"
 
 #: src/components/VlanForm.js:93
 msgid "Parent"
-msgstr ""
+msgstr "Padre"
 
 #: src/components/VlanDetails.js:37
 msgid "Parent:"
-msgstr ""
+msgstr "Padre:"
 
 #: src/components/WirelessForm.js:122
 msgid "Password"

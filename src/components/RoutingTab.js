@@ -51,7 +51,7 @@ const RoutingTab = () => {
             <Title headingLevel="h4" size="lg">
                 {_('No routes found.')}
             </Title>
-            <AddRoute variant="primary" />
+            <AddRoute />
         </EmptyState>
     );
 

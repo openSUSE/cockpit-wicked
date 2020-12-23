@@ -26,7 +26,7 @@ import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
 
-const AddRoute = ({ variant = 'control' }) => {
+const AddRoute = ({ variant = 'primary' }) => {
     const [isFormOpen, setFormOpen] = useState(false);
 
     return (

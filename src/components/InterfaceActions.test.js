@@ -34,7 +34,7 @@ const connection = createConnection({ id: 1, name: 'eth0' });
 jest.mock('../lib/NetworkClient');
 
 describe('InterfaceActions', () => {
-    describe('when interface is enable', () => {
+    describe('when interface is enabled', () => {
         const iface = createInterface(
             {
                 name: 'eth0',
@@ -66,7 +66,7 @@ describe('InterfaceActions', () => {
         });
     });
 
-    describe('when interface is disable', () => {
+    describe('when interface is disabled', () => {
         const iface = createInterface(
             {
                 name: 'eth0',

@@ -33,9 +33,9 @@ import {
 import { Spinner } from '@patternfly/react-core';
 import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import InterfaceDetails from "./InterfaceDetails";
+import InterfaceActions from "./InterfaceActions";
 import interfaceType from '../lib/model/interfaceType';
 import interfaceStatus from '../lib/model/interfaceStatus';
-import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import { createConnection } from '../lib/model/connections';
 
 const _ = cockpit.gettext;
@@ -43,23 +43,15 @@ const _ = cockpit.gettext;
 const InterfacesList = ({ interfaces = [], connections = [] }) => {
     const [rows, setRows] = useState([]);
     const [openRows, setOpenRows] = useState([]);
-    const dispatch = useNetworkDispatch();
 
     const columns = [
         { title: "", props: { className: "status-column" } },
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
         { title: _("Status"), transforms: [cellWidth(10)], cellTransforms: [truncate] },
-        { title: _("Addresses") }
+        { title: _("Addresses") },
+        { title: "", props: { className: "actions-column" } }
     ];
-
-    const onDeleteConnection = useCallback((connection) => {
-        deleteConnection(dispatch, connection);
-    }, [dispatch]);
-
-    const changeState = useCallback((connection, state) => {
-        changeConnectionState(dispatch, connection, state);
-    }, [dispatch]);
 
     const interfaceAddresses = (iface) => {
         if (iface.addresses.length === 0) return;
@@ -119,7 +111,8 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                         i.name,
                         interfaceType.label(i.type),
                         renderStatusText(i),
-                        interfaceAddresses(i)
+                        interfaceAddresses(i),
+                        <><InterfaceActions iface={i} connection={conn} /></>
                     ]
                 }
             );
@@ -129,8 +122,8 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                     cells: [
                         "",
                         {
-                            title: <InterfaceDetails iface={i} connection={conn} deleteConnection={onDeleteConnection} changeConnectionState={changeState} />,
-                            props: { colSpan: 4 }
+                            title: <InterfaceDetails iface={i} connection={conn} />,
+                            props: { colSpan: 5 }
                         }
                     ]
                 }
@@ -140,7 +133,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
 
             return list;
         }, []);
-    }, [interfaces, openRows, onDeleteConnection, changeState, findOrCreateConnection]);
+    }, [interfaces, openRows, findOrCreateConnection]);
 
     /**
      * Keeps the openRows internal state up to date using the information provided by the

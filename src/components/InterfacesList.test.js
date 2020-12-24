@@ -53,6 +53,21 @@ describe('InterfacesList', () => {
         expect(screen.getByText('192.168.8.100/24')).toBeInTheDocument();
     });
 
+    test('display actions', () => {
+        customRender(
+            <InterfacesList interfaces={interfaces} connections={connections} />
+        );
+
+        expect(screen.queryByText('Disable')).not.toBeInTheDocument();
+        expect(screen.queryByText('Reset')).not.toBeInTheDocument();
+
+        const actionsButton = screen.getByLabelText('Actions');
+        userEvent.click(actionsButton);
+
+        expect(screen.getByText('Disable')).toBeVisible();
+        expect(screen.getByText('Reset')).toBeVisible();
+    });
+
     test('display details', () => {
         customRender(
             <InterfacesList interfaces={interfaces} connections={connections} />

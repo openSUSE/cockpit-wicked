@@ -27,9 +27,8 @@ import BondDetails from './BondDetails';
 import VlanDetails from './VlanDetails';
 import WirelessDetails from './WirelessDetails';
 import IPSettingsLink from './IPSettingsLink';
-import DeleteConnection from './DeleteConnection';
 import interfaceTypeEnum from '../lib/model/interfaceType';
-import { Alert, Split, SplitItem, Switch, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Alert } from '@patternfly/react-core';
 
 const _ = cockpit.gettext;
 
@@ -111,7 +110,7 @@ const renderError = (error) => {
     return <Alert variant="warning" isInline title={error} />;
 };
 
-const InterfaceDetails = ({ iface, connection, changeConnectionState, deleteConnection }) => {
+const InterfaceDetails = ({ iface, connection }) => {
     const renderFullDetails = () => {
         if (connection.exists) {
             return (
@@ -127,43 +126,15 @@ const InterfaceDetails = ({ iface, connection, changeConnectionState, deleteConn
         }
     };
 
-    const renderActions = () => {
-        return (
-            <Toolbar>
-                <ToolbarContent>
-                    { connection.exists &&
-                        <ToolbarItem>
-                            <DeleteConnection connection={connection} deleteConnection={deleteConnection} />
-                        </ToolbarItem>}
-
-                    <ToolbarItem>
-                        <Switch
-                          id={`status_${iface.name}}`}
-                          isChecked={iface.link}
-                          onChange={() => changeConnectionState(connection, !iface.link)}
-                        />
-                    </ToolbarItem>
-                </ToolbarContent>
-            </Toolbar>
-        );
-    };
-
     return (
         <>
             {renderError(iface.error)}
 
-            <Split hasGutter>
-                <SplitItem isFilled>
-                    <dl className="details-list">
-                        { iface.mac && macAddress(iface) }
-                        {startMode(connection)}
-                        {renderFullDetails()}
-                    </dl>
-                </SplitItem>
-                <SplitItem>
-                    { renderActions() }
-                </SplitItem>
-            </Split>
+            <dl className="details-list">
+                { iface.mac && macAddress(iface) }
+                {startMode(connection)}
+                {renderFullDetails()}
+            </dl>
         </>
     );
 };

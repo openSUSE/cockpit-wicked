@@ -61,8 +61,7 @@ const UnmanagedInterfacesList = ({ interfaces = [] }) => {
     };
 
     /**
-     * Builds the needed structure for rendering the interfaces and their details in an expandable
-     * Patternfly/Table
+     * Builds the needed structure for rendering unmanaged interfaces
      */
     const buildRows = useCallback(() => {
         return interfaces.reduce((list, i) => {

@@ -105,7 +105,7 @@ describe('InterfaceActions', () => {
 
             expect(screen.getByRole('dialog')).toBeInTheDocument();
             // Strings are being neither, formatted nor translated during tests. See __mocks__/cockpit.js
-            expect(screen.getByText(/Delete .* configuration/, { selector:  'h1' })).toBeInTheDocument();
+            expect(screen.getByText(/\$action .* configuration/, { selector:  'h1' })).toBeInTheDocument();
             expect(screen.getByText('Confirm', { selector: 'button' })).toBeInTheDocument();
         });
     });

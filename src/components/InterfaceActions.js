@@ -50,17 +50,27 @@ const InterfaceActions = ({ iface, connection }) => {
         deleteConnection(dispatch, connection);
         closeDeleteConfirmation();
     };
+
     const renderDeleteConfirmation = () => {
         if (!showDeleteConfirmation) return null;
 
+        const confirmationTitle = cockpit.format(
+            _("$action '$iface' configuration"),
+            { action: deleteTooltip, iface: connection?.name }
+        );
+        const confirmationMessage = cockpit.format(
+            _("Please, confirm that you really want to $action the interface configuration."),
+            { action:  deleteTooltip.toLowerCase() }
+        );
+
         return (
             <ModalConfirm
-                title={cockpit.format(_("Delete '$0' configuration"), connection?.name)}
+                title={confirmationTitle}
                 isOpen={showDeleteConfirmation}
                 onCancel={closeDeleteConfirmation}
                 onConfirm={onDeleteConfirmation}
             >
-                {_("Please, confirm that you really want to the delete the interface configuration.")}
+                {confirmationMessage}
             </ModalConfirm>
         );
     };

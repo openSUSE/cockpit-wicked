@@ -28,7 +28,8 @@ import VlanDetails from './VlanDetails';
 import WirelessDetails from './WirelessDetails';
 import IPSettingsLink from './IPSettingsLink';
 import interfaceTypeEnum from '../lib/model/interfaceType';
-import { Alert } from '@patternfly/react-core';
+import { Alert, Split, SplitItem } from '@patternfly/react-core';
+import InterfaceActions from "./InterfaceActions";
 
 const _ = cockpit.gettext;
 
@@ -130,11 +131,18 @@ const InterfaceDetails = ({ iface, connection }) => {
         <>
             {renderError(iface.error)}
 
-            <dl className="details-list">
-                { iface.mac && macAddress(iface) }
-                {startMode(connection)}
-                {renderFullDetails()}
-            </dl>
+            <Split hasGutter>
+                <SplitItem isFilled>
+                    <dl className="details-list">
+                        { iface.mac && macAddress(iface) }
+                        {startMode(connection)}
+                        {renderFullDetails()}
+                    </dl>
+                </SplitItem>
+                <SplitItem>
+                    <InterfaceActions iface={iface} connection={connection} />
+                </SplitItem>
+            </Split>
         </>
     );
 };

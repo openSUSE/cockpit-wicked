@@ -53,21 +53,6 @@ describe('InterfacesList', () => {
         expect(screen.getByText('192.168.8.100/24')).toBeInTheDocument();
     });
 
-    test('display actions', () => {
-        customRender(
-            <InterfacesList interfaces={interfaces} connections={connections} />
-        );
-
-        expect(screen.queryByText('Disable')).not.toBeInTheDocument();
-        expect(screen.queryByText('Reset')).not.toBeInTheDocument();
-
-        const actionsButton = screen.getByLabelText('Actions');
-        userEvent.click(actionsButton);
-
-        expect(screen.getByText('Disable')).toBeVisible();
-        expect(screen.getByText('Reset')).toBeVisible();
-    });
-
     test('display details', () => {
         customRender(
             <InterfacesList interfaces={interfaces} connections={connections} />
@@ -80,6 +65,21 @@ describe('InterfacesList', () => {
         userEvent.click(expandButton);
         expect(screen.getByText('00:d8:23:93:14:cc')).toBeVisible();
         expect(screen.getByText('On Boot')).toBeVisible();
+    });
+
+    test('include actions into details', () => {
+        customRender(
+            <InterfacesList interfaces={interfaces} connections={connections} />
+        );
+
+        expect(screen.getByLabelText('Disable eth0')).not.toBeVisible();
+        expect(screen.getByLabelText('Reset eth0')).not.toBeVisible();
+
+        const expandButton = screen.getByRole('button', { name: 'Details' });
+        userEvent.click(expandButton);
+
+        expect(screen.getByLabelText('Disable eth0')).toBeVisible();
+        expect(screen.getByLabelText('Reset eth0')).toBeVisible();
     });
 
     test('when the connection is not configured', () => {

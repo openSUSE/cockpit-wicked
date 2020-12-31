@@ -33,7 +33,6 @@ import {
 import { Spinner } from '@patternfly/react-core';
 import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import InterfaceDetails from "./InterfaceDetails";
-import InterfaceActions from "./InterfaceActions";
 import interfaceType from '../lib/model/interfaceType';
 import interfaceStatus from '../lib/model/interfaceStatus';
 import { createConnection } from '../lib/model/connections';
@@ -49,8 +48,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
         { title: _("Name"), cellFormatters: [expandable] },
         { title: _("Type") },
         { title: _("Status"), transforms: [cellWidth(10)], cellTransforms: [truncate] },
-        { title: _("Addresses") },
-        { title: "", props: { className: "actions-column" } }
+        { title: _("Addresses") }
     ];
 
     const interfaceAddresses = (iface) => {
@@ -111,8 +109,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                         i.name,
                         interfaceType.label(i.type),
                         renderStatusText(i),
-                        interfaceAddresses(i),
-                        <><InterfaceActions iface={i} connection={conn} /></>
+                        interfaceAddresses(i)
                     ]
                 }
             );
@@ -123,7 +120,7 @@ const InterfacesList = ({ interfaces = [], connections = [] }) => {
                         "",
                         {
                             title: <InterfaceDetails iface={i} connection={conn} />,
-                            props: { colSpan: 5 }
+                            props: { colSpan: 4 }
                         }
                     ]
                 }

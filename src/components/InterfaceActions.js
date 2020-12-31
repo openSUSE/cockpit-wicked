@@ -34,12 +34,8 @@ import ResetIcon from '@patternfly/react-icons/dist/js/icons/undo-icon';
 const _ = cockpit.gettext;
 
 const InterfaceActions = ({ iface, connection }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const dispatch = useNetworkDispatch();
-
-    const onToggle = isOpen => setIsOpen(isOpen);
-    const onSelect = (event) => onToggle(!isOpen);
 
     const DeleteIcon = connection.virtual ? TrashIcon : ResetIcon;
     const deleteTooltip = connection.virtual ? _("Delete") : _("Reset");

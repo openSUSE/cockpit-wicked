@@ -147,6 +147,10 @@ p {
 .pf-c-switch.interface-status-switcher {
    --pf-c-switch--FontSize: var(--pf-global--FontSize--sm);
    vertical-align: text-bottom;
+
+   .pf-c-switch__label {
+     padding-left: calc(var(--pf-global--FontSize--sm) / 2);
+   }
 }
 
 .pf-c-button.pf-m-link.delete-action {

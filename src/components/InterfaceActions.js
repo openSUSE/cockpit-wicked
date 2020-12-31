@@ -39,7 +39,13 @@ const InterfaceActions = ({ iface, connection }) => {
 
     const DeleteIcon = connection.virtual ? TrashIcon : ResetIcon;
     const deleteTooltip = connection.virtual ? _("Delete") : _("Reset");
-    const changeStatusTooltip = iface.link ? _("Disable") : _("Enable");
+    const changeStatusLabel = _("Enable");
+    const changeStatusLabelOff = _("Disable");
+    const changeStatusAction = iface.link ? changeStatusLabelOff : changeStatusLabel;
+    const changeStatusTooltip = cockpit.format(
+        _("Click to $action it"),
+        { action: changeStatusAction.toLowerCase() }
+    );
     const openDeleteConfirmation = () => setShowDeleteConfirmation(true);
     const closeDeleteConfirmation = () => setShowDeleteConfirmation(false);
     const onDeleteConfirmation = () => {
@@ -96,7 +102,9 @@ const InterfaceActions = ({ iface, connection }) => {
             <Tooltip content={changeStatusTooltip}>
                 <Switch
                     id={`${iface.name}-status-switcher}`}
-                    aria-label={`${changeStatusTooltip} ${iface.name}`}
+                    aria-label={`${changeStatusAction} ${iface.name}`}
+                    label={changeStatusLabel}
+                    labelOff={changeStatusLabelOff}
                     className="interface-status-switcher"
                     isChecked={iface.link}
                     onChange={() => changeConnectionState(dispatch, connection, !iface.link)}

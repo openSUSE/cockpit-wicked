@@ -23,13 +23,13 @@ import cockpit from "cockpit";
 import React, { useState } from 'react';
 import {
     Button,
-    Dropdown,
-    DropdownItem,
-    DropdownPosition,
-    KebabToggle
+    Switch,
+    Tooltip
 } from '@patternfly/react-core';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import ModalConfirm from './ModalConfirm';
+import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
+import ResetIcon from '@patternfly/react-icons/dist/js/icons/undo-icon';
 
 const _ = cockpit.gettext;
 
@@ -41,7 +41,9 @@ const InterfaceActions = ({ iface, connection }) => {
     const onToggle = isOpen => setIsOpen(isOpen);
     const onSelect = (event) => onToggle(!isOpen);
 
-    const deleteActionLabel = connection.virtual ? _("Delete") : _("Reset");
+    const DeleteIcon = connection.virtual ? TrashIcon : ResetIcon;
+    const deleteTooltip = connection.virtual ? _("Delete") : _("Reset");
+    const changeStatusTooltip = iface.link ? _("Disable") : _("Enable");
     const openDeleteConfirmation = () => setShowDeleteConfirmation(true);
     const closeDeleteConfirmation = () => setShowDeleteConfirmation(false);
     const onDeleteConfirmation = () => {
@@ -63,32 +65,27 @@ const InterfaceActions = ({ iface, connection }) => {
         );
     };
 
-    const actions = [
-        <DropdownItem key={`${iface.name}-change-state`}>
-            <Button
-                variant="link"
-                onClick={() => changeConnectionState(dispatch, connection, !iface.link)}
-            >
-                {iface.link ? _("Disable") : _("Enable")}
-            </Button>
-        </DropdownItem>,
-        <DropdownItem key={`${iface.name}-reset-connection`} className="dangerous-action">
-            <Button variant="link" onClick={openDeleteConfirmation}>
-                {deleteActionLabel}
-            </Button>
-        </DropdownItem>
-    ];
-
     return (
         <>
-            <Dropdown
-                isPlain
-                position={DropdownPosition.right}
-                isOpen={isOpen}
-                onSelect={onSelect}
-                dropdownItems={actions}
-                toggle={<KebabToggle id={`connection-${connection.id}-actions`} onToggle={onToggle} />}
-            />
+            <Tooltip content={changeStatusTooltip}>
+                <Switch
+                    id={`${iface.name}-status-switcher}`}
+                    aria-label={`${changeStatusTooltip} ${iface.name}`}
+                    className="interface-status-switcher"
+                    isChecked={iface.link}
+                    onChange={() => changeConnectionState(dispatch, connection, !iface.link)}
+                />
+            </Tooltip>
+            <Tooltip content={deleteTooltip}>
+                <Button
+                    variant="link"
+                    aria-label={`${deleteTooltip} ${iface.name}`}
+                    className="delete-action"
+                    onClick={openDeleteConfirmation}
+                >
+                    <DeleteIcon />
+                </Button>
+            </Tooltip>
             { renderDeleteConfirmation() }
         </>
     );

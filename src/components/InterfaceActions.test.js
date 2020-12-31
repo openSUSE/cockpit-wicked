@@ -48,10 +48,7 @@ describe('InterfaceActions', () => {
                 <InterfaceActions iface={iface} connection={connection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Disable')).toBeInTheDocument();
+            expect(screen.getByLabelText('Disable eth0')).toBeInTheDocument();
         });
 
         test('includes an action to reset it', () => {
@@ -59,10 +56,7 @@ describe('InterfaceActions', () => {
                 <InterfaceActions iface={iface} connection={connection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Reset')).toBeInTheDocument();
+            expect(screen.getByLabelText('Reset eth0')).toBeInTheDocument();
         });
     });
 
@@ -80,10 +74,7 @@ describe('InterfaceActions', () => {
                 <InterfaceActions iface={iface} connection={connection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Enable')).toBeInTheDocument();
+            expect(screen.getByLabelText('Enable eth0')).toBeInTheDocument();
         });
 
         test('includes an action to reset it', () => {
@@ -91,39 +82,11 @@ describe('InterfaceActions', () => {
                 <InterfaceActions iface={iface} connection={connection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Reset')).toBeInTheDocument();
+            expect(screen.getByLabelText('Reset eth0')).toBeInTheDocument();
         });
     });
 
-    describe('when triggering an action', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                addresses: [createAddressConfig({ local: '192.168.8.100/24' })]
-            }
-        );
-
-        test('hides actions menu', () => {
-            customRender(
-                <InterfaceActions iface={iface} connection={connection} />
-            );
-
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            const availableActions = screen.getByRole('menu');
-            expect(availableActions).toBeVisible();
-
-            userEvent.click(screen.getByText('Reset'));
-            expect(availableActions).not.toBeInTheDocument();
-        });
-    });
-
-    describe('when Reset action is triggered', () => {
+    describe('when delete/reset action is triggered', () => {
         const iface = createInterface(
             {
                 name: 'eth0',
@@ -137,13 +100,11 @@ describe('InterfaceActions', () => {
                 <InterfaceActions iface={iface} connection={connection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            const resetAction = screen.getByText('Reset');
-            userEvent.click(resetAction);
+            const deleteAction = screen.getByLabelText('Reset eth0');
+            userEvent.click(deleteAction);
 
             expect(screen.getByRole('dialog')).toBeInTheDocument();
+            // Strings are being neither, formatted nor translated during tests. See __mocks__/cockpit.js
             expect(screen.getByText(/Delete .* configuration/, { selector:  'h1' })).toBeInTheDocument();
             expect(screen.getByText('Confirm', { selector: 'button' })).toBeInTheDocument();
         });

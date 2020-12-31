@@ -29,75 +29,61 @@ import { createConnection } from '../lib/model/connections';
 import { createAddressConfig } from '../lib/model/address';
 import InterfaceActions from "./InterfaceActions";
 
-const connection = createConnection({ id: 1, name: 'eth0' });
+const ifaceAttrs = { name: 'eth0', mac: '00:d8:23:93:14:cc' };
+const ifaceAddr = createAddressConfig({ local: '192.168.8.100/24' });
+const enableIface = createInterface({ ...ifaceAttrs, addresses: [ifaceAddr] });
+const disableIface = createInterface({ ...ifaceAttrs, link: false });
+const connAttrs = { id: 1, name: 'eth0' };
+const systemConnection = createConnection({ ...connAttrs });
+const factoryConnection = createConnection({ ...connAttrs, exists: false });
 
 jest.mock('../lib/NetworkClient');
 
 describe('InterfaceActions', () => {
     describe('when interface is enabled', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                addresses: [createAddressConfig({ local: '192.168.8.100/24' })]
-            }
-        );
-
         test('includes an action to disable it', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={enableIface} connection={systemConnection} />
             );
 
             expect(screen.getByLabelText('Disable eth0')).toBeInTheDocument();
         });
-
-        test('includes an action to reset it', () => {
-            customRender(
-                <InterfaceActions iface={iface} connection={connection} />
-            );
-
-            expect(screen.getByLabelText('Reset eth0')).toBeInTheDocument();
-        });
     });
 
     describe('when interface is disabled', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                link: false
-            }
-        );
-
         test('includes an action to enable it', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={disableIface} connection={systemConnection} />
             );
 
             expect(screen.getByLabelText('Enable eth0')).toBeInTheDocument();
         });
+    });
 
-        test('includes an action to reset it', () => {
+    describe('when the connection was loaded from the system', () => {
+        test('includes an action to delete/reset it', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={enableIface} connection={systemConnection} />
             );
 
             expect(screen.getByLabelText('Reset eth0')).toBeInTheDocument();
         });
     });
 
-    describe('when delete/reset action is triggered', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                addresses: [createAddressConfig({ local: '192.168.8.100/24' })]
-            }
-        );
+    describe('when the connection was not loaded from the system', () => {
+        test('does not include an action to delete/reset it', () => {
+            customRender(
+                <InterfaceActions iface={enableIface} connection={factoryConnection} />
+            );
 
+            expect(screen.queryByLabelText('Reset eth0')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('when delete/reset action is triggered', () => {
         test('shows a confirmation dialog', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={enableIface} connection={systemConnection} />
             );
 
             const deleteAction = screen.getByLabelText('Reset eth0');

@@ -75,6 +75,26 @@ const InterfaceActions = ({ iface, connection }) => {
         );
     };
 
+    const renderDeleteAction = () => {
+        if (!connection.exists) return null;
+
+        return (
+            <>
+                <Tooltip content={deleteTooltip}>
+                    <Button
+                        variant="link"
+                        aria-label={`${deleteTooltip} ${iface.name}`}
+                        className="delete-action"
+                        onClick={openDeleteConfirmation}
+                    >
+                        <DeleteIcon />
+                    </Button>
+                </Tooltip>
+                { renderDeleteConfirmation() }
+            </>
+        );
+    };
+
     return (
         <>
             <Tooltip content={changeStatusTooltip}>
@@ -86,17 +106,7 @@ const InterfaceActions = ({ iface, connection }) => {
                     onChange={() => changeConnectionState(dispatch, connection, !iface.link)}
                 />
             </Tooltip>
-            <Tooltip content={deleteTooltip}>
-                <Button
-                    variant="link"
-                    aria-label={`${deleteTooltip} ${iface.name}`}
-                    className="delete-action"
-                    onClick={openDeleteConfirmation}
-                >
-                    <DeleteIcon />
-                </Button>
-            </Tooltip>
-            { renderDeleteConfirmation() }
+            { renderDeleteAction() }
         </>
     );
 };

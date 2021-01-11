@@ -39,9 +39,9 @@ const InterfaceActions = ({ iface, connection }) => {
 
     const DeleteIcon = connection.virtual ? TrashIcon : ResetIcon;
     const deleteTooltip = connection.virtual ? _("Delete") : _("Reset");
-    const changeStatusLabel = _("Enable");
-    const changeStatusLabelOff = _("Disable");
-    const changeStatusAction = iface.link ? changeStatusLabelOff : changeStatusLabel;
+    const changeStatusLabel = _("Enabled");
+    const changeStatusLabelOff = _("Disabled");
+    const changeStatusAction = iface.link ? _("Disable") : _("Enable");
     const changeStatusTooltip = cockpit.format(
         _("Click to $action it"),
         { action: changeStatusAction.toLowerCase() }

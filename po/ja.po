@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-11 14:37+0000\n"
-"PO-Revision-Date: 2020-12-19 08:26+0000\n"
+"PO-Revision-Date: 2021-01-12 00:37+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
 "Language-Team: Japanese <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/ja/>\n"
@@ -21,10 +21,8 @@ msgstr ""
 "X-Generator: Weblate 3.6.1\n"
 
 #: src/components/InterfaceActions.js:60
-#, fuzzy
-#| msgid "Delete '$0' configuration"
 msgid "$action '$iface' configuration"
-msgstr "\"$0\" 設定の削除"
+msgstr "'$iface' 設定の $action"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/WirelessForm.js:82 src/components/BondForm.js:99
@@ -98,7 +96,7 @@ msgstr "サービスが動作しているかどうかを確認しています...
 
 #: src/components/InterfaceActions.js:46
 msgid "Click to $action it"
-msgstr ""
+msgstr "クリックすると $action"
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
@@ -153,10 +151,8 @@ msgid "Device"
 msgstr "デバイス"
 
 #: src/components/InterfaceActions.js:44
-#, fuzzy
-#| msgid "Disabled"
 msgid "Disable"
-msgstr "無効"
+msgstr "無効化"
 
 #: src/components/InterfaceActions.js:43 src/components/DnsSettings.js:34
 msgid "Disabled"
@@ -201,13 +197,11 @@ msgstr "何もありません"
 
 #: src/components/InterfaceActions.js:44
 msgid "Enable"
-msgstr ""
+msgstr "有効化"
 
 #: src/components/InterfaceActions.js:42
-#, fuzzy
-#| msgid "Disabled"
 msgid "Enabled"
-msgstr "無効"
+msgstr "有効化"
 
 #: src/components/InactiveServicePage.js:73
 msgid "For more help, please check the documentation linked below."
@@ -281,10 +275,8 @@ msgid "No networks found"
 msgstr "ネットワークが見つかりません"
 
 #: src/components/RoutingTab.js:52
-#, fuzzy
-#| msgid "No networks found"
 msgid "No routes found."
-msgstr "ネットワークが見つかりません"
+msgstr "ルートが見つかりません。"
 
 #: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
 msgid "Not configured"
@@ -308,13 +300,9 @@ msgid "Password"
 msgstr "パスワード"
 
 #: src/components/InterfaceActions.js:64
-#, fuzzy
-#| msgid ""
-#| "Please, confirm that you really want to the delete the interface "
-#| "configuration."
 msgid ""
 "Please, confirm that you really want to $action the interface configuration."
-msgstr "インターフェイスの設定を削除して問題ないかどうか、ご確認ください。"
+msgstr "インターフェイスの設定を $action して問題ないかどうか、ご確認ください。"
 
 #: src/components/VlanForm.js:109
 msgid "Please, provide the VLAN ID (e.g., 10)"

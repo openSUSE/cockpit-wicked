@@ -123,10 +123,6 @@ p {
             width: var(--pf-global--spacer--lg);
             text-align: center;
         }
-
-        .actions-column {
-            text-align: right;
-        }
     }
 
     tbody tr:hover {
@@ -144,15 +140,19 @@ p {
     }
 }
 
-.pf-c-dropdown__menu-item.dangerous-action {
-  button.pf-m-link {
-    color: var(--pf-global--danger-color--200);
-  }
+.pf-c-switch.interface-status-switcher {
+   --pf-c-switch--FontSize: var(--pf-global--FontSize--sm);
+   vertical-align: text-bottom;
+
+   .pf-c-switch__label {
+     padding-left: calc(var(--pf-global--FontSize--sm) / 2);
+   }
+}
+
+.pf-c-button.pf-m-link.delete-action {
+  color: var(--pf-global--Color--200);
 
   &:hover {
-    background-color: var(--pf-global--danger-color--200);
-    button.pf-m-link {
-      color: white;
-    }
+    color: var(--pf-global--danger-color--200);
   }
 }

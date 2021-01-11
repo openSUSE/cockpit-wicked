@@ -29,122 +29,69 @@ import { createConnection } from '../lib/model/connections';
 import { createAddressConfig } from '../lib/model/address';
 import InterfaceActions from "./InterfaceActions";
 
-const connection = createConnection({ id: 1, name: 'eth0' });
+const ifaceAttrs = { name: 'eth0', mac: '00:d8:23:93:14:cc' };
+const ifaceAddr = createAddressConfig({ local: '192.168.8.100/24' });
+const enableIface = createInterface({ ...ifaceAttrs, addresses: [ifaceAddr] });
+const disableIface = createInterface({ ...ifaceAttrs, link: false });
+const connAttrs = { id: 1, name: 'eth0' };
+const systemConnection = createConnection({ ...connAttrs });
+const factoryConnection = createConnection({ ...connAttrs, exists: false });
 
 jest.mock('../lib/NetworkClient');
 
 describe('InterfaceActions', () => {
     describe('when interface is enabled', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                addresses: [createAddressConfig({ local: '192.168.8.100/24' })]
-            }
-        );
-
         test('includes an action to disable it', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={enableIface} connection={systemConnection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Disable')).toBeInTheDocument();
-        });
-
-        test('includes an action to reset it', () => {
-            customRender(
-                <InterfaceActions iface={iface} connection={connection} />
-            );
-
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Reset')).toBeInTheDocument();
+            expect(screen.getByLabelText('Disable eth0')).toBeInTheDocument();
         });
     });
 
     describe('when interface is disabled', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                link: false
-            }
-        );
-
         test('includes an action to enable it', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={disableIface} connection={systemConnection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Enable')).toBeInTheDocument();
-        });
-
-        test('includes an action to reset it', () => {
-            customRender(
-                <InterfaceActions iface={iface} connection={connection} />
-            );
-
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            expect(screen.getByText('Reset')).toBeInTheDocument();
+            expect(screen.getByLabelText('Enable eth0')).toBeInTheDocument();
         });
     });
 
-    describe('when triggering an action', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                addresses: [createAddressConfig({ local: '192.168.8.100/24' })]
-            }
-        );
-
-        test('hides actions menu', () => {
+    describe('when the connection was loaded from the system', () => {
+        test('includes an action to delete/reset it', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={enableIface} connection={systemConnection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            const availableActions = screen.getByRole('menu');
-            expect(availableActions).toBeVisible();
-
-            userEvent.click(screen.getByText('Reset'));
-            expect(availableActions).not.toBeInTheDocument();
+            expect(screen.getByLabelText('Reset eth0')).toBeInTheDocument();
         });
     });
 
-    describe('when Reset action is triggered', () => {
-        const iface = createInterface(
-            {
-                name: 'eth0',
-                mac: '00:d8:23:93:14:cc',
-                addresses: [createAddressConfig({ local: '192.168.8.100/24' })]
-            }
-        );
+    describe('when the connection was not loaded from the system', () => {
+        test('does not include an action to delete/reset it', () => {
+            customRender(
+                <InterfaceActions iface={enableIface} connection={factoryConnection} />
+            );
 
+            expect(screen.queryByLabelText('Reset eth0')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('when delete/reset action is triggered', () => {
         test('shows a confirmation dialog', () => {
             customRender(
-                <InterfaceActions iface={iface} connection={connection} />
+                <InterfaceActions iface={enableIface} connection={systemConnection} />
             );
 
-            const actionsButton = screen.getByLabelText('Actions');
-            userEvent.click(actionsButton);
-
-            const resetAction = screen.getByText('Reset');
-            userEvent.click(resetAction);
+            const deleteAction = screen.getByLabelText('Reset eth0');
+            userEvent.click(deleteAction);
 
             expect(screen.getByRole('dialog')).toBeInTheDocument();
-            expect(screen.getByText(/Delete .* configuration/, { selector:  'h1' })).toBeInTheDocument();
+            // Strings are being neither, formatted nor translated during tests. See __mocks__/cockpit.js
+            expect(screen.getByText(/\$action .* configuration/, { selector:  'h1' })).toBeInTheDocument();
             expect(screen.getByText('Confirm', { selector: 'button' })).toBeInTheDocument();
         });
     });

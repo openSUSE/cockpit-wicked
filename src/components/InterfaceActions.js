@@ -23,73 +23,94 @@ import cockpit from "cockpit";
 import React, { useState } from 'react';
 import {
     Button,
-    Dropdown,
-    DropdownItem,
-    DropdownPosition,
-    KebabToggle
+    Switch,
+    Tooltip
 } from '@patternfly/react-core';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import ModalConfirm from './ModalConfirm';
+import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
+import ResetIcon from '@patternfly/react-icons/dist/js/icons/undo-icon';
 
 const _ = cockpit.gettext;
 
 const InterfaceActions = ({ iface, connection }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const dispatch = useNetworkDispatch();
 
-    const onToggle = isOpen => setIsOpen(isOpen);
-    const onSelect = (event) => onToggle(!isOpen);
-
-    const deleteActionLabel = connection.virtual ? _("Delete") : _("Reset");
+    const DeleteIcon = connection.virtual ? TrashIcon : ResetIcon;
+    const deleteTooltip = connection.virtual ? _("Delete") : _("Reset");
+    const changeStatusLabel = _("Enable");
+    const changeStatusLabelOff = _("Disable");
+    const changeStatusAction = iface.link ? changeStatusLabelOff : changeStatusLabel;
+    const changeStatusTooltip = cockpit.format(
+        _("Click to $action it"),
+        { action: changeStatusAction.toLowerCase() }
+    );
     const openDeleteConfirmation = () => setShowDeleteConfirmation(true);
     const closeDeleteConfirmation = () => setShowDeleteConfirmation(false);
     const onDeleteConfirmation = () => {
         deleteConnection(dispatch, connection);
         closeDeleteConfirmation();
     };
+
     const renderDeleteConfirmation = () => {
         if (!showDeleteConfirmation) return null;
 
+        const confirmationTitle = cockpit.format(
+            _("$action '$iface' configuration"),
+            { action: deleteTooltip, iface: connection?.name }
+        );
+        const confirmationMessage = cockpit.format(
+            _("Please, confirm that you really want to $action the interface configuration."),
+            { action:  deleteTooltip.toLowerCase() }
+        );
+
         return (
             <ModalConfirm
-                title={cockpit.format(_("Delete '$0' configuration"), connection?.name)}
+                title={confirmationTitle}
                 isOpen={showDeleteConfirmation}
                 onCancel={closeDeleteConfirmation}
                 onConfirm={onDeleteConfirmation}
             >
-                {_("Please, confirm that you really want to the delete the interface configuration.")}
+                {confirmationMessage}
             </ModalConfirm>
         );
     };
 
-    const actions = [
-        <DropdownItem key={`${iface.name}-change-state`}>
-            <Button
-                variant="link"
-                onClick={() => changeConnectionState(dispatch, connection, !iface.link)}
-            >
-                {iface.link ? _("Disable") : _("Enable")}
-            </Button>
-        </DropdownItem>,
-        <DropdownItem key={`${iface.name}-reset-connection`} className="dangerous-action">
-            <Button variant="link" onClick={openDeleteConfirmation}>
-                {deleteActionLabel}
-            </Button>
-        </DropdownItem>
-    ];
+    const renderDeleteAction = () => {
+        if (!connection.exists) return null;
+
+        return (
+            <>
+                <Tooltip content={deleteTooltip}>
+                    <Button
+                        variant="link"
+                        aria-label={`${deleteTooltip} ${iface.name}`}
+                        className="delete-action"
+                        onClick={openDeleteConfirmation}
+                    >
+                        <DeleteIcon />
+                    </Button>
+                </Tooltip>
+                { renderDeleteConfirmation() }
+            </>
+        );
+    };
 
     return (
         <>
-            <Dropdown
-                isPlain
-                position={DropdownPosition.right}
-                isOpen={isOpen}
-                onSelect={onSelect}
-                dropdownItems={actions}
-                toggle={<KebabToggle id={`connection-${connection.id}-actions`} onToggle={onToggle} />}
-            />
-            { renderDeleteConfirmation() }
+            <Tooltip content={changeStatusTooltip}>
+                <Switch
+                    id={`${iface.name}-status-switcher}`}
+                    aria-label={`${changeStatusAction} ${iface.name}`}
+                    label={changeStatusLabel}
+                    labelOff={changeStatusLabelOff}
+                    className="interface-status-switcher"
+                    isChecked={iface.link}
+                    onChange={() => changeConnectionState(dispatch, connection, !iface.link)}
+                />
+            </Tooltip>
+            { renderDeleteAction() }
         </>
     );
 };

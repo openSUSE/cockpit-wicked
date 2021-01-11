@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-01 10:10+0000\n"
+"POT-Creation-Date: 2021-01-11 14:37+0000\n"
 "PO-Revision-Date: 2020-12-19 11:26+0000\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
 "Language-Team: Catalan <https://l10n.opensuse.org/projects/cockpit-wicked/"
@@ -19,6 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.6.1\n"
+
+#: src/components/InterfaceActions.js:60
+#, fuzzy
+#| msgid "Delete '$0' configuration"
+msgid "$action '$iface' configuration"
+msgstr "Suprimeix la configuració $0"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/WirelessForm.js:82 src/components/BondForm.js:99
@@ -34,7 +40,7 @@ msgstr "Afegeix vincle"
 msgid "Add Bridge"
 msgstr "Afegeix pont"
 
-#: src/components/AddRoute.js:34 src/components/RouteForm.js:149
+#: src/components/AddRoute.js:35 src/components/RouteForm.js:149
 msgid "Add Route"
 msgstr "Afegeix ruta"
 
@@ -47,7 +53,7 @@ msgid "Add WiFi settings"
 msgstr "Afegeix paràmetres de WiFi"
 
 #: src/components/UnmanagedInterfacesList.js:44
-#: src/components/InterfacesList.js:53
+#: src/components/InterfacesList.js:51
 msgid "Addresses"
 msgstr "Adreces"
 
@@ -90,6 +96,10 @@ msgstr "Canvia"
 msgid "Checking if service is active..."
 msgstr "Comprovant si el servei està actiu..."
 
+#: src/components/InterfaceActions.js:46
+msgid "Click to $action it"
+msgstr ""
+
 #: src/index.html:20
 msgid "Cockpit Wicked"
 msgstr "Cabina wicked"
@@ -125,13 +135,9 @@ msgstr ""
 "Defineix la política de combinació de DNS tal com es documenta a la pàgina "
 "del manual de netconfig (8)."
 
-#: src/components/DeleteConnection.js:39 src/components/RoutesList.js:65
+#: src/components/InterfaceActions.js:41 src/components/RoutesList.js:65
 msgid "Delete"
 msgstr "Suprimeix"
-
-#: src/components/DeleteConnection.js:46
-msgid "Delete '$0' configuration"
-msgstr "Suprimeix la configuració $0"
 
 #: src/components/RouteForm.js:133 src/components/RouteForm.js:135
 #: src/components/RoutesList.js:31
@@ -146,12 +152,18 @@ msgstr "La destinació no és vàlida."
 msgid "Device"
 msgstr "Dispositiu"
 
-#: src/components/DnsSettings.js:34
+#: src/components/InterfaceActions.js:44
+#, fuzzy
+#| msgid "Disabled"
+msgid "Disable"
+msgstr "Inhabilitat"
+
+#: src/components/InterfaceActions.js:43 src/components/DnsSettings.js:34
 msgid "Disabled"
 msgstr "Inhabilitat"
 
 #: src/components/UnmanagedInterfacesList.js:54
-#: src/components/InterfacesList.js:81
+#: src/components/InterfacesList.js:71
 msgid "Down"
 msgstr "Inactiu"
 
@@ -186,6 +198,16 @@ msgstr "Edita els paràmetres de WiFi"
 #: src/components/DnsSettings.js:45 src/components/DnsSettings.js:56
 msgid "Empty"
 msgstr "Buit"
+
+#: src/components/InterfaceActions.js:44
+msgid "Enable"
+msgstr ""
+
+#: src/components/InterfaceActions.js:42
+#, fuzzy
+#| msgid "Disabled"
+msgid "Enabled"
+msgstr "Inhabilitat"
 
 #: src/components/InactiveServicePage.js:73
 msgid "For more help, please check the documentation linked below."
@@ -231,7 +253,7 @@ msgid "Mode"
 msgstr "Mode"
 
 #: src/components/BridgeForm.js:84 src/components/UnmanagedInterfacesList.js:41
-#: src/components/InterfacesList.js:50 src/components/BondForm.js:102
+#: src/components/InterfacesList.js:48 src/components/BondForm.js:102
 #: src/components/VlanForm.js:121
 msgid "Name"
 msgstr "Nom"
@@ -261,6 +283,12 @@ msgstr "Treball per xarxa"
 msgid "No networks found"
 msgstr "No s'ha trobat cap xarxa."
 
+#: src/components/RoutingTab.js:52
+#, fuzzy
+#| msgid "No networks found"
+msgid "No routes found."
+msgstr "No s'ha trobat cap xarxa."
+
 #: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
 msgid "Not configured"
 msgstr "Sense configurar"
@@ -282,10 +310,13 @@ msgstr "Pare:"
 msgid "Password"
 msgstr "Contrasenya"
 
-#: src/components/DeleteConnection.js:51
+#: src/components/InterfaceActions.js:64
+#, fuzzy
+#| msgid ""
+#| "Please, confirm that you really want to the delete the interface "
+#| "configuration."
 msgid ""
-"Please, confirm that you really want to the delete the interface "
-"configuration."
+"Please, confirm that you really want to $action the interface configuration."
 msgstr ""
 "Si us plau, confirmeu que realment voleu suprimir la configuració de la "
 "interfície."
@@ -318,7 +349,7 @@ msgstr "Ports"
 msgid "Ports:"
 msgstr "Ports:"
 
-#: src/components/DeleteConnection.js:39
+#: src/components/InterfaceActions.js:41
 msgid "Reset"
 msgstr "Restableix"
 
@@ -369,7 +400,7 @@ msgid "Static Name Servers"
 msgstr "Servidors de noms estàtics"
 
 #: src/components/UnmanagedInterfacesList.js:43
-#: src/components/InterfacesList.js:52
+#: src/components/InterfacesList.js:50
 msgid "Status"
 msgstr "Estat"
 
@@ -390,7 +421,7 @@ msgid "There are repeated labels"
 msgstr "Hi ha etiquetes repetides."
 
 #: src/components/UnmanagedInterfacesList.js:42
-#: src/components/InterfacesList.js:51
+#: src/components/InterfacesList.js:49
 msgid "Type"
 msgstr "Tipus"
 
@@ -399,7 +430,7 @@ msgid "Unmanaged Interfaces"
 msgstr "Interfícies no gestionades"
 
 #: src/components/UnmanagedInterfacesList.js:54
-#: src/components/InterfacesList.js:81
+#: src/components/InterfacesList.js:71
 msgid "Up"
 msgstr "Actiu"
 

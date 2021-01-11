@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-01 10:10+0000\n"
+"POT-Creation-Date: 2021-01-11 14:37+0000\n"
 "PO-Revision-Date: 2020-12-19 08:26+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
 "Language-Team: Japanese <https://l10n.opensuse.org/projects/cockpit-wicked/"
@@ -19,6 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 3.6.1\n"
+
+#: src/components/InterfaceActions.js:60
+#, fuzzy
+#| msgid "Delete '$0' configuration"
+msgid "$action '$iface' configuration"
+msgstr "\"$0\" 設定の削除"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/WirelessForm.js:82 src/components/BondForm.js:99
@@ -34,7 +40,7 @@ msgstr "ボンディングの追加"
 msgid "Add Bridge"
 msgstr "ブリッジの追加"
 
-#: src/components/AddRoute.js:34 src/components/RouteForm.js:149
+#: src/components/AddRoute.js:35 src/components/RouteForm.js:149
 msgid "Add Route"
 msgstr "ルートの追加"
 
@@ -47,7 +53,7 @@ msgid "Add WiFi settings"
 msgstr "WiFi 設定の追加"
 
 #: src/components/UnmanagedInterfacesList.js:44
-#: src/components/InterfacesList.js:53
+#: src/components/InterfacesList.js:51
 msgid "Addresses"
 msgstr "アドレス"
 
@@ -59,7 +65,9 @@ msgstr "適用"
 msgid ""
 "At least one address must be provided when using the \"$bootProto\" boot "
 "protocol"
-msgstr "\"$bootProto\" 起動プロトコルを使用する場合は、少なくとも 1 つ以上のアドレスを指定しなければなりません"
+msgstr ""
+"\"$bootProto\" 起動プロトコルを使用する場合は、少なくとも 1 つ以上のアドレス"
+"を指定しなければなりません"
 
 #: src/components/WirelessForm.js:110
 msgid "Auth Mode"
@@ -87,6 +95,10 @@ msgstr "変更"
 #: src/app.jsx:82
 msgid "Checking if service is active..."
 msgstr "サービスが動作しているかどうかを確認しています..."
+
+#: src/components/InterfaceActions.js:46
+msgid "Click to $action it"
+msgstr ""
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
@@ -119,15 +131,13 @@ msgstr "デフォルトルート"
 
 #: src/components/DnsSettingsForm.js:123
 msgid "Defines the DNS merge policy as documented in netconfig(8) manual page."
-msgstr "DNS 設定の合成ポリシーについて、詳しくは netconfig(8) マニュアルページをお読みください。"
+msgstr ""
+"DNS 設定の合成ポリシーについて、詳しくは netconfig(8) マニュアルページをお読"
+"みください。"
 
-#: src/components/DeleteConnection.js:39 src/components/RoutesList.js:65
+#: src/components/InterfaceActions.js:41 src/components/RoutesList.js:65
 msgid "Delete"
 msgstr "削除"
-
-#: src/components/DeleteConnection.js:46
-msgid "Delete '$0' configuration"
-msgstr "\"$0\" 設定の削除"
 
 #: src/components/RouteForm.js:133 src/components/RouteForm.js:135
 #: src/components/RoutesList.js:31
@@ -142,12 +152,18 @@ msgstr "宛先が正しくありません。"
 msgid "Device"
 msgstr "デバイス"
 
-#: src/components/DnsSettings.js:34
+#: src/components/InterfaceActions.js:44
+#, fuzzy
+#| msgid "Disabled"
+msgid "Disable"
+msgstr "無効"
+
+#: src/components/InterfaceActions.js:43 src/components/DnsSettings.js:34
 msgid "Disabled"
 msgstr "無効"
 
 #: src/components/UnmanagedInterfacesList.js:54
-#: src/components/InterfacesList.js:81
+#: src/components/InterfacesList.js:71
 msgid "Down"
 msgstr "下へ"
 
@@ -182,6 +198,16 @@ msgstr "WiFi 設定の編集"
 #: src/components/DnsSettings.js:45 src/components/DnsSettings.js:56
 msgid "Empty"
 msgstr "何もありません"
+
+#: src/components/InterfaceActions.js:44
+msgid "Enable"
+msgstr ""
+
+#: src/components/InterfaceActions.js:42
+#, fuzzy
+#| msgid "Disabled"
+msgid "Enabled"
+msgstr "無効"
 
 #: src/components/InactiveServicePage.js:73
 msgid "For more help, please check the documentation linked below."
@@ -225,7 +251,7 @@ msgid "Mode"
 msgstr "モード"
 
 #: src/components/BridgeForm.js:84 src/components/UnmanagedInterfacesList.js:41
-#: src/components/InterfacesList.js:50 src/components/BondForm.js:102
+#: src/components/InterfacesList.js:48 src/components/BondForm.js:102
 #: src/components/VlanForm.js:121
 msgid "Name"
 msgstr "名前"
@@ -254,6 +280,12 @@ msgstr "ネットワーキング"
 msgid "No networks found"
 msgstr "ネットワークが見つかりません"
 
+#: src/components/RoutingTab.js:52
+#, fuzzy
+#| msgid "No networks found"
+msgid "No routes found."
+msgstr "ネットワークが見つかりません"
+
 #: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
 msgid "Not configured"
 msgstr "未設定"
@@ -275,10 +307,13 @@ msgstr "親:"
 msgid "Password"
 msgstr "パスワード"
 
-#: src/components/DeleteConnection.js:51
+#: src/components/InterfaceActions.js:64
+#, fuzzy
+#| msgid ""
+#| "Please, confirm that you really want to the delete the interface "
+#| "configuration."
 msgid ""
-"Please, confirm that you really want to the delete the interface "
-"configuration."
+"Please, confirm that you really want to $action the interface configuration."
 msgstr "インターフェイスの設定を削除して問題ないかどうか、ご確認ください。"
 
 #: src/components/VlanForm.js:109
@@ -309,7 +344,7 @@ msgstr "ポート"
 msgid "Ports:"
 msgstr "ポート:"
 
-#: src/components/DeleteConnection.js:39
+#: src/components/InterfaceActions.js:41
 msgid "Reset"
 msgstr "リセット"
 
@@ -338,7 +373,8 @@ msgid ""
 "Seems that wicked service is not active. It could be either, the service is\n"
 "                    not running or wicked is not installed."
 msgstr ""
-"wicked サービスが有効化されていないものと思われます。サービスが動作していないか、\n"
+"wicked サービスが有効化されていないものと思われます。サービスが動作していない"
+"か、\n"
 "                    そもそもインストールされていないことが考えられます。"
 
 #: src/components/DnsSettingsForm.js:136
@@ -358,7 +394,7 @@ msgid "Static Name Servers"
 msgstr "固定のネームサーバ"
 
 #: src/components/UnmanagedInterfacesList.js:43
-#: src/components/InterfacesList.js:52
+#: src/components/InterfacesList.js:50
 msgid "Status"
 msgstr "状態"
 
@@ -379,7 +415,7 @@ msgid "There are repeated labels"
 msgstr "ラベルが重複しています"
 
 #: src/components/UnmanagedInterfacesList.js:42
-#: src/components/InterfacesList.js:51
+#: src/components/InterfacesList.js:49
 msgid "Type"
 msgstr "種類"
 
@@ -388,7 +424,7 @@ msgid "Unmanaged Interfaces"
 msgstr "管理対象外のインターフェイス"
 
 #: src/components/UnmanagedInterfacesList.js:54
-#: src/components/InterfacesList.js:81
+#: src/components/InterfacesList.js:71
 msgid "Up"
 msgstr "上へ"
 

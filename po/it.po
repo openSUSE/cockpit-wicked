@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-01 10:10+0000\n"
+"POT-Creation-Date: 2021-01-11 14:37+0000\n"
 "PO-Revision-Date: 2020-12-19 14:26+0000\n"
 "Last-Translator: Marina Latini <marina.latini@suse.com>\n"
 "Language-Team: Italian <https://l10n.opensuse.org/projects/cockpit-wicked/"
@@ -19,6 +19,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.6.1\n"
+
+#: src/components/InterfaceActions.js:60
+msgid "$action '$iface' configuration"
+msgstr ""
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/WirelessForm.js:82 src/components/BondForm.js:99
@@ -34,7 +38,7 @@ msgstr ""
 msgid "Add Bridge"
 msgstr ""
 
-#: src/components/AddRoute.js:34 src/components/RouteForm.js:149
+#: src/components/AddRoute.js:35 src/components/RouteForm.js:149
 msgid "Add Route"
 msgstr ""
 
@@ -47,7 +51,7 @@ msgid "Add WiFi settings"
 msgstr "Aggiungi configurazione WiFi"
 
 #: src/components/UnmanagedInterfacesList.js:44
-#: src/components/InterfacesList.js:53
+#: src/components/InterfacesList.js:51
 msgid "Addresses"
 msgstr "Indirizzi"
 
@@ -90,6 +94,10 @@ msgstr "Modifica"
 msgid "Checking if service is active..."
 msgstr "Controllo se il servizio è attivo..."
 
+#: src/components/InterfaceActions.js:46
+msgid "Click to $action it"
+msgstr ""
+
 #: src/index.html:20
 msgid "Cockpit Wicked"
 msgstr ""
@@ -123,13 +131,9 @@ msgstr "Rotta predefinita"
 msgid "Defines the DNS merge policy as documented in netconfig(8) manual page."
 msgstr ""
 
-#: src/components/DeleteConnection.js:39 src/components/RoutesList.js:65
+#: src/components/InterfaceActions.js:41 src/components/RoutesList.js:65
 msgid "Delete"
 msgstr "Cancella"
-
-#: src/components/DeleteConnection.js:46
-msgid "Delete '$0' configuration"
-msgstr ""
 
 #: src/components/RouteForm.js:133 src/components/RouteForm.js:135
 #: src/components/RoutesList.js:31
@@ -144,12 +148,16 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
-#: src/components/DnsSettings.js:34
+#: src/components/InterfaceActions.js:44
+msgid "Disable"
+msgstr ""
+
+#: src/components/InterfaceActions.js:43 src/components/DnsSettings.js:34
 msgid "Disabled"
 msgstr ""
 
 #: src/components/UnmanagedInterfacesList.js:54
-#: src/components/InterfacesList.js:81
+#: src/components/InterfacesList.js:71
 msgid "Down"
 msgstr ""
 
@@ -183,6 +191,14 @@ msgstr ""
 
 #: src/components/DnsSettings.js:45 src/components/DnsSettings.js:56
 msgid "Empty"
+msgstr ""
+
+#: src/components/InterfaceActions.js:44
+msgid "Enable"
+msgstr ""
+
+#: src/components/InterfaceActions.js:42
+msgid "Enabled"
 msgstr ""
 
 #: src/components/InactiveServicePage.js:73
@@ -227,7 +243,7 @@ msgid "Mode"
 msgstr ""
 
 #: src/components/BridgeForm.js:84 src/components/UnmanagedInterfacesList.js:41
-#: src/components/InterfacesList.js:50 src/components/BondForm.js:102
+#: src/components/InterfacesList.js:48 src/components/BondForm.js:102
 #: src/components/VlanForm.js:121
 msgid "Name"
 msgstr ""
@@ -256,6 +272,10 @@ msgstr ""
 msgid "No networks found"
 msgstr ""
 
+#: src/components/RoutingTab.js:52
+msgid "No routes found."
+msgstr ""
+
 #: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
 msgid "Not configured"
 msgstr ""
@@ -277,10 +297,9 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/components/DeleteConnection.js:51
+#: src/components/InterfaceActions.js:64
 msgid ""
-"Please, confirm that you really want to the delete the interface "
-"configuration."
+"Please, confirm that you really want to $action the interface configuration."
 msgstr ""
 
 #: src/components/VlanForm.js:109
@@ -311,7 +330,7 @@ msgstr ""
 msgid "Ports:"
 msgstr ""
 
-#: src/components/DeleteConnection.js:39
+#: src/components/InterfaceActions.js:41
 msgid "Reset"
 msgstr ""
 
@@ -358,7 +377,7 @@ msgid "Static Name Servers"
 msgstr ""
 
 #: src/components/UnmanagedInterfacesList.js:43
-#: src/components/InterfacesList.js:52
+#: src/components/InterfacesList.js:50
 msgid "Status"
 msgstr ""
 
@@ -379,7 +398,7 @@ msgid "There are repeated labels"
 msgstr ""
 
 #: src/components/UnmanagedInterfacesList.js:42
-#: src/components/InterfacesList.js:51
+#: src/components/InterfacesList.js:49
 msgid "Type"
 msgstr ""
 
@@ -388,7 +407,7 @@ msgid "Unmanaged Interfaces"
 msgstr ""
 
 #: src/components/UnmanagedInterfacesList.js:54
-#: src/components/InterfacesList.js:81
+#: src/components/InterfacesList.js:71
 msgid "Up"
 msgstr ""
 

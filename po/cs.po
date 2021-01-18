@@ -9,424 +9,434 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-11 14:37+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-01-22 18:23+0000\n"
+"Last-Translator: Aleš Kastner <alkas@volny.cz>\n"
+"Language-Team: Czech <https://l10n.opensuse.org/projects/cockpit-wicked/"
+"master/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Cockpit manifest2po\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 3.6.1\n"
 
 #: src/components/InterfaceActions.js:60
 msgid "$action '$iface' configuration"
-msgstr ""
+msgstr "Konfigurace $action '$iface'"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/WirelessForm.js:82 src/components/BondForm.js:99
 #: src/components/RouteForm.js:153 src/components/VlanForm.js:89
 msgid "Add"
-msgstr ""
+msgstr "Přidat"
 
 #: src/components/BondForm.js:94
 msgid "Add Bond"
-msgstr ""
+msgstr "Přidat spojení"
 
 #: src/components/BridgeForm.js:76
 msgid "Add Bridge"
-msgstr ""
+msgstr "Přidat most"
 
 #: src/components/AddRoute.js:35 src/components/RouteForm.js:149
 msgid "Add Route"
-msgstr ""
+msgstr "Přidat trasu"
 
 #: src/components/VlanForm.js:85
 msgid "Add VLAN"
-msgstr ""
+msgstr "Přidat virtuální LAN"
 
 #: src/components/WirelessForm.js:77
 msgid "Add WiFi settings"
-msgstr ""
+msgstr "Přidat nastavení WiFi"
 
 #: src/components/UnmanagedInterfacesList.js:44
 #: src/components/InterfacesList.js:51
 msgid "Addresses"
-msgstr ""
+msgstr "Adresy"
 
 #: src/components/ModalForm.js:61
 msgid "Apply"
-msgstr ""
+msgstr "Použít"
 
 #: src/components/IPSettingsForm.js:135
 msgid ""
 "At least one address must be provided when using the \"$bootProto\" boot "
 "protocol"
 msgstr ""
+"Používáte-li spouštěcí protokol „$bootProto“, musíte zadat alespoň jednu "
+"adresu"
 
 #: src/components/WirelessForm.js:110
 msgid "Auth Mode"
-msgstr ""
+msgstr "Režim Auth"
 
 #: src/components/InterfaceDetails.js:57 src/components/AddConnectionMenu.js:53
 msgid "Bond"
-msgstr ""
+msgstr "Spojení"
 
 #: src/components/InterfaceDetails.js:66 src/components/AddConnectionMenu.js:56
 msgid "Bridge"
-msgstr ""
+msgstr "Most"
 
 #: src/components/ModalConfirm.js:61 src/components/WirelessForm.js:85
 #: src/components/ModalForm.js:63
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #: src/components/BridgeForm.js:80 src/components/WirelessForm.js:82
 #: src/components/BondForm.js:99 src/components/RouteForm.js:153
 #: src/components/VlanForm.js:89
 msgid "Change"
-msgstr ""
+msgstr "Změna"
 
 #: src/app.jsx:82
 msgid "Checking if service is active..."
-msgstr ""
+msgstr "Kontrola, zda je služba aktivní ..."
 
 #: src/components/InterfaceActions.js:46
 msgid "Click to $action it"
-msgstr ""
+msgstr "Kliknuttím proveďte $action"
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
-msgstr ""
+msgstr "Cockpit Wicked"
 
 #: src/components/BondDetails.js:33 src/components/VlanDetails.js:50
 #: src/components/WirelessDetails.js:48 src/components/BridgeDetails.js:48
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurovat"
 
 #: src/components/ModalConfirm.js:59
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdit"
 
 #: src/app.jsx:58
 msgid "DNS"
-msgstr ""
+msgstr "DNS"
 
 #: src/components/DnsSettingsForm.js:114
 msgid "DNS Settings"
-msgstr ""
+msgstr "Nastavení DNS"
 
 #: src/components/IPSettingsForm.js:209 src/components/DnsSettingsForm.js:103
 msgid "Data is not valid, please check it"
-msgstr ""
+msgstr "Údaje nejsou platné, zkontrolujte je"
 
 #: src/components/RouteForm.js:159
 msgid "Default route"
-msgstr ""
+msgstr "Výchozí trasa"
 
 #: src/components/DnsSettingsForm.js:123
 msgid "Defines the DNS merge policy as documented in netconfig(8) manual page."
 msgstr ""
+"Definuje zásady slučování DNS, jak je popsáno na stránce příručky netconfig "
+"(8)."
 
 #: src/components/InterfaceActions.js:41 src/components/RoutesList.js:65
 msgid "Delete"
-msgstr ""
+msgstr "Smazat"
 
 #: src/components/RouteForm.js:133 src/components/RouteForm.js:135
 #: src/components/RoutesList.js:31
 msgid "Destination"
-msgstr ""
+msgstr "Místo určení (cíl)"
 
 #: src/components/RouteForm.js:61
 msgid "Destination is not valid."
-msgstr ""
+msgstr "Cíl není platný."
 
 #: src/components/RouteForm.js:185 src/components/RoutesList.js:33
 msgid "Device"
-msgstr ""
+msgstr "Zařízení"
 
 #: src/components/InterfaceActions.js:44
 msgid "Disable"
-msgstr ""
+msgstr "Zakázat"
 
 #: src/components/InterfaceActions.js:43 src/components/DnsSettings.js:34
 msgid "Disabled"
-msgstr ""
+msgstr "Zakázáno"
 
 #: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:71
 msgid "Down"
-msgstr ""
+msgstr "Dolů"
 
 #: src/components/WirelessForm.js:103
 msgid "ESSID"
-msgstr ""
+msgstr "ESSID"
 
 #: src/components/RoutesList.js:61
 msgid "Edit"
-msgstr ""
+msgstr "Upravit"
 
 #: src/components/BondForm.js:94
 msgid "Edit Bond"
-msgstr ""
+msgstr "Upravit spojení"
 
 #: src/components/BridgeForm.js:76
 msgid "Edit Bridge"
-msgstr ""
+msgstr "Upravit most"
 
 #: src/components/RouteForm.js:149
 msgid "Edit Route"
-msgstr ""
+msgstr "Upravit trasu"
 
 #: src/components/VlanForm.js:85
 msgid "Edit VLAN"
-msgstr ""
+msgstr "Upravit VLAN"
 
 #: src/components/WirelessForm.js:77
 msgid "Edit WiFi settings"
-msgstr ""
+msgstr "Upravit nastavení WiFi"
 
 #: src/components/DnsSettings.js:45 src/components/DnsSettings.js:56
 msgid "Empty"
-msgstr ""
+msgstr "Prázdný"
 
 #: src/components/InterfaceActions.js:44
 msgid "Enable"
-msgstr ""
+msgstr "Povolit"
 
 #: src/components/InterfaceActions.js:42
 msgid "Enabled"
-msgstr ""
+msgstr "Povoleno"
 
 #: src/components/InactiveServicePage.js:73
 msgid "For more help, please check the documentation linked below."
-msgstr ""
+msgstr "Další nápovědu najdete v dále uvedené dokumentaci."
 
 #: src/components/RouteForm.js:173 src/components/RoutesList.js:32
 msgid "Gateway"
-msgstr ""
+msgstr "Brána"
 
 #: src/components/RouteForm.js:68
 msgid "Gateway is not valid."
-msgstr ""
+msgstr "Brána je neplatná."
 
 #: src/components/IPInput.js:35
 msgid "IP Address"
-msgstr ""
+msgstr "IP adresa"
 
 #: src/components/InterfaceDetails.js:93
 msgid "IPv4"
-msgstr ""
+msgstr "IPv4"
 
 #: src/components/InterfaceDetails.js:102
 msgid "IPv6"
-msgstr ""
+msgstr "IPv6"
 
 #: src/components/VlanDetails.js:40
 msgid "Id:"
-msgstr ""
+msgstr "Id:"
 
 #: src/components/BondForm.js:117 src/components/InterfacesTab.js:74
 #: src/app.jsx:52
 msgid "Interfaces"
-msgstr ""
+msgstr "Rozhraní"
 
 #: src/components/InterfaceDetails.js:48
 msgid "MAC"
-msgstr ""
+msgstr "MAC"
 
 #: src/components/WirelessForm.js:91 src/components/BondForm.js:131
 msgid "Mode"
-msgstr ""
+msgstr "Režim"
 
 #: src/components/BridgeForm.js:84 src/components/UnmanagedInterfacesList.js:41
 #: src/components/InterfacesList.js:48 src/components/BondForm.js:102
 #: src/components/VlanForm.js:121
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #: src/components/DnsSettingsForm.js:161 src/components/DnsSettingsForm.js:170
 msgid "Name Server IP"
-msgstr ""
+msgstr "IP názvového serveru"
 
 #: src/components/DnsSettingsForm.js:147
 msgid "Name Server IP address used for host-name lookup."
-msgstr ""
+msgstr "Adresa IP názvového serveru použitého k vyhledání názvu hostitele."
 
 #: src/components/DnsSettings.js:55
 msgid "Name servers"
-msgstr ""
+msgstr "Názvové servery"
 
 #: src/components/DnsSettingsForm.js:152
 msgid "Nameserver IP"
-msgstr ""
+msgstr "IP názvového serveru"
 
 #: src/manifest.json
 msgid "Networking"
-msgstr ""
+msgstr "Práce v síti"
 
 #: src/components/WirelessEssidSelect.js:78
 msgid "No networks found"
-msgstr ""
+msgstr "Nenašla se žádná síť"
 
 #: src/components/RoutingTab.js:52
 msgid "No routes found."
-msgstr ""
+msgstr "Nenašly se žádné trasy."
 
 #: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
 msgid "Not configured"
-msgstr ""
+msgstr "Nekonfigurováno"
 
 #: src/components/BondForm.js:143 src/components/RouteForm.js:196
 #: src/components/RoutesList.js:34
 msgid "Options"
-msgstr ""
+msgstr "Volby"
 
 #: src/components/VlanForm.js:93
 msgid "Parent"
-msgstr ""
+msgstr "Rodič"
 
 #: src/components/VlanDetails.js:37
 msgid "Parent:"
-msgstr ""
+msgstr "Rodič:"
 
 #: src/components/WirelessForm.js:122
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 #: src/components/InterfaceActions.js:64
 msgid ""
 "Please, confirm that you really want to $action the interface configuration."
-msgstr ""
+msgstr "Potvrďte, že opravdu chcete $action konfiguraci rozhraní."
 
 #: src/components/VlanForm.js:109
 msgid "Please, provide the VLAN ID (e.g., 10)"
-msgstr ""
+msgstr "Zadejte prosím VLAN ID (například 10)"
 
 #: src/components/BondForm.js:105
 msgid "Please, provide the interface name (e.g., bond0)"
-msgstr ""
+msgstr "Zadejte prosím název rozhraní (např. bond0)"
 
 #: src/components/BridgeForm.js:87
 msgid "Please, provide the interface name (e.g., br0)"
-msgstr ""
+msgstr "Zadejte prosím název rozhraní (např. br0)"
 
 #: src/components/VlanForm.js:124
 msgid "Please, provide the interface name (e.g., vlan10)"
-msgstr ""
+msgstr "Zadejte prosím název rozhraní (např. vlan10)"
 
 #: src/components/DnsSettings.js:33 src/components/DnsSettingsForm.js:121
 msgid "Policy"
-msgstr ""
+msgstr "Zásady"
 
 #: src/components/BridgeForm.js:99
 msgid "Ports"
-msgstr ""
+msgstr "Porty"
 
 #: src/components/BridgeDetails.js:37
 msgid "Ports:"
-msgstr ""
+msgstr "Porty:"
 
 #: src/components/InterfaceActions.js:41
 msgid "Reset"
-msgstr ""
+msgstr "Reset"
 
 #: src/components/RouteForm.js:117
 msgid "Route is not valid, please check it."
-msgstr ""
+msgstr "Trasa není platná, zkontrolujte ji."
 
 #: src/app.jsx:55
 msgid "Routing"
-msgstr ""
+msgstr "Směrování"
 
 #: src/components/WirelessEssidSelect.js:70
 msgid "Scanning..."
-msgstr ""
+msgstr "Skenování..."
 
 #: src/components/DnsSettingsForm.js:133
 msgid "Search List"
-msgstr ""
+msgstr "Hledací seznam"
 
 #: src/components/DnsSettings.js:44
 msgid "Search list"
-msgstr ""
+msgstr "Hledací seznam"
 
 #: src/components/InactiveServicePage.js:69
 msgid ""
 "Seems that wicked service is not active. It could be either, the service is\n"
 "                    not running or wicked is not installed."
 msgstr ""
+"Zdá se, že služba \"wicked\" není aktivní. Služba buď\n"
+"                     není spuštěna nebo \"wicked\" není nainstalován."
 
 #: src/components/DnsSettingsForm.js:136
 msgid "Space separated list of DNS domain names used for host-name lookup"
 msgstr ""
+"Seznam mezerami oddělených doménových názvů DNS použitých pro vyhledávání "
+"hostitelských názvů"
 
 #: src/components/InterfaceDetails.js:39
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: src/components/StartMode.js:66
 msgid "Start Mode"
-msgstr ""
+msgstr "Režim startu"
 
 #: src/components/DnsSettingsForm.js:146
 msgid "Static Name Servers"
-msgstr ""
+msgstr "Statické názvové servery"
 
 #: src/components/UnmanagedInterfacesList.js:43
 #: src/components/InterfacesList.js:50
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #: src/components/IPSettingsForm.js:145
 msgid "There are invalid IPs"
-msgstr ""
+msgstr "Obsahuje neplatné adresy IP"
 
 #: src/components/DnsSettingsForm.js:56
 msgid "There are invalid domains in the search list."
-msgstr ""
+msgstr "V hledacím seznamu jsou neplatné domény."
 
 #: src/components/DnsSettingsForm.js:65
 msgid "There are invalid name servers."
-msgstr ""
+msgstr "Obsahuje neplatné názvové servery."
 
 #: src/components/IPSettingsForm.js:153
 msgid "There are repeated labels"
-msgstr ""
+msgstr "Existují opakující se štítky"
 
 #: src/components/UnmanagedInterfacesList.js:42
 #: src/components/InterfacesList.js:49
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: src/components/InterfacesTab.js:56
 msgid "Unmanaged Interfaces"
-msgstr ""
+msgstr "Nespravovaná rozhraní"
 
 #: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:71
 msgid "Up"
-msgstr ""
+msgstr "Nahoru"
 
 #: src/components/BondForm.js:145
 msgid "Use this field to provide more options using the key=value format"
-msgstr ""
+msgstr "Toto pole slouží k zadání více možností ve tvaru klíč=hodnota"
 
 #: src/components/InterfaceDetails.js:75 src/components/AddConnectionMenu.js:59
 msgid "VLAN"
-msgstr ""
+msgstr "VLAN"
 
 #: src/components/VlanForm.js:106
 msgid "VLAN ID"
-msgstr ""
+msgstr "VLAN ID"
 
 #: src/components/InterfaceDetails.js:84
 msgid "WiFi"
-msgstr ""
+msgstr "WiFi"
 
 #: src/components/InactiveServicePage.js:65
 msgid "Wicked service is not active"
-msgstr ""
+msgstr "Služba \"wicked\" není aktivní"
 
 #: src/components/DnsSettingsForm.js:140
 msgid "example.com another.com"
-msgstr ""
+msgstr "example.com another.com"

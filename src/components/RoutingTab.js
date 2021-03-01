@@ -26,9 +26,12 @@ import {
     Card,
     CardActions,
     CardBody,
+    CardTitle,
     CardHeader,
     EmptyState,
     EmptyStateIcon,
+    Text,
+    TextVariants,
     Title
 } from '@patternfly/react-core';
 import InfoCircleIcon from '@patternfly/react-icons/dist/js/icons/info-circle-icon';
@@ -49,7 +52,7 @@ const RoutingTab = () => {
         <EmptyState>
             <EmptyStateIcon icon={InfoCircleIcon} />
             <Title headingLevel="h4" size="lg">
-                {_('No routes found.')}
+                {_('No user-defined routes were found.')}
             </Title>
             <AddRoute />
         </EmptyState>
@@ -65,6 +68,9 @@ const RoutingTab = () => {
                 <CardActions>
                     <AddRoute />
                 </CardActions>
+                <CardTitle>
+                    <Text component={TextVariants.h2}>{_("User-defined Routes")}</Text>
+                </CardTitle>
             </CardHeader>
             <CardBody>
                 <RoutesList routes={routesList} />

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-11 14:37+0000\n"
+"POT-Creation-Date: 2021-03-01 16:26+0000\n"
 "PO-Revision-Date: 2020-12-20 02:26+0000\n"
 "Last-Translator: Javier Llorente <javier@opensuse.org>\n"
 "Language-Team: Spanish <https://l10n.opensuse.org/projects/cockpit-wicked/"
@@ -27,8 +27,8 @@ msgid "$action '$iface' configuration"
 msgstr "Borrar la configuración '$0'"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
-#: src/components/WirelessForm.js:82 src/components/BondForm.js:99
-#: src/components/RouteForm.js:153 src/components/VlanForm.js:89
+#: src/components/BondForm.js:99 src/components/VlanForm.js:89
+#: src/components/RouteForm.js:153 src/components/WirelessForm.js:82
 msgid "Add"
 msgstr "Añadir"
 
@@ -40,7 +40,7 @@ msgstr "Añadir vínculo"
 msgid "Add Bridge"
 msgstr "Añadir puente"
 
-#: src/components/AddRoute.js:35 src/components/RouteForm.js:149
+#: src/components/RouteForm.js:149 src/components/AddRoute.js:35
 msgid "Add Route"
 msgstr "Añadir ruta"
 
@@ -52,8 +52,8 @@ msgstr "Añadir VLAN"
 msgid "Add WiFi settings"
 msgstr "Añadir configuración inalámbrica"
 
-#: src/components/UnmanagedInterfacesList.js:44
 #: src/components/InterfacesList.js:51
+#: src/components/UnmanagedInterfacesList.js:44
 msgid "Addresses"
 msgstr "Direcciones"
 
@@ -73,22 +73,22 @@ msgstr ""
 msgid "Auth Mode"
 msgstr "Modo de autenticación"
 
-#: src/components/InterfaceDetails.js:57 src/components/AddConnectionMenu.js:53
+#: src/components/AddConnectionMenu.js:53 src/components/InterfaceDetails.js:57
 msgid "Bond"
 msgstr "Vínculo"
 
-#: src/components/InterfaceDetails.js:66 src/components/AddConnectionMenu.js:56
+#: src/components/AddConnectionMenu.js:56 src/components/InterfaceDetails.js:66
 msgid "Bridge"
 msgstr "Puente"
 
-#: src/components/ModalConfirm.js:61 src/components/WirelessForm.js:85
-#: src/components/ModalForm.js:63
+#: src/components/ModalForm.js:63 src/components/WirelessForm.js:85
+#: src/components/ModalConfirm.js:61
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/components/BridgeForm.js:80 src/components/WirelessForm.js:82
-#: src/components/BondForm.js:99 src/components/RouteForm.js:153
-#: src/components/VlanForm.js:89
+#: src/components/BridgeForm.js:80 src/components/BondForm.js:99
+#: src/components/VlanForm.js:89 src/components/RouteForm.js:153
+#: src/components/WirelessForm.js:82
 msgid "Change"
 msgstr "Cambiar"
 
@@ -104,8 +104,8 @@ msgstr ""
 msgid "Cockpit Wicked"
 msgstr "Cockpit Wicked"
 
-#: src/components/BondDetails.js:33 src/components/VlanDetails.js:50
-#: src/components/WirelessDetails.js:48 src/components/BridgeDetails.js:48
+#: src/components/BondDetails.js:33 src/components/WirelessDetails.js:48
+#: src/components/VlanDetails.js:50 src/components/BridgeDetails.js:48
 msgid "Configure"
 msgstr "Configurar"
 
@@ -121,7 +121,7 @@ msgstr "DNS"
 msgid "DNS Settings"
 msgstr "Configuración de DNS"
 
-#: src/components/IPSettingsForm.js:209 src/components/DnsSettingsForm.js:103
+#: src/components/DnsSettingsForm.js:103 src/components/IPSettingsForm.js:209
 msgid "Data is not valid, please check it"
 msgstr "Los datos no son válidos, por favor, compruébelos"
 
@@ -135,12 +135,12 @@ msgstr ""
 "Define la política de fusión de DNS como se documenta en la página de manual "
 "netconfig(8)."
 
-#: src/components/InterfaceActions.js:41 src/components/RoutesList.js:65
+#: src/components/RoutesList.js:65 src/components/InterfaceActions.js:41
 msgid "Delete"
 msgstr "Borrar"
 
-#: src/components/RouteForm.js:133 src/components/RouteForm.js:135
-#: src/components/RoutesList.js:31
+#: src/components/RoutesList.js:31 src/components/RouteForm.js:133
+#: src/components/RouteForm.js:135
 msgid "Destination"
 msgstr "Destino"
 
@@ -148,7 +148,7 @@ msgstr "Destino"
 msgid "Destination is not valid."
 msgstr "El destino no es válido."
 
-#: src/components/RouteForm.js:185 src/components/RoutesList.js:33
+#: src/components/RoutesList.js:33 src/components/RouteForm.js:185
 msgid "Device"
 msgstr "Dispositivo"
 
@@ -158,12 +158,12 @@ msgstr "Dispositivo"
 msgid "Disable"
 msgstr "Deshabilitado"
 
-#: src/components/InterfaceActions.js:43 src/components/DnsSettings.js:34
+#: src/components/DnsSettings.js:34 src/components/InterfaceActions.js:43
 msgid "Disabled"
 msgstr "Deshabilitado"
 
-#: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:71
+#: src/components/UnmanagedInterfacesList.js:54
 msgid "Down"
 msgstr "Bajada"
 
@@ -215,7 +215,7 @@ msgstr ""
 "Para obtener más ayuda, por favor, compruebe la documentación que se enlaza "
 "más abajo."
 
-#: src/components/RouteForm.js:173 src/components/RoutesList.js:32
+#: src/components/RoutesList.js:32 src/components/RouteForm.js:173
 msgid "Gateway"
 msgstr "Puerta de Enlace"
 
@@ -239,7 +239,7 @@ msgstr "IPv6"
 msgid "Id:"
 msgstr "Id:"
 
-#: src/components/BondForm.js:117 src/components/InterfacesTab.js:74
+#: src/components/InterfacesTab.js:74 src/components/BondForm.js:117
 #: src/app.jsx:52
 msgid "Interfaces"
 msgstr "Interfaces"
@@ -248,13 +248,13 @@ msgstr "Interfaces"
 msgid "MAC"
 msgstr "MAC"
 
-#: src/components/WirelessForm.js:91 src/components/BondForm.js:131
+#: src/components/BondForm.js:131 src/components/WirelessForm.js:91
 msgid "Mode"
 msgstr "Modo"
 
-#: src/components/BridgeForm.js:84 src/components/UnmanagedInterfacesList.js:41
-#: src/components/InterfacesList.js:48 src/components/BondForm.js:102
-#: src/components/VlanForm.js:121
+#: src/components/BridgeForm.js:84 src/components/InterfacesList.js:48
+#: src/components/BondForm.js:102 src/components/VlanForm.js:121
+#: src/components/UnmanagedInterfacesList.js:41
 msgid "Name"
 msgstr "Nombre"
 
@@ -282,18 +282,18 @@ msgstr "Redes"
 msgid "No networks found"
 msgstr "Ninguna red encontrada"
 
-#: src/components/RoutingTab.js:52
+#: src/components/RoutingTab.js:55
 #, fuzzy
 #| msgid "No networks found"
-msgid "No routes found."
+msgid "No user-defined routes were found."
 msgstr "Ninguna red encontrada"
 
-#: src/components/IPSettingsLink.js:35 src/components/StartMode.js:55
+#: src/components/StartMode.js:55 src/components/IPSettingsLink.js:35
 msgid "Not configured"
 msgstr "No configurada"
 
-#: src/components/BondForm.js:143 src/components/RouteForm.js:196
-#: src/components/RoutesList.js:34
+#: src/components/BondForm.js:143 src/components/RoutesList.js:34
+#: src/components/RouteForm.js:196
 msgid "Options"
 msgstr "Opciones"
 
@@ -336,7 +336,7 @@ msgstr "Por favor, proporcione el nombre de la interfaz (por ejemplo: br0)"
 msgid "Please, provide the interface name (e.g., vlan10)"
 msgstr "Por favor, proporcione el nombre de la interfaz (por ejemplo: vlan10)"
 
-#: src/components/DnsSettings.js:33 src/components/DnsSettingsForm.js:121
+#: src/components/DnsSettingsForm.js:121 src/components/DnsSettings.js:33
 msgid "Policy"
 msgstr "Política"
 
@@ -398,8 +398,8 @@ msgstr "Modo de inicio"
 msgid "Static Name Servers"
 msgstr "Servidores de nombres estáticos"
 
-#: src/components/UnmanagedInterfacesList.js:43
 #: src/components/InterfacesList.js:50
+#: src/components/UnmanagedInterfacesList.js:43
 msgid "Status"
 msgstr "Estado"
 
@@ -419,8 +419,8 @@ msgstr "Hay servidores de nombres no válidos."
 msgid "There are repeated labels"
 msgstr "Hay etiquetas repetidas"
 
-#: src/components/UnmanagedInterfacesList.js:42
 #: src/components/InterfacesList.js:49
+#: src/components/UnmanagedInterfacesList.js:42
 msgid "Type"
 msgstr "Tipo"
 
@@ -428,8 +428,8 @@ msgstr "Tipo"
 msgid "Unmanaged Interfaces"
 msgstr "Interfaces no gestionadas"
 
-#: src/components/UnmanagedInterfacesList.js:54
 #: src/components/InterfacesList.js:71
+#: src/components/UnmanagedInterfacesList.js:54
 msgid "Up"
 msgstr "Subida"
 
@@ -438,7 +438,11 @@ msgid "Use this field to provide more options using the key=value format"
 msgstr ""
 "Utilice este campo para proporcionar más opciones con el formato clave=valor"
 
-#: src/components/InterfaceDetails.js:75 src/components/AddConnectionMenu.js:59
+#: src/components/RoutingTab.js:72
+msgid "User-defined Routes"
+msgstr ""
+
+#: src/components/AddConnectionMenu.js:59 src/components/InterfaceDetails.js:75
 msgid "VLAN"
 msgstr "VLAN"
 

@@ -25,6 +25,7 @@ describe('#createInterface', () => {
     const wickedInterface = {
         interface: {
             name: 'eth0',
+            status: 'ready, device-up, arp, broadcast, multicast',
             addresses: [
                 { local: '192.168.1.101/24', broadcast: '192.168.1.155' },
                 { local: 'fe80::3091:4019:f740:9b97/64' }
@@ -35,7 +36,7 @@ describe('#createInterface', () => {
         },
         ethtool: {
             driver_info: { driver: 'virtio_net' },
-            link_detected: "false"
+            link_detected: "true"
         },
         ethernet: {
             address: '52:54:00:11:22:33'
@@ -51,7 +52,7 @@ describe('#createInterface', () => {
             description: '',
             type: 'eth',
             virtual: false,
-            link: false,
+            link: true,
             managed: true
         }));
     });

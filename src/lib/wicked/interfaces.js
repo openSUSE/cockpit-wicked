@@ -38,12 +38,14 @@ import { typeFromWicked } from './utils';
  * @return {Interface} Interface model object
  */
 const createInterface = (iface) => {
-    const { name, addresses: assignedAddresses, client_state } = iface.interface;
+    const {
+        name, addresses: assignedAddresses, client_state, status = ""
+    } = iface.interface;
     const description = "";
 
     const ethtool = iface.ethtool || {};
-    const { driver_info, link_detected } = ethtool;
-    const link = link_detected === "true";
+    const { driver_info } = ethtool;
+    const link = status.split(", ").includes("device-up");
     const driver = driver_info?.driver;
 
     const mac = iface?.ethernet?.address;

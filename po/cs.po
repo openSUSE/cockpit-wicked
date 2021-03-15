@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-01 16:26+0000\n"
-"PO-Revision-Date: 2021-01-22 18:23+0000\n"
+"PO-Revision-Date: 2021-03-15 15:11+0000\n"
 "Last-Translator: Aleš Kastner <alkas@volny.cz>\n"
 "Language-Team: Czech <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/cs/>\n"
@@ -275,10 +275,8 @@ msgid "No networks found"
 msgstr "Nenašla se žádná síť"
 
 #: src/components/RoutingTab.js:55
-#, fuzzy
-#| msgid "No routes found."
 msgid "No user-defined routes were found."
-msgstr "Nenašly se žádné trasy."
+msgstr "Nenašly se žádné uživatelem definované trasy."
 
 #: src/components/StartMode.js:55 src/components/IPSettingsLink.js:35
 msgid "Not configured"
@@ -425,7 +423,7 @@ msgstr "Toto pole slouží k zadání více možností ve tvaru klíč=hodnota"
 
 #: src/components/RoutingTab.js:72
 msgid "User-defined Routes"
-msgstr ""
+msgstr "Uživatelem definované trasy"
 
 #: src/components/AddConnectionMenu.js:59 src/components/InterfaceDetails.js:75
 msgid "VLAN"

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-01 16:26+0000\n"
-"PO-Revision-Date: 2021-01-11 19:37+0000\n"
+"PO-Revision-Date: 2021-03-15 20:56+0000\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
 "Language-Team: Catalan <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/ca/>\n"
@@ -278,10 +278,8 @@ msgid "No networks found"
 msgstr "No s'ha trobat cap xarxa."
 
 #: src/components/RoutingTab.js:55
-#, fuzzy
-#| msgid "No routes found."
 msgid "No user-defined routes were found."
-msgstr "No s'ha trobat cap ruta."
+msgstr "No s'ha trobat cap ruta definida per usuaris."
 
 #: src/components/StartMode.js:55 src/components/IPSettingsLink.js:35
 msgid "Not configured"
@@ -431,7 +429,7 @@ msgstr ""
 
 #: src/components/RoutingTab.js:72
 msgid "User-defined Routes"
-msgstr ""
+msgstr "Rutes definides per usuaris"
 
 #: src/components/AddConnectionMenu.js:59 src/components/InterfaceDetails.js:75
 msgid "VLAN"

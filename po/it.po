@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-01 16:26+0000\n"
-"PO-Revision-Date: 2020-12-19 14:26+0000\n"
+"PO-Revision-Date: 2021-03-22 14:56+0000\n"
 "Last-Translator: Marina Latini <marina.latini@suse.com>\n"
 "Language-Team: Italian <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/it/>\n"
@@ -32,15 +32,15 @@ msgstr "Aggiungi"
 
 #: src/components/BondForm.js:94
 msgid "Add Bond"
-msgstr ""
+msgstr "Aggiungi Bond"
 
 #: src/components/BridgeForm.js:76
 msgid "Add Bridge"
-msgstr ""
+msgstr "Aggiungi Bridge"
 
 #: src/components/RouteForm.js:149 src/components/AddRoute.js:35
 msgid "Add Route"
-msgstr ""
+msgstr "Aggiungi Rotta"
 
 #: src/components/VlanForm.js:85
 msgid "Add VLAN"

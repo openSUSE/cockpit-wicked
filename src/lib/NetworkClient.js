@@ -21,6 +21,7 @@
 
 import cockpit from 'cockpit';
 import WickedAdapter from './wicked/adapter';
+import init from 'y3network_wasm';
 
 /**
  * Class responsible for interacting with the network.

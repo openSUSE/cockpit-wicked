@@ -201,5 +201,8 @@ module.exports = {
             },
         ]
     },
-    plugins: plugins
-}
+    plugins: plugins,
+    experiments: {
+        asyncWebAssembly: true,
+    }
+};

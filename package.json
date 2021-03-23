@@ -55,7 +55,7 @@
     "sizzle": "^2.3.6",
     "stdio": "^2.1.0",
     "string-replace-loader": "^2.3.0",
-    "webpack": "^4.46.0",
+    "webpack": "^5.27.2",
     "webpack-cli": "^3.3.5"
   },
   "dependencies": {

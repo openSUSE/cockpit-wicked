@@ -1,6 +1,5 @@
 {
   "name": "wicked",
-  "version": "4.0.0",
   "description": "Cockpit user interface for wicked",
   "main": "index.js",
   "repository": "https://github.com/dgdavid/cockpit-wicked",

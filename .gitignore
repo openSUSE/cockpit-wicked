@@ -2,6 +2,7 @@
 *.retry
 *.tar.gz
 *.rpm
+.log/
 node_modules/
 dist/
 /*.spec

@@ -25,7 +25,7 @@ describe('#createInterface', () => {
     const wickedInterface = {
         interface: {
             name: 'eth0',
-            status: 'ready, device-up, arp, broadcast, multicast',
+            status: 'ready, device-up, link-up, arp, broadcast, multicast',
             addresses: [
                 { local: '192.168.1.101/24', broadcast: '192.168.1.155' },
                 { local: 'fe80::3091:4019:f740:9b97/64' }
@@ -57,6 +57,14 @@ describe('#createInterface', () => {
         }));
     });
 
+    it('includes the assigned addresses', () => {
+        const iface = createInterface(wickedInterface);
+        expect(iface.addresses).toEqual(expect.arrayContaining([
+            expect.objectContaining({ type: 'ipv4', local: '192.168.1.101/24' }),
+            expect.objectContaining({ type: "ipv6", local: 'fe80::3091:4019:f740:9b97/64' })
+        ]));
+    });
+
     describe('when no origin is reported', () => {
         const wickedInterface = {
             interface: {
@@ -86,11 +94,17 @@ describe('#createInterface', () => {
         });
     });
 
-    it('includes the assigned addresses', () => {
-        const iface = createInterface(wickedInterface);
-        expect(iface.addresses).toEqual(expect.arrayContaining([
-            expect.objectContaining({ type: 'ipv4', local: '192.168.1.101/24' }),
-            expect.objectContaining({ type: "ipv6", local: 'fe80::3091:4019:f740:9b97/64' })
-        ]));
+    describe('when link is down', () => {
+        const wickedInterface = {
+            interface: {
+                name: 'eth0',
+                status: 'ready, device-up, arp, broadcast, multicast'
+            }
+        };
+
+        it('sets "link" to false', () => {
+            const iface = createInterface(wickedInterface);
+            expect(iface.link).toEqual(false);
+        });
     });
 });

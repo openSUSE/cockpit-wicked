@@ -260,7 +260,8 @@ class WickedClient {
         });
 
         this._onSignal('deviceDelete', this._onDeviceDelete.bind(this));
-        this._onSignal(['deviceCreate', 'networkUp', 'linkUp', 'networkDown', 'linkDown', 'addressAcquired',
+        this._onSignal(['deviceCreate', 'networkUp', 'linkUp', 'networkDown',
+            'linkDown', 'deviceDown', 'addressAcquired', 'addressReleased',
             'deviceReady', 'deviceChange'], this._onDeviceEvent.bind(this));
 
         // TODO: de-bouncing.

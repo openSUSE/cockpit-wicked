@@ -45,7 +45,7 @@ const createInterface = (iface) => {
 
     const ethtool = iface.ethtool || {};
     const { driver_info } = ethtool;
-    const link = status.split(", ").includes("device-up");
+    const link = status.split(", ").includes("link-up");
     const driver = driver_info?.driver;
 
     const mac = iface?.ethernet?.address;

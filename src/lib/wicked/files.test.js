@@ -19,7 +19,7 @@
  * find current contact information at www.suse.com.
  */
 
-import { IfcfgFile, SysconfigParser, SysconfigFile } from './files';
+import { IfcfgFile, SysconfigParser, SysconfigFile, IfrouteParser, IfrouteFile } from './files';
 import model from '../model';
 import interfaceType from '../model/interfaceType';
 import bootProtocol from '../model/bootProtocol';
@@ -282,6 +282,119 @@ describe('SysconfigFile', () => {
                 { key: 'STARTMODE', value: 'ifplugd', added: true, commented: false, removed: false },
                 { key: 'IPADDR', value: '', added: true, commented: false, removed: false }
             ]);
+        });
+    });
+
+    describe('#remove', () => {
+        it('removes the file completely', async () => {
+            await file.read();
+            file.remove();
+            expect(replaceFn).toHaveBeenCalledWith(null);
+        });
+    });
+});
+
+describe('IfrouteParser', () => {
+    const parser = new IfrouteParser();
+    const lines = [
+        { destination: 'default', gateway: '192.168.1.1', netmask: '255.255.255.0' },
+        { destination: '10.0.0.8', gateway: '10.163.28.1', options: 'option1' }
+    ];
+
+    describe('#stringify', () => {
+        it('returns a string containing the routes in ifroute format', () => {
+            expect(parser.stringify(lines)).toEqual(
+                "default\t192.168.1.1\t255.255.255.0\t-\t-\n10.0.0.8\t10.163.28.1\t-\t-\toption1"
+            );
+        });
+    });
+
+    describe('#parse', () => {
+        const content = [
+            "# The default route",
+            "default\t192.168.1.1\t255.255.255.0\t-\t-",
+            "10.0.0.8\t10.163.28.1\t-\t-\toption1"
+        ].join('\n');
+
+        it('returns an array containing one object for each route', () => {
+            expect(parser.parse(content)).toEqual([
+                {
+                    destination: "default", device: undefined, gateway: "192.168.1.1",
+                    netmask: "255.255.255.0", options: ""
+                },
+                {
+                    destination: "10.0.0.8", device: undefined, gateway: "10.163.28.1",
+                    netmask: undefined, options: "option1"
+                }
+            ]);
+        });
+    });
+});
+
+describe('IfrouteFile', () => {
+    const fileContent = [
+        { destination: 'default', gateway: '192.168.1.1', netmask: '255.255.255.0' },
+    ];
+
+    const readFn = () => {
+        return new Promise((resolve, reject) => {
+            process.nextTick(() => {
+                resolve([...fileContent]);
+            });
+        });
+    };
+
+    const replaceFn = jest.fn();
+
+    beforeAll(() => {
+        cockpit.file = jest.fn(() => {
+            return { read: readFn, replace: replaceFn };
+        });
+    });
+
+    describe('constructor', () => {
+        describe('when an interface is given', () => {
+            it('sets the path to the specific routes file', () => {
+                const file = new IfrouteFile('eth0');
+                expect(file.path).toEqual('/etc/sysconfig/network/ifroute-eth0');
+                expect(cockpit.file).toHaveBeenCalledWith(
+                    "/etc/sysconfig/network/ifroute-eth0", expect.anything()
+                );
+            });
+        });
+
+        describe('when no interface is given', () => {
+            it('sets the path to the general routes file', () => {
+                const file = new IfrouteFile();
+                expect(file.path).toEqual('/etc/sysconfig/network/routes');
+                expect(cockpit.file).toHaveBeenCalledWith(
+                    "/etc/sysconfig/network/routes", expect.anything()
+                );
+            });
+        });
+    });
+
+    describe('#read', () => {
+        it('returns an array containing the routes and including the interface', async () => {
+            const file = new IfrouteFile('eth0');
+            const routes = await file.read();
+            expect(routes).toEqual([
+                {
+                    destination: 'default', gateway: '192.168.1.1', netmask: '255.255.255.0',
+                    device: 'eth0'
+                },
+            ]);
+        });
+    });
+
+    describe('#update', () => {
+        it('updates the file content with the given routes', async () => {
+            const file = new IfrouteFile('eth0');
+            const routes = [{ destination: 'default', gateway: '192.168.1.2' }];
+            await file.read();
+
+            file.update(routes);
+            expect(replaceFn).toHaveBeenCalledWith(routes);
         });
     });
 });

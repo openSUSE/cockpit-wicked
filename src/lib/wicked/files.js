@@ -411,6 +411,8 @@ class IfrouteFile {
         });
     }
 
+    // FIXME: to be consistent with SysconfigFile, it should not write the file, just update
+    // the contents.
     async update(routes) {
         return this.file.replace(routes);
     }
@@ -418,6 +420,7 @@ class IfrouteFile {
 
 export {
     IfcfgFile,
+    IfrouteParser,
     IfrouteFile,
     SysconfigParser,
     SysconfigFile

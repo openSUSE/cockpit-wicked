@@ -1,5 +1,8 @@
 # Cockpit Wicked
 
+[![tests](https://github.com/openSUSE/cockpit-wicked/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/openSUSE/cockpit-wicked/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/openSUSE/cockpit-wicked/branch/master/graph/badge.svg?token=5QLDEWWSDH)](https://codecov.io/gh/openSUSE/cockpit-wicked)
+
 [Cockpit](https://cockpit-project.org/) user interface for
 [wicked](https://github.com/openSUSE/wicked).
 

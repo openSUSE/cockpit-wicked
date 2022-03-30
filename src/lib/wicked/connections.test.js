@@ -104,4 +104,91 @@ describe('#createConnection', () => {
             });
         });
     });
+
+    describe('when it is a wireless device', () => {
+        describe('and no wireless network is defined', () => {
+            const wickedConfig = {
+                name: 'wlan0',
+                wireless: {
+                    ap_scan: '1',
+                }
+            };
+
+            it('returns only common wireless configuration', () => {
+                const conn = createConnection(wickedConfig);
+                expect(conn.wireless).toEqual({
+                    ap_scan: '1'
+                });
+            });
+        });
+
+        describe('and one wireless network is defined', () => {
+            const wickedConfig = {
+                name: 'wlan0',
+                wireless: {
+                    ap_scan: '1',
+                    network: {
+                        essid: 'YaST-AP_1',
+                        scan_ssid: true,
+                        mode: 'infrastructure',
+                        key_management: 'WPA-PSK',
+                        wpa_psk: {
+                            passphrase: 'yast.password.test'
+                        }
+                    }
+                }
+            };
+
+            it('sets the wireless network configuration', () => {
+                const conn = createConnection(wickedConfig);
+                expect(conn.wireless).toEqual({
+                    ap_scan: '1',
+                    authMode: 'psk',
+                    essid: 'YaST-AP_1',
+                    mode: 'managed',
+                    password: 'yast.password.test'
+                });
+            });
+        });
+
+        describe('and multiple wireless network are defined', () => {
+            const wickedConfig = {
+                name: 'wlan0',
+                wireless: {
+                    ap_scan: '1',
+                    networks: [
+                        {
+                            essid: 'YaST-AP_1',
+                            scan_ssid: true,
+                            mode: 'infrastructure',
+                            key_management: 'WPA-PSK',
+                            wpa_psk: {
+                                passphrase: 'yast.password.test'
+                            }
+                        },
+                        {
+                            essid: 'YaST-AP_2',
+                            scan_ssid: true,
+                            mode: 'infrastructure',
+                            key_management: 'WPA-PSK',
+                            wpa_psk: {
+                                passphrase: 'yast.password.test'
+                            }
+                        }
+                    ]
+                }
+            };
+
+            it('sets the wireless network configuration', () => {
+                const conn = createConnection(wickedConfig);
+                expect(conn.wireless).toEqual({
+                    ap_scan: '1',
+                    authMode: 'psk',
+                    essid: 'YaST-AP_1',
+                    mode: 'managed',
+                    password: 'yast.password.test'
+                });
+            });
+        });
+    });
 });

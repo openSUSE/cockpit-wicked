@@ -194,15 +194,19 @@ const propsByConnectionType = {
         return { vlan: { parentDevice: device, vlanId: tag } };
     },
     [interfaceType.WIRELESS]: ({ wireless }) => {
-        const { ap_scan, network } = wireless;
-        const { essid, mode } = network;
-        const authMode = wirelessAuthModeFor(network);
+        const { ap_scan, network, networks } = wireless;
+
+        if (!network && !networks) return { wireless: { ap_scan } };
+
+        const first_network = network || networks[0];
+        const { essid, mode } = first_network;
+        const authMode = wirelessAuthModeFor(first_network);
 
         return {
             wireless: {
                 ap_scan, essid, mode: wirelessModeFor(mode), authMode,
                 // FIXME: we should use and object instead of destructuring the props
-                ...propsByAuthMode(authMode, network)
+                ...propsByAuthMode(authMode, first_network)
             }
         };
     }

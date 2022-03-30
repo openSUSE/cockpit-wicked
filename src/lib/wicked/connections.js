@@ -178,6 +178,8 @@ const propsByWirelessAuthMode = {
     }
 };
 
+const networkFrom = (wireless) => wireless.networks ? wireless.networks[0] : wireless.network;
+
 const propsByConnectionType = {
     [interfaceType.BONDING]: ({ bond }) => {
         const { slaves = [], mode = bondingMode.ACTIVE_BACKUP, options = "", miimon = { frequency: "100" } } = bond;
@@ -194,17 +196,17 @@ const propsByConnectionType = {
         return { vlan: { parentDevice: device, vlanId: tag } };
     },
     [interfaceType.WIRELESS]: ({ wireless }) => {
-        const { ap_scan, network, networks } = wireless;
+        const { ap_scan } = wireless;
+        const first_network = networkFrom(wireless);
 
-        if (!network && !networks) return { wireless: { ap_scan } };
-
-        const first_network = network || networks[0];
-        const { essid, mode } = first_network;
+        if (!first_network) return { wireless: { ap_scan } };
         const authMode = wirelessAuthModeFor(first_network);
 
         return {
             wireless: {
-                ap_scan, essid, mode: wirelessModeFor(mode), authMode,
+                ap_scan, authMode,
+                essid: first_network.essid,
+                mode: wirelessModeFor(first_network.mode),
                 // FIXME: we should use and object instead of destructuring the props
                 ...propsByAuthMode(authMode, first_network)
             }

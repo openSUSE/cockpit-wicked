@@ -176,7 +176,7 @@ class WickedClient {
         if (this._connections && cache) return this._connections;
 
         const stdout = await cockpit.spawn(['/usr/sbin/wicked', 'show-config']);
-        this._connections = XmlToJson(stdout, ['body', 'slaves', 'ipv4:static', 'ipv6:static', 'ports']);
+        this._connections = XmlToJson(stdout, ['body', 'slaves', 'ipv4:static', 'ipv6:static', 'ports', 'networks']);
         return this._connections;
     }
 

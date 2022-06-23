@@ -32,6 +32,8 @@ Requires:       wicked
 BuildRequires:  nodejs-devel
 BuildRequires:  npm
 
+Conflicts:      cockpit-networkmanager
+
 %description
 Cockpit component for managing network configuration through Wicked
 

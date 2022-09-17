@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-01 16:26+0000\n"
-"PO-Revision-Date: 2022-01-04 01:11+0000\n"
-"Last-Translator: Javier Llorente <javier@opensuse.org>\n"
+"PO-Revision-Date: 2022-09-17 20:13+0000\n"
+"Last-Translator: Victor hck <correohck@gmail.com>\n"
 "Language-Team: Spanish <https://l10n.opensuse.org/projects/cockpit-wicked/"
 "master/es/>\n"
 "Language: es\n"
@@ -21,10 +21,8 @@ msgstr ""
 "X-Generator: Weblate 4.9.1\n"
 
 #: src/components/InterfaceActions.js:60
-#, fuzzy
-#| msgid "Delete '$0' configuration"
 msgid "$action '$iface' configuration"
-msgstr "Borrar la configuración '$0'"
+msgstr "$action la configuración '$iface'"
 
 #: src/components/BridgeForm.js:80 src/components/AddConnectionMenu.js:67
 #: src/components/BondForm.js:99 src/components/VlanForm.js:89
@@ -98,7 +96,7 @@ msgstr "Comprobando si el servicio está activo..."
 
 #: src/components/InterfaceActions.js:46
 msgid "Click to $action it"
-msgstr ""
+msgstr "Hacer clic para $action"
 
 #: src/index.html:20
 msgid "Cockpit Wicked"
@@ -153,10 +151,8 @@ msgid "Device"
 msgstr "Dispositivo"
 
 #: src/components/InterfaceActions.js:44
-#, fuzzy
-#| msgid "Disabled"
 msgid "Disable"
-msgstr "Deshabilitado"
+msgstr "Deshabilitar"
 
 #: src/components/DnsSettings.js:34 src/components/InterfaceActions.js:43
 msgid "Disabled"
@@ -204,10 +200,8 @@ msgid "Enable"
 msgstr "Habilitar"
 
 #: src/components/InterfaceActions.js:42
-#, fuzzy
-#| msgid "Disabled"
 msgid "Enabled"
-msgstr "Deshabilitado"
+msgstr "Habilitado"
 
 #: src/components/InactiveServicePage.js:73
 msgid "For more help, please check the documentation linked below."
@@ -283,10 +277,8 @@ msgid "No networks found"
 msgstr "Ninguna red encontrada"
 
 #: src/components/RoutingTab.js:55
-#, fuzzy
-#| msgid "No networks found"
 msgid "No user-defined routes were found."
-msgstr "Ninguna red encontrada"
+msgstr "No se encontraron rutas definidas por el usuario."
 
 #: src/components/StartMode.js:55 src/components/IPSettingsLink.js:35
 msgid "Not configured"
@@ -310,14 +302,10 @@ msgid "Password"
 msgstr "Contraseña"
 
 #: src/components/InterfaceActions.js:64
-#, fuzzy
-#| msgid ""
-#| "Please, confirm that you really want to the delete the interface "
-#| "configuration."
 msgid ""
 "Please, confirm that you really want to $action the interface configuration."
 msgstr ""
-"Por favor, cofirme que realmente quiere eliminar la configuración del "
+"Por favor, confirme que realmente quiere $action la configuración de la "
 "interfaz."
 
 #: src/components/VlanForm.js:109
@@ -440,7 +428,7 @@ msgstr ""
 
 #: src/components/RoutingTab.js:72
 msgid "User-defined Routes"
-msgstr ""
+msgstr "Rutas definidas por el usuario"
 
 #: src/components/AddConnectionMenu.js:59 src/components/InterfaceDetails.js:75
 msgid "VLAN"

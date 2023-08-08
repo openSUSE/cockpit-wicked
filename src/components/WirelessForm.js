@@ -92,7 +92,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                     isRequired
                     fieldId="wireless-mode"
                 >
-                    <FormSelect value={mode} onChange={setMode} id="wireless-mode">
+                    <FormSelect value={mode} onChange={(_e, val) => setMode(val)} id="wireless-mode">
                         {modeOptions.map((option, index) => (
                             <FormSelectOption key={index} {...option} />
                         ))}
@@ -104,14 +104,14 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                     isRequired
                     fieldId="essid"
                 >
-                    <WirelessEssidSelect essid={essid} setEssid={setEssid} iface={iface} />
+                    <WirelessEssidSelect essid={essid} setEssid={(_e, val) => setEssid(val)} iface={iface} />
                 </FormGroup>
                 <FormGroup
                     label={_("Auth Mode")}
                     isRequired
                     fieldId="wireless-auth-mode"
                 >
-                    <FormSelect value={authMode} onChange={setAuthMode} id="wireless-auth-mode">
+                    <FormSelect value={authMode} onChange={(_e, val) => setAuthMode(val)} id="wireless-auth-mode">
                         {authModeOptions.map((option, index) => (
                             <FormSelectOption key={index} {...option} />
                         ))}
@@ -127,7 +127,7 @@ const WirelessForm = ({ isOpen, onClose, iface, connection }) => {
                             isRequired
                             id="password"
                             value={password}
-                            onChange={setPassword}
+                            onChange={(_e, val) => setPassword(val)}
                             type='password'
                         />
                     </FormGroup>}

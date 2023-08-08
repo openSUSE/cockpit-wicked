@@ -24,7 +24,6 @@ import React, { useEffect } from 'react';
 import { useNetworkDispatch, useNetworkState, fetchRoutes } from '../context/network';
 import {
     Card,
-    CardActions,
     CardBody,
     CardTitle,
     CardHeader,
@@ -34,7 +33,7 @@ import {
     TextVariants,
     Title
 } from '@patternfly/react-core';
-import InfoCircleIcon from '@patternfly/react-icons/dist/js/icons/info-circle-icon';
+import InfoCircleIcon from '@patternfly/react-icons/dist/esm/icons/info-circle-icon';
 import RoutesList from './RoutesList';
 import AddRoute from './AddRoute';
 
@@ -64,10 +63,7 @@ const RoutingTab = () => {
 
     return (
         <Card>
-            <CardHeader>
-                <CardActions>
-                    <AddRoute />
-                </CardActions>
+            <CardHeader actions={{ actions: <AddRoute /> }}>
                 <CardTitle>
                     <Text component={TextVariants.h2}>{_("User-defined Routes")}</Text>
                 </CardTitle>

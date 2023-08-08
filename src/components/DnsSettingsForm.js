@@ -24,6 +24,8 @@ import cockpit from 'cockpit';
 import {
     Alert,
     FormGroup,
+    HelperText,
+    HelperTextItem,
     TextInput
 } from '@patternfly/react-core';
 import { useNetworkDispatch, updateDnsSettings } from '../context/network';
@@ -97,10 +99,10 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
 
         return (
             <Alert
-              isInline
-              variant="danger"
-              aria-live="polite"
-              title={_("Data is not valid, please check it")}
+                isInline
+                variant="danger"
+                aria-live="polite"
+                title={_("Data is not valid, please check it")}
             >
                 {errorMessages.map(({ key, message }) => <p key={key}>{message}</p>)}
             </Alert>
@@ -116,63 +118,78 @@ const DnsSettingsForm = ({ isOpen, onClose, dns }) => {
             onCancel={onClose}
             onSubmit={handleSubmit}
         >
-            {renderErrors()}
-            <FormGroup
-                label={_("Policy")}
-                fieldId="dns_policy"
-                helperText={_("Defines the DNS merge policy as documented in netconfig(8) manual page.")}
-            >
-                <TextInput
+            <>
+                {renderErrors()}
+                <FormGroup
+                    label={_("Policy")}
+                    fieldId="dns_policy"
+                >
+                    <TextInput
+                        isRequired
+                        id="dns_policy"
+                        value={policy}
+                        onChange={(_e, val) => setPolicy(val)}
+                    />
+                    <HelperText>
+                        <HelperTextItem>
+                            {_("Defines the DNS merge policy as documented in netconfig(8) manual page.")}
+                        </HelperTextItem>
+                    </HelperText>
+                </FormGroup>
+                <FormGroup
+                    label={_("Search List")}
                     isRequired
-                    id="dns_policy"
-                    value={policy}
-                    onChange={setPolicy}
-                />
-            </FormGroup>
-            <FormGroup
-                label={_("Search List")}
-                isRequired
-                fieldId="dns_search_list"
-                helperText={_("Space separated list of DNS domain names used for host-name lookup")}
-            >
-                <TextInput
-                    id="dns_search_list"
-                    placeholder={_("example.com another.com")}
-                    value={searchListInput}
-                    onChange={setSearchListInput}
-                />
-            </FormGroup>
-            <FormGroup
-                label={_("Static Name Servers")}
-                helperText={_("Name Server IP address used for host-name lookup.")}
-            >
-                <IPInput
-                    id="dns_nameserver_one"
-                    onChange={setNameserver1}
-                    placeholder={_("Nameserver IP")}
-                    defaultValue={nameserver1}
-                    onError={handleError}
-                />
-            </FormGroup>
+                    fieldId="dns_search_list"
+                >
+                    <TextInput
+                        id="dns_search_list"
+                        placeholder={_("example.com another.com")}
+                        value={searchListInput}
+                        onChange={(_e, val) => setSearchListInput(val)}
+                    />
+                    <HelperText>
+                        <HelperTextItem>
+                            {_("Space separated list of DNS domain names used for host-name lookup")}
+                        </HelperTextItem>
+                    </HelperText>
+                </FormGroup>
+                <FormGroup
+                    label={_("Static Name Servers")}
+                >
+                    <IPInput
+                        id="dns_nameserver_one"
+                        onChange={(_e, val) => setNameserver1(val)}
+                        placeholder={_("Nameserver IP")}
+                        defaultValue={nameserver1}
+                        onError={handleError}
+                    />
+                    <HelperText>
+                        <HelperTextItem>
+                            {_("Name Server IP address used for host-name lookup.")}
+                        </HelperTextItem>
+                    </HelperText>
 
-            <FormGroup>
-                <IPInput
-                    id="dns_nameserver_two"
-                    placeholder={_("Name Server IP")}
-                    defaultValue={nameserver2}
-                    onChange={setNameserver2}
-                    onError={handleError}
-                />
-            </FormGroup>
-            <FormGroup>
-                <IPInput
-                    id="dns_nameserver_three"
-                    placeholder={_("Name Server IP")}
-                    defaultValue={nameserver3}
-                    onChange={setNameserver3}
-                    onError={handleError}
-                />
-            </FormGroup>
+                </FormGroup>
+
+                <FormGroup>
+                    <IPInput
+                        id="dns_nameserver_two"
+                        placeholder={_("Name Server IP")}
+                        defaultValue={nameserver2}
+                        onChange={(_e, val) => setNameserver2(val)}
+                        onError={handleError}
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <IPInput
+                        id="dns_nameserver_three"
+                        placeholder={_("Name Server IP")}
+                        defaultValue={nameserver3}
+                        onChange={(_e, val) => setNameserver3(val)}
+                        onError={handleError}
+                    />
+                </FormGroup>
+            </>
         </ModalForm>
     );
 };

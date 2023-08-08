@@ -24,14 +24,13 @@ import { fetchEssidList } from '../context/network';
 import {
     Dropdown,
     DropdownItem,
-    DropdownPosition,
-    DropdownToggle,
     InputGroup,
     Spinner,
     TextInput
 } from '@patternfly/react-core';
-import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
-import ExclamationIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
+import { DropdownPosition, DropdownToggle } from '@patternfly/react-core/deprecated';
+import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
+import ExclamationIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import cockpit from 'cockpit';
 
 const _ = cockpit.gettext;
@@ -85,7 +84,7 @@ const WirelessEssidSelect = ({ essid, setEssid, iface }) => {
 
     return (
         <InputGroup>
-            <TextInput id="essid" value={essid} onChange={setEssid} type="text" aria-label="Essid" />
+            <TextInput id="essid" value={essid} onChange={(_e, val) => setEssid(val)} type="text" aria-label="Essid" />
             <Dropdown
               position={DropdownPosition.right}
               isOpen={isOpen}

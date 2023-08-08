@@ -225,7 +225,7 @@ const IPSettingsForm = ({ connection, ipVersion = 'ipv4', isOpen, onClose }) => 
             {renderErrors()}
 
             <FormGroup label={_("Boot Protocol")} isRequired>
-                <BootProtoSelector value={bootProto} onChange={setBootProto} />
+                <BootProtoSelector value={bootProto} onChange={(_e, val) => setBootProto(val)} />
             </FormGroup>
 
             <FormGroup label={_("Addresses")}>

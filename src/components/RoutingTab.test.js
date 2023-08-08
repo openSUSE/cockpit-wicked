@@ -101,13 +101,13 @@ describe('RoutingTab', () => {
             act(() => { customRender(<RoutingTab />) });
 
             expect(await screen.findByText('192.168.2.1')).toBeInTheDocument();
-            userEvent.click(screen.getByRole('button', { name: 'Actions' }));
-            userEvent.click(screen.getByRole('button', { name: 'Edit' }));
+            userEvent.click(screen.getByRole('button', { name: 'Kebab toggle' }));
+            userEvent.click(screen.getByText('Edit'));
 
             expect(await screen.findByRole('dialog')).toBeInTheDocument();
             const dialog = screen.getByRole('dialog');
             userEvent.type(getByLabelText(dialog, /gateway/i), '{backspace}2');
-            userEvent.click(screen.getByRole('button', { name: 'Change' }));
+            userEvent.click(screen.getByText('Change'));
             expect(await screen.findByText('192.168.2.2')).toBeInTheDocument();
         });
 
@@ -115,8 +115,8 @@ describe('RoutingTab', () => {
             act(() => { customRender(<RoutingTab />) });
 
             expect(await screen.findByText('192.168.2.1')).toBeInTheDocument();
-            userEvent.click(screen.getByRole('button', { name: 'Actions' }));
-            userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+            userEvent.click(screen.getByRole('button', { name: 'Kebab toggle' }));
+            userEvent.click(screen.getByText('Delete'));
             expect(screen.queryByText('192.168.2.1')).toBeNull();
         });
     });

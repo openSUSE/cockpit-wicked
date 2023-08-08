@@ -53,7 +53,7 @@ describe('InterfacesList', () => {
         expect(screen.getByText('192.168.8.100/24')).toBeInTheDocument();
     });
 
-    test('display details', () => {
+    test('display details', async () => {
         customRender(
             <InterfacesList interfaces={interfaces} connections={connections} />
         );
@@ -63,11 +63,13 @@ describe('InterfacesList', () => {
 
         const expandButton = screen.getByRole('button', { name: 'Details' });
         userEvent.click(expandButton);
+        // Updating the dom takes a while
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         expect(screen.getByText('00:d8:23:93:14:cc')).toBeVisible();
         expect(screen.getByText('On Boot')).toBeVisible();
     });
 
-    test('include actions into details', () => {
+    test('include actions into details', async () => {
         customRender(
             <InterfacesList interfaces={interfaces} connections={connections} />
         );
@@ -78,6 +80,8 @@ describe('InterfacesList', () => {
         const expandButton = screen.getByRole('button', { name: 'Details' });
         userEvent.click(expandButton);
 
+        // Updating the dom takes a while
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         expect(screen.getByLabelText('Disable eth0')).toBeVisible();
         expect(screen.getByLabelText('Reset eth0')).toBeVisible();
     });

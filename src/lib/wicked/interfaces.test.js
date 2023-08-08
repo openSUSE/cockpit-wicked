@@ -77,7 +77,7 @@ describe('#createInterface', () => {
 
         it('sets "managed" to false', () => {
             const iface = createInterface(wickedInterface);
-            expect(iface.managed).toEqual(false);
+            expect(iface.managed).toBe(false);
         });
     });
 
@@ -90,7 +90,7 @@ describe('#createInterface', () => {
 
         it('sets "managed" to false', () => {
             const iface = createInterface(wickedInterface);
-            expect(iface.managed).toEqual(false);
+            expect(iface.managed).toBe(false);
         });
     });
 
@@ -104,7 +104,7 @@ describe('#createInterface', () => {
 
         it('sets "link" to false', () => {
             const iface = createInterface(wickedInterface);
-            expect(iface.link).toEqual(false);
+            expect(iface.link).toBe(false);
         });
     });
 });

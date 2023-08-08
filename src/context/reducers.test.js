@@ -173,7 +173,7 @@ describe('interfacesReducer', () => {
 
             const { [eth0.id]: newIface } = newState;
             expect(newIface.status).toEqual(interfaceStatus.ERROR);
-            expect(newIface.error).toEqual('some error');
+            expect(newIface.error).toBe('some error');
         });
     });
 });

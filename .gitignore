@@ -16,3 +16,4 @@ src/lib/patternfly/
 po/wicked.*.pot
 POTFILES*
 coverage/
+pkg/

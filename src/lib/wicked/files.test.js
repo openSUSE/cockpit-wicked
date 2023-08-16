@@ -42,9 +42,9 @@ describe('IfcfgFile', () => {
 
         it('updates file content', () => {
             ifcfg.update(conn);
-            expect(ifcfg.getKey('BOOTPROTO')).toEqual('dhcp');
-            expect(ifcfg.getKey('NAME')).toEqual('eth0');
-            expect(ifcfg.getKey('STARTMODE')).toEqual('auto');
+            expect(ifcfg.getKey('BOOTPROTO')).toBe('dhcp');
+            expect(ifcfg.getKey('NAME')).toBe('eth0');
+            expect(ifcfg.getKey('STARTMODE')).toBe('auto');
         });
 
         describe('when it contains multiple addresses', () => {
@@ -65,12 +65,12 @@ describe('IfcfgFile', () => {
 
             it('includes all the addresses and their labels', () => {
                 ifcfg.update(conn);
-                expect(ifcfg.getKey('BOOTPROTO')).toEqual('dhcp');
-                expect(ifcfg.getKey('IPADDR')).toEqual('192.168.1.100/24');
-                expect(ifcfg.getKey('IPADDR_1')).toEqual('10.0.0.1/10');
-                expect(ifcfg.getKey('LABEL_1')).toEqual('private');
-                expect(ifcfg.getKey('IPADDR_2')).toEqual('10.0.0.2/10');
-                expect(ifcfg.getKey('IPADDR_3')).toEqual('2001:0db4:95b3:0000:0000:8a2e:0370:9335');
+                expect(ifcfg.getKey('BOOTPROTO')).toBe('dhcp');
+                expect(ifcfg.getKey('IPADDR')).toBe('192.168.1.100/24');
+                expect(ifcfg.getKey('IPADDR_1')).toBe('10.0.0.1/10');
+                expect(ifcfg.getKey('LABEL_1')).toBe('private');
+                expect(ifcfg.getKey('IPADDR_2')).toBe('10.0.0.2/10');
+                expect(ifcfg.getKey('IPADDR_3')).toBe('2001:0db4:95b3:0000:0000:8a2e:0370:9335');
             });
         });
 
@@ -105,8 +105,8 @@ describe('IfcfgFile', () => {
                 await ifcfg.read();
                 ifcfg.update(conn);
 
-                expect(ifcfg.getKey('NAME')).toEqual('eth0');
-                expect(ifcfg.getKey('UNKOWN')).toEqual('some value');
+                expect(ifcfg.getKey('NAME')).toBe('eth0');
+                expect(ifcfg.getKey('UNKOWN')).toBe('some value');
                 expect(ifcfg.getKey('IPADDR_MYIP')).toBeUndefined();
                 expect(ifcfg.getKey('LABEL_MYIP')).toBeUndefined();
             });
@@ -119,8 +119,8 @@ describe('IfcfgFile', () => {
 
             it('includes bridge settings', () => {
                 ifcfg.update(conn);
-                expect(ifcfg.getKey('BRIDGE')).toEqual('yes');
-                expect(ifcfg.getKey('BRIDGE_PORTS')).toEqual('eth0 eth1');
+                expect(ifcfg.getKey('BRIDGE')).toBe('yes');
+                expect(ifcfg.getKey('BRIDGE_PORTS')).toBe('eth0 eth1');
             });
         });
 
@@ -132,10 +132,10 @@ describe('IfcfgFile', () => {
 
             it('includes bonding settings', () => {
                 ifcfg.update(conn);
-                expect(ifcfg.getKey('BONDING_MASTER')).toEqual('yes');
-                expect(ifcfg.getKey('BONDING_SLAVE_0')).toEqual('eth0');
-                expect(ifcfg.getKey('BONDING_SLAVE_1')).toEqual('eth1');
-                expect(ifcfg.getKey('BONDING_MODULE_OPTS')).toEqual('mode=active-backup some-option');
+                expect(ifcfg.getKey('BONDING_MASTER')).toBe('yes');
+                expect(ifcfg.getKey('BONDING_SLAVE_0')).toBe('eth0');
+                expect(ifcfg.getKey('BONDING_SLAVE_1')).toBe('eth1');
+                expect(ifcfg.getKey('BONDING_MODULE_OPTS')).toBe('mode=active-backup some-option');
             });
         });
     });
@@ -151,14 +151,14 @@ describe('SysconfigParser', () => {
 
     describe('#stringify', () => {
         it('returns a string in sysconfig place', () => {
-            expect(parser.stringify(lines)).toEqual(
+            expect(parser.stringify(lines)).toBe(
                 "BOOTPROTO=\"dhcp\"\n# Infer the name from the file name\n# NAME=\"eth0\""
             );
         });
 
         it('includes a newline when the last line was added', () => {
             lines[lines.length - 1].added = true;
-            expect(parser.stringify(lines)).toEqual(
+            expect(parser.stringify(lines)).toBe(
                 "BOOTPROTO=\"dhcp\"\n# Infer the name from the file name\n# NAME=\"eth0\"\n"
             );
         });
@@ -219,13 +219,13 @@ describe('SysconfigFile', () => {
         it('returns the value for the given key', async () => {
             await file.read();
             expect(file.getKey('NAME')).toBeUndefined();
-            expect(file.getKey('BOOTPROTO')).toEqual('dhcp');
+            expect(file.getKey('BOOTPROTO')).toBe('dhcp');
             expect(file.getKey('STARTMODE')).toBeUndefined();
         });
 
         it('returns the default value if the key is not found', async () => {
             await file.read();
-            expect(file.getKey('UNKNOWN', 'Some value')).toEqual('Some value');
+            expect(file.getKey('UNKNOWN', 'Some value')).toBe('Some value');
         });
     });
 
@@ -242,9 +242,9 @@ describe('SysconfigFile', () => {
             file.setKey('BOOTPROTO', undefined);
             file.setKey('STARTMODE', 'ifplugd');
 
-            expect(file.getKey('NAME')).toEqual('eth0');
+            expect(file.getKey('NAME')).toBe('eth0');
             expect(file.getKey('BOOTPROTO')).toBeUndefined();
-            expect(file.getKey('STARTMODE')).toEqual('ifplugd');
+            expect(file.getKey('STARTMODE')).toBe('ifplugd');
         });
     });
 
@@ -258,10 +258,10 @@ describe('SysconfigFile', () => {
                 IPADDR: ''
             });
 
-            expect(file.getKey('NAME')).toEqual('eth0');
+            expect(file.getKey('NAME')).toBe('eth0');
             expect(file.getKey('BOOTPROTO')).toBeUndefined();
-            expect(file.getKey('STARTMODE')).toEqual('ifplugd');
-            expect(file.getKey('IPADDR')).toEqual('');
+            expect(file.getKey('STARTMODE')).toBe('ifplugd');
+            expect(file.getKey('IPADDR')).toBe('');
         });
     });
 
@@ -303,7 +303,7 @@ describe('IfrouteParser', () => {
 
     describe('#stringify', () => {
         it('returns a string containing the routes in ifroute format', () => {
-            expect(parser.stringify(lines)).toEqual(
+            expect(parser.stringify(lines)).toBe(
                 "default\t192.168.1.1\t255.255.255.0\t-\t-\n10.0.0.8\t10.163.28.1\t-\t-\toption1"
             );
         });
@@ -356,7 +356,7 @@ describe('IfrouteFile', () => {
         describe('when an interface is given', () => {
             it('sets the path to the specific routes file', () => {
                 const file = new IfrouteFile('eth0');
-                expect(file.path).toEqual('/etc/sysconfig/network/ifroute-eth0');
+                expect(file.path).toBe('/etc/sysconfig/network/ifroute-eth0');
                 expect(cockpit.file).toHaveBeenCalledWith(
                     "/etc/sysconfig/network/ifroute-eth0", expect.anything()
                 );
@@ -366,7 +366,7 @@ describe('IfrouteFile', () => {
         describe('when no interface is given', () => {
             it('sets the path to the general routes file', () => {
                 const file = new IfrouteFile();
-                expect(file.path).toEqual('/etc/sysconfig/network/routes');
+                expect(file.path).toBe('/etc/sysconfig/network/routes');
                 expect(cockpit.file).toHaveBeenCalledWith(
                     "/etc/sysconfig/network/routes", expect.anything()
                 );

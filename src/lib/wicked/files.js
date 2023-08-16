@@ -198,6 +198,7 @@ class SysconfigParser {
      * @return {Array<SysconfigFileLine>} An array of objects describing each line
      */
     parse(text) {
+        // eslint-disable-next-line prefer-regex-literals
         const keyValueLine = new RegExp(/^ *(#)? *([A-Za-z_0-9]+) *= *"?([^"]*)"?/);
 
         const lines = text.split(/\r?\n/);

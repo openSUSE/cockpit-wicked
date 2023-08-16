@@ -21,7 +21,7 @@
 
 import React, { useState, useEffect } from 'react';
 import cockpit from 'cockpit';
-import { Alert, Checkbox, FormGroup, FormSelect, FormSelectOption, TextInput } from '@patternfly/react-core';
+import { Alert, Checkbox, FormGroup, FormSelect, FormSelectOption, HelperText, HelperTextItem, TextInput } from '@patternfly/react-core';
 import { useNetworkDispatch, useNetworkState, addRoute, updateRoute } from '../context/network';
 import { isValidIP } from '../lib/utils';
 import ModalForm from './ModalForm';
@@ -111,10 +111,10 @@ const RouteForm = ({ isOpen, onClose, route }) => {
 
         return (
             <Alert
-              isInline
-              variant="danger"
-              aria-live="polite"
-              title={_("Route is not valid, please check it.")}
+                isInline
+                variant="danger"
+                aria-live="polite"
+                title={_("Route is not valid, please check it.")}
             >
                 {errors.map(({ key, message }) => <p key={key}>{message}</p>)}
             </Alert>
@@ -132,14 +132,18 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                 isRequired
                 label={_("Destination")}
                 fieldId="destination"
-                helperText={_("Destination")}
             >
                 <TextInput
                     isRequired
                     id="destination"
                     value={destination}
-                    onChange={setDestination}
+                    onChange={(_e, val) => setDestination(val)}
                 />
+                <HelperText>
+                    <HelperTextItem>
+                        {_("Destination")}
+                    </HelperTextItem>
+                </HelperText>
             </FormGroup>
         );
     };
@@ -162,7 +166,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                 <Checkbox
                     id="isDefault"
                     isChecked={isDefault}
-                    onChange={setIsDefault}
+                    onChange={(_e, val) => setIsDefault(val)}
                 />
             </FormGroup>
 
@@ -177,7 +181,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                     isRequired
                     id="gateway"
                     value={gateway}
-                    onChange={setGateway}
+                    onChange={(_e, val) => setGateway(val)}
                 />
             </FormGroup>
 
@@ -185,7 +189,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                 label={_("Device")}
                 fieldId="device"
             >
-                <FormSelect value={device} onChange={setDevice} id="device">
+                <FormSelect value={device} onChange={(_e, val) => setDevice(val)} id="device">
                     {candidateInterfaces.map(({ name }, index) => (
                         <FormSelectOption key={index} value={name} label={name} />
                     ))}
@@ -199,7 +203,7 @@ const RouteForm = ({ isOpen, onClose, route }) => {
                 <TextInput
                     id="options"
                     value={options}
-                    onChange={setOptions}
+                    onChange={(_e, val) => setOptions(val)}
                 />
             </FormGroup>
         </ModalForm>

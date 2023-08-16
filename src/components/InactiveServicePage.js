@@ -22,14 +22,14 @@
 import React from 'react';
 import cockpit from 'cockpit';
 import {
-    Title,
     Button,
     EmptyState,
     EmptyStateIcon,
     EmptyStateBody,
-    EmptyStateSecondaryActions
+    EmptyStateActions,
+    EmptyStateHeader
 } from '@patternfly/react-core';
-import AlertIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
+import AlertIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
 const _ = cockpit.gettext;
 
@@ -60,10 +60,11 @@ const ExternalLink = ({ href, children }) => {
 const InactiveServicePage = () => {
     return (
         <EmptyState>
-            <EmptyStateIcon icon={AlertIcon} />
-            <Title headingLevel="h4" size="lg">
-                {_("Wicked service is not active")}
-            </Title>
+            <EmptyStateHeader
+                titleText={_("Wicked service is not active")}
+                headingLevel="h4"
+                icon={<EmptyStateIcon icon={AlertIcon} />}
+            />
             <EmptyStateBody>
                 <p>
                     {_(`Seems that wicked service is not active. It could be either, the service is
@@ -74,7 +75,7 @@ const InactiveServicePage = () => {
                 </p>
             </EmptyStateBody>
 
-            <EmptyStateSecondaryActions>
+            <EmptyStateActions>
                 <ExternalLink href="https://en.opensuse.org/Portal:Wicked">
                     openSUSE Wicked Portal
                 </ExternalLink>
@@ -84,7 +85,7 @@ const InactiveServicePage = () => {
                 <ExternalLink href="https://github.com/openSUSE/wicked">
                     Public Wicked Repository
                 </ExternalLink>
-            </EmptyStateSecondaryActions>
+            </EmptyStateActions>
         </EmptyState>
     );
 };

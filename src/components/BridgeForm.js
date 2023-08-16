@@ -20,7 +20,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Checkbox, FormGroup, TextInput } from '@patternfly/react-core';
+import { Checkbox, FormGroup, HelperText, HelperTextItem, TextInput } from '@patternfly/react-core';
 import cockpit from 'cockpit';
 import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
 import interfaceType from '../lib/model/interfaceType';
@@ -84,15 +84,19 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
                 label={_("Name")}
                 isRequired
                 fieldId="interface-name"
-                helperText={_("Please, provide the interface name (e.g., br0)")}
             >
                 <TextInput
                     isRequired
                     isDisabled={isEditing}
                     id="interface-name"
                     value={name}
-                    onChange={setName}
+                    onChange={(_e, val) => setName(val)}
                 />
+                <HelperText>
+                    <HelperTextItem>
+                        {_("Please, provide the interface name (e.g., br0)")}
+                    </HelperTextItem>
+                </HelperText>
             </FormGroup>
 
             <FormGroup
@@ -104,7 +108,7 @@ const BridgeForm = ({ isOpen, onClose, connection }) => {
                         label={name}
                         key={name}
                         isChecked={selectedPorts.includes(name)}
-                        onChange={handleSelectedPorts(name)}
+                        onChange={(_e, val) => handleSelectedPorts(name)(val)}
                     />
                 ))}
             </FormGroup>

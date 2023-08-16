@@ -38,7 +38,7 @@ const bootProtocolOptions = supportedBootProtocols.map(bootProto => {
 
 const BootProtoSelector = ({ value, onChange }) => {
     return (
-        <FormSelect value={value} onChange={onChange} id="bootProto">
+        <FormSelect value={value} onChange={(_e, val) => onChange(val)} id="bootProto">
             {bootProtocolOptions.map((option, index) => (
                 <FormSelectOption key={option.value} value={option.value} label={option.label} />
             ))}

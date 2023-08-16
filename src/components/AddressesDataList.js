@@ -38,8 +38,8 @@ import {
     SplitItem,
 } from '@patternfly/react-core';
 
-import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-icon';
-import MinusIcon from '@patternfly/react-icons/dist/js/icons/minus-icon';
+import PlusIcon from '@patternfly/react-icons/dist/esm/icons/plus-icon';
+import MinusIcon from '@patternfly/react-icons/dist/esm/icons/minus-icon';
 import IPInput from './IPInput';
 
 const _ = cockpit.gettext;
@@ -94,7 +94,7 @@ const AddressesDataList = ({ addresses, updateAddresses, allowEmpty = true }) =>
             <DataListCell key={`address-${id}-local`}>
                 <IPInput
                   defaultValue={local}
-                  onChange={(value) => updateAddress(id, 'local', value)}
+                  onChange={(_e, value) => updateAddress(id, 'local', value)}
                   placeholder={_("Address")}
                   aria-label={_("Address")}
                 />
@@ -102,7 +102,7 @@ const AddressesDataList = ({ addresses, updateAddresses, allowEmpty = true }) =>
             <DataListCell key={`address-${id}-label`}>
                 <TextInput
                   defaultValue={label}
-                  onChange={(value) => updateAddress(id, 'label', value)}
+                  onChange={(_e, value) => updateAddress(id, 'label', value)}
                   placeholder={_("Label")}
                   aria-label={_("Label")}
                 />

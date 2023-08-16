@@ -26,6 +26,8 @@ import {
     FormGroup,
     FormSelect,
     FormSelectOption,
+    HelperText,
+    HelperTextItem,
     TextInput
 } from '@patternfly/react-core';
 import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
@@ -109,8 +111,13 @@ const BondForm = ({ isOpen, onClose, connection }) => {
                     isDisabled={isEditing}
                     id="interface-name"
                     value={name}
-                    onChange={setName}
+                    onChange={(_e, val) => setName(val)}
                 />
+                <HelperText>
+                    <HelperTextItem>
+                        {_("Please, provide the interface name (e.g., bond0)")}
+                    </HelperTextItem>
+                </HelperText>
             </FormGroup>
 
             <FormGroup
@@ -122,7 +129,7 @@ const BondForm = ({ isOpen, onClose, connection }) => {
                         label={name}
                         key={name}
                         isChecked={selectedInterfaces.includes(name)}
-                        onChange={handleSelectedInterfaces(name)}
+                        onChange={(_e, val) => handleSelectedInterfaces(name)(val)}
                     />
                 ))}
             </FormGroup>
@@ -132,7 +139,7 @@ const BondForm = ({ isOpen, onClose, connection }) => {
                 isRequired
                 fieldId="bonding-mode"
             >
-                <FormSelect value={mode} onChange={setMode} id="bonding-mode">
+                <FormSelect value={mode} onChange={(_e, val) => setMode(val)} id="bonding-mode">
                     {modeOptions.map((option, index) => (
                         <FormSelectOption key={index} {...option} />
                     ))}
@@ -142,14 +149,19 @@ const BondForm = ({ isOpen, onClose, connection }) => {
             <FormGroup
                 label={_("Options")}
                 fieldId="bond-options"
-                helperText={_("Use this field to provide more options using the key=value format")}
+
             >
                 <TextInput
                     isRequired
                     id="bond-options"
                     value={options}
-                    onChange={setOptions}
+                    onChange={(_e, val) => setOptions(val)}
                 />
+                <HelperText>
+                    <HelperTextItem>
+                        {_("Use this field to provide more options using the key=value format")}
+                    </HelperTextItem>
+                </HelperText>
             </FormGroup>
         </ModalForm>
     );

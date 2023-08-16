@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { createConnection, mergeConnection } from '../lib/model/connections';
 import { createRoute } from '../lib/model/routes';
 import interfaceStatus from '../lib/model/interfaceStatus';
 import NetworkClient from '../lib/NetworkClient';
-import useRootReducer from 'use-root-reducer';
+import useRootReducer from '../lib/use-root-reducer';
 import actionTypes from './actionTypes';
 
 import { interfacesReducer, connectionsReducer, routesReducer, dnsReducer } from './reducers';

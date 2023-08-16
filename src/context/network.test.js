@@ -325,19 +325,19 @@ describe('#serviceIsActive', () => {
     it('returns true if the service is active', async () => {
         isActiveMock.mockImplementation(() => Promise.resolve(true));
         const isActive = await serviceIsActive();
-        expect(isActive).toEqual(true);
+        expect(isActive).toBe(true);
     });
 
     it('returns false if the service is inactive', async () => {
         isActiveMock.mockImplementation(() => false);
         const isActive = await serviceIsActive();
-        expect(isActive).toEqual(false);
+        expect(isActive).toBe(false);
     });
 
     it('returns false if something went wrong', async () => {
         const error = new Error('unknown error');
         isActiveMock.mockImplementation(() => { throw error });
         const isActive = await serviceIsActive();
-        expect(isActive).toEqual(false);
+        expect(isActive).toBe(false);
     });
 });

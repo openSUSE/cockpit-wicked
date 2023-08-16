@@ -50,7 +50,8 @@ const startModeFor = (config) => {
 
     if (mode === 'boot') {
         return (boot_stage === 'localfs' && persistent === 'true')
-            ? startMode.NFSROOT : startMode.AUTO;
+            ? startMode.NFSROOT
+            : startMode.AUTO;
     } else {
         return START_MODE[mode];
     }

@@ -79,7 +79,7 @@ const elementAttributes = (element) => {
     ), {});
 };
 
-/* @ignore */
+// eslint-disable-next-line prefer-regex-literals
 const emptyTagsRegExp = new RegExp(/<\w+\/>/, 'g');
 
 /**

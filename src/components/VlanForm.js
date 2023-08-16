@@ -25,6 +25,8 @@ import {
     FormGroup,
     FormSelect,
     FormSelectOption,
+    HelperText,
+    HelperTextItem,
     TextInput,
 } from '@patternfly/react-core';
 import { useNetworkDispatch, useNetworkState, addConnection, updateConnection } from '../context/network';
@@ -95,7 +97,7 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
                 fieldId="parentDevice"
             >
 
-                <FormSelect value={parentDevice} onChange={setParentDevice} id="parentDevice">
+                <FormSelect value={parentDevice} onChange={(_e, val) => setParentDevice(val)} id="parentDevice">
                     {candidateInterfaces.map(({ name }) => (
                         <FormSelectOption key={name} value={name} label={name} />
                     ))}
@@ -106,29 +108,37 @@ const VlanForm = ({ isOpen, onClose, connection }) => {
                 label={_("VLAN ID")}
                 isRequired
                 fieldId="vlan_id"
-                helperText={_("Please, provide the VLAN ID (e.g., 10)")}
             >
                 <TextInput
                     isRequired
                     id="vlan_id"
                     value={vlanId}
-                    onChange={setVlanId}
+                    onChange={(_e, val) => setVlanId(val)}
                     type="number"
                 />
+                <HelperText>
+                    <HelperTextItem>
+                        helperText={_("Please, provide the VLAN ID (e.g., 10)")}
+                    </HelperTextItem>
+                </HelperText>
             </FormGroup>
 
             <FormGroup
                 label={_("Name")}
                 isRequired
                 fieldId="interface-name"
-                helperText={_("Please, provide the interface name (e.g., vlan10)")}
             >
                 <TextInput
                     isRequired
                     id="interface-name"
                     value={name}
-                    onChange={updateName}
+                    onChange={(_e, val) => updateName(val)}
                 />
+                <HelperText>
+                    <HelperTextItem>
+                        {_("Please, provide the interface name (e.g., vlan10)")}
+                    </HelperTextItem>
+                </HelperText>
             </FormGroup>
         </ModalForm>
     );

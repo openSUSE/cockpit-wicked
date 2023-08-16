@@ -28,8 +28,8 @@ import {
 } from '@patternfly/react-core';
 import { useNetworkDispatch, deleteConnection, changeConnectionState } from '../context/network';
 import ModalConfirm from './ModalConfirm';
-import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
-import ResetIcon from '@patternfly/react-icons/dist/js/icons/undo-icon';
+import TrashIcon from '@patternfly/react-icons/dist/esm/icons/trash-icon';
+import ResetIcon from '@patternfly/react-icons/dist/esm/icons/undo-icon';
 
 const _ = cockpit.gettext;
 

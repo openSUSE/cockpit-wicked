@@ -85,7 +85,7 @@ describe('WickedClient', () => {
             expect.assertions(1);
 
             return client.getInterfaceByPath('/org/opensuse/Network/Interface/2').then(data => {
-                expect(data.interface.name).toEqual('eth0');
+                expect(data.interface.name).toBe('eth0');
             });
         });
 

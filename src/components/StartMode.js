@@ -69,7 +69,7 @@ const StartMode = ({ connection }) => {
               onSubmit={handleSubmit}
               onCancel={closeForm}
             >
-                <FormSelect value={startMode} onChange={setStartMode} id="startMode">
+                <FormSelect value={startMode} onChange={(_e, val) => setStartMode(val)} id="startMode">
                     {startModeOptions.map((option, index) => (
                         <FormSelectOption key={index} value={option.value} label={option.label} />
                     ))}

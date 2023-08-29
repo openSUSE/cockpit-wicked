@@ -30,7 +30,7 @@ Source12:       node_modules.sums
 BuildArch:      noarch
 BuildRequires:  appstream-glib
 BuildRequires:  appstream-glib
-BuildRequires:  cockpit-devel >= 251
+BuildRequires:  cockpit-devel >= 293
 BuildRequires:  local-npm-registry
 BuildRequires:  make
 BuildRequires:  nodejs-devel

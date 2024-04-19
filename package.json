@@ -28,7 +28,7 @@
     "chrome-remote-interface": "^0.28.0",
     "compression-webpack-plugin": "^6.0.0",
     "copy-webpack-plugin": "^6.1.0",
-    "css-loader": "^4.3.0",
+    "css-loader": "^7.1.1",
     "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-config-standard-react": "^9.2.0",
@@ -45,7 +45,7 @@
     "jed": "^1.1.1",
     "jest": "^26.5.3",
     "jest-transform-stub": "^2.0.0",
-    "jsdoc": "^3.6.6",
+    "jsdoc": "^4.0.2",
     "mini-css-extract-plugin": "^0.11.0",
     "po2json": "^1.0.0-alpha",
     "qunit": "^2.9.3",
@@ -54,7 +54,7 @@
     "sizzle": "^2.3.3",
     "stdio": "^2.1.0",
     "string-replace-loader": "^2.3.0",
-    "webpack": "^4.35.3",
+    "webpack": "^5.91.0",
     "webpack-cli": "^3.3.5"
   },
   "dependencies": {

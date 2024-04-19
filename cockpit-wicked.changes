@@ -3,7 +3,7 @@ Fri Apr 19 10:24:35 UTC 2024 - Imobach Gonzalez Sosa <igonzalezsosa@suse.com>
 
 - Version 4.5:
   * Update a few dependencies to address security concerns
-    (gh#openSUSE/cockpit-wicked#144).
+    (bsc#1217325, gh#openSUSE/cockpit-wicked#144).
 
 -------------------------------------------------------------------
 Fri Sep 23 10:35:23 UTC 2022 - Imobach Gonzalez Sosa <igonzalezsosa@suse.com>
